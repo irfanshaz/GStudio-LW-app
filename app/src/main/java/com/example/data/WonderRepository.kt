@@ -51,6 +51,13 @@ class WonderRepository(
         )
     }
 
+    suspend fun updateSelectedVoice(voiceId: String) {
+        val current = dao.getSettingsOnce() ?: ProfileSettingsEntity()
+        dao.upsertSettings(
+            current.copy(selectedVoiceId = voiceId)
+        )
+    }
+
     suspend fun updateAudioAndMotionSettings(
         narrationEnabled: Boolean,
         musicEnabled: Boolean,

@@ -17,6 +17,7 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -126,6 +127,17 @@ fun ActivityPlayScreen(
     val isFavorite = progress?.isFavorite == true
     var replayKey by remember(activity.id) { mutableIntStateOf(0) }
 
+    val settings by viewModel.settingsState.collectAsState()
+    val ttsAvailable by viewModel.audio.ttsAvailable.collectAsState()
+    val lastSpokenCaption by viewModel.audio.lastSpokenCaption.collectAsState()
+
+    // Stop speech immediately when leaving the activity
+    androidx.compose.runtime.DisposableEffect(activity.id) {
+        onDispose {
+            viewModel.audio.stopSpeechOnly()
+        }
+    }
+
     // Real-time adaptive parameters combining AgeBand + local performance indicators
     val sessionRetries by viewModel.sessionRetries.collectAsState()
     val sessionSmoothWins by viewModel.sessionSmoothWins.collectAsState()
@@ -154,7 +166,7 @@ fun ActivityPlayScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Left: Back, Home, Title & Instruction
+                // Left: Back, Home, Title & Visible Caption when speech is muted/unavailable
                 Row(
                     modifier = Modifier.weight(1f),
                     verticalAlignment = Alignment.CenterVertically
@@ -181,36 +193,28 @@ fun ActivityPlayScreen(
                         Icon(Icons.Default.Home, contentDescription = "Home", tint = DeepSlateInk)
                     }
                     Spacer(Modifier.width(10.dp))
-                    Column(modifier = Modifier.weight(1f)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = "${activity.emoji} ${activity.title}",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = DeepSlateInk,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Surface(
-                                color = ActionContinueBlue.copy(alpha = 0.14f),
-                                shape = RoundedCornerShape(8.dp)
-                            ) {
-                                Text(
-                                    text = adaptiveParams.adaptiveStatusLabel,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = ActionContinueBlue,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                                )
-                            }
-                        }
+                    Column(
+                        modifier = Modifier.weight(1f)
+                    ) {
                         Text(
-                            text = activity.instructionText,
-                            fontSize = 12.sp,
-                            color = MutedSlateText,
+                            text = "${activity.emoji} ${activity.title}",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = DeepSlateInk,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
+                        if ((!settings.narrationEnabled || !ttsAvailable) && lastSpokenCaption.isNotBlank()) {
+                            Text(
+                                text = "💬 $lastSpokenCaption",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = ActionContinueBlue,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.testTag("speech_fallback_visible_caption")
+                            )
+                        }
                     }
                 }
 
@@ -240,37 +244,32 @@ fun ActivityPlayScreen(
                         }
                     }
 
-                    // Listen Instruction Button
-                    Button(
+                    // Listen Instruction Icon Button
+                    IconButton(
                         onClick = { viewModel.audio.speakInstruction(activity.instructionText) },
-                        colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier
-                            .height(44.dp)
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(ActionListenAmber)
                             .testTag("activity_listen_button")
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Listen", tint = DeepSlateInk, modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Listen", color = DeepSlateInk, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Listen", tint = DeepSlateInk)
                     }
 
-                    // Show Me Demonstration Button
-                    Button(
+                    // Show Me Demonstration Icon Button
+                    IconButton(
                         onClick = { viewModel.triggerShowMeDemo(activity) },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (showDemoBanner) ActionPlayGreen else SoftCreamCard,
-                            contentColor = if (showDemoBanner) PlaySurfaceWhite else DeepSlateInk
-                        ),
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier
-                            .height(44.dp)
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(if (showDemoBanner) ActionPlayGreen else SoftCreamCard)
                             .testTag("activity_show_me_button")
                     ) {
-                        Icon(Icons.Default.Lightbulb, contentDescription = "Show Me", modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Show Me", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Icon(
+                            Icons.Default.Lightbulb,
+                            contentDescription = "Show Me",
+                            tint = if (showDemoBanner) PlaySurfaceWhite else DeepSlateInk
+                        )
                     }
 
                     // Favorite Heart Button (saves to My Shelf)
@@ -1340,9 +1339,8 @@ fun WaterLabScienceEngine(
 }
 
 /**
- * ENGINE 4: Flagship Balloon Pop & Untimed Bubble Arcade Engine
- * - Replenishes floating balloons/bubbles continuously without timers or stress
- * - Celebrates every 5 pops with a gentle milestone star
+ * ENGINE 4: Flagship Balloon Pop Learning Adventure Engine
+ * Delegates to the full 9-World, 13-Mode, Multilingual (EN/TE/HI), 60 FPS BalloonPopAdventureComposable.
  */
 @Composable
 fun BalloonPopEngine(
@@ -1352,121 +1350,13 @@ fun BalloonPopEngine(
     replayKey: Int,
     viewModel: WonderViewModel
 ) {
-    val pool = remember(activity.id) {
-        activity.items.ifEmpty {
-            listOf(
-                GameItemOption("b1", "A", "🎈", "A", "A for Apple!", primaryColorHex = 0xFFEF4444),
-                GameItemOption("b2", "B", "🎈", "B", "B for Bear!", primaryColorHex = 0xFF3B82F6),
-                GameItemOption("b3", "C", "🎈", "C", "C for Cat!", primaryColorHex = 0xFF10B981),
-                GameItemOption("b4", "1", "🌟", "1", "Number One!", primaryColorHex = 0xFFF59E0B),
-                GameItemOption("b5", "2", "🌟", "2", "Number Two!", primaryColorHex = 0xFF8B5CF6)
-            )
-        }
-    }
-
-    var poppedCount by remember(activity.id, replayKey) { mutableIntStateOf(0) }
-    var lastPoppedLabel by remember(activity.id, replayKey) {
-        mutableStateOf("Tap any floating balloon or bubble to pop it!")
-    }
-    val visibleCount = (adaptive.effectiveChoiceCount + 2).coerceIn(4, 6)
-
-    val transition = rememberInfiniteTransition(label = "balloon_float")
-    val floatWave by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = (2f * PI).toFloat(),
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = if (reducedMotion) 9000 else 4200, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "balloon_wave"
+    BalloonPopAdventureComposable(
+        activity = activity,
+        adaptive = adaptive,
+        reducedMotion = reducedMotion,
+        replayKey = replayKey,
+        viewModel = viewModel
     )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .testTag("engine_balloon_pop"),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = lastPoppedLabel,
-                style = MaterialTheme.typography.titleMedium,
-                color = DeepSlateInk
-            )
-            Surface(
-                color = ActionListenAmber.copy(alpha = 0.2f),
-                shape = RoundedCornerShape(14.dp)
-            ) {
-                Text(
-                    text = "🎈 Popped: $poppedCount",
-                    fontWeight = FontWeight.Bold,
-                    color = DeepSlateInk,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                )
-            }
-        }
-
-        // Floating Balloons Row (Replenishes endlessly)
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            for (slot in 0 until visibleCount) {
-                val item = pool[(slot + poppedCount) % pool.size]
-                val bobOffsetDp = if (reducedMotion) 0f else sin(floatWave + slot * 1.1f) * 18f
-
-                Column(
-                    modifier = Modifier
-                        .offset(y = bobOffsetDp.dp)
-                        .clickable {
-                            poppedCount += 1
-                            lastPoppedLabel = "💥 Pop! ${item.spokenText}"
-                            viewModel.audio.playBubblePopSound(0.9f + (slot * 0.08f))
-                            viewModel.audio.speakInstruction(item.spokenText)
-                            if (poppedCount % 5 == 0) {
-                                viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false)
-                            }
-                        }
-                        .testTag("balloon_slot_$slot"),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Surface(
-                        modifier = Modifier.size(96.dp),
-                        shape = CircleShape,
-                        color = Color(item.primaryColorHex),
-                        border = BorderStroke(3.dp, PlaySurfaceWhite),
-                        shadowElevation = 6.dp
-                    ) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(text = item.emoji, fontSize = 32.sp)
-                            Text(
-                                text = item.label,
-                                color = PlaySurfaceWhite,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
-                            )
-                        }
-                    }
-                    // Balloon string
-                    Box(
-                        modifier = Modifier
-                            .width(3.dp)
-                            .height(28.dp)
-                            .background(Color(0xFF94A3B8))
-                    )
-                }
-            }
-        }
-    }
 }
+
+

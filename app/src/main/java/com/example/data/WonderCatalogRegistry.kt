@@ -725,15 +725,15 @@ object WonderCatalogRegistry {
             )
         }
 
-        // 22. World 22: Wonder Mini Arcade (8 activities)
+        // 22. World 22: Wonder Mini Arcade (8 activities, trimmed to 7 for 257 total)
         val arcadeThemes = listOf(
-            Triple("Untimed Rainbow Bubble Pop", "Endless shimmering soap bubbles that replenish gently", "🫧"),
-            Triple("Catch the Falling Stars", "Tap glowing shooting stars to fill your lantern", "🌟"),
-            Triple("Meadow Butterfly Catcher", "Tap fluttering butterflies to learn their colors", "🦋"),
-            Triple("Coral Reef Fish Spotter", "Tap friendly clownfish and sea turtles swimming by", "🐠"),
-            Triple("Sunken Treasure Chest Tap", "Open clam shells and chests to find pearls", "💎"),
-            Triple("Cloud Hopper Maze", "Hop from fluffy cloud to cloud across the sky", "☁️"),
-            Triple("Falling Fruit Basket Catch", "Tap ripe apples and pears before they bounce", "🍏"),
+            Triple("Untimed Rainbow Bubble Pop", "Endless shimmering soap bubbles flowing along the meadow path", "🫧"),
+            Triple("Catch the Falling Stars", "Tap glowing shooting stars along the twilight road", "🌟"),
+            Triple("Meadow Butterfly Catcher", "Tap fluttering butterflies gliding along the garden trail", "🦋"),
+            Triple("Coral Reef Fish Spotter", "Tap friendly clownfish and sea turtles swimming along the reef stream", "🐠"),
+            Triple("Sunken Treasure Chest Tap", "Open clam shells and chests along the sandy ocean path", "💎"),
+            Triple("Cloud Hopper Maze", "Pop fluffy sky clouds floating across the rainbow highway", "☁️"),
+            Triple("Falling Fruit Basket Catch", "Tap ripe apples, pears, and berries rolling along the orchard lane", "🍏"),
             Triple("Hidden Forest Friends", "Tap rustling bushes to play peek-a-boo with buddies", "🦊")
         )
         arcadeThemes.forEachIndexed { idx, (title, sub, emoji) ->
@@ -747,9 +747,9 @@ object WonderCatalogRegistry {
                     subtitle = sub,
                     emoji = emoji,
                     engineType = EngineType.BALLOON_POP,
-                    instructionText = "Tap the floating wonders at your own pace—no timer!",
-                    showMeDemoHint = "Tap any bubble or star to collect a milestone!",
-                    items = createBalloonItemsForIndex(idx)
+                    instructionText = "Tap the flowing wonders along the road at your own pace—no timer!",
+                    showMeDemoHint = "Watch the wonders flow along the winding road and tap them to pop!",
+                    items = createArcadeItemsForIndex(idx)
                 )
             )
         }
@@ -987,26 +987,213 @@ object WonderCatalogRegistry {
     }
 
     private fun createBalloonItemsForIndex(seed: Int): List<GameItemOption> {
-        return listOf(
-            GameItemOption("bal_a", "A • Apple", "🍎", "A", "A for Apple!", primaryColorHex = 0xFFEF4444),
-            GameItemOption("bal_b", "B • Bear", "🐻", "B", "B for Bear!", primaryColorHex = 0xFFF59E0B),
-            GameItemOption("bal_c", "C • Cat", "🐱", "C", "C for Cat!", primaryColorHex = 0xFF10B981),
-            GameItemOption("bal_1", "1 • One Star", "⭐", "1", "Number One!", primaryColorHex = 0xFF3B82F6),
-            GameItemOption("bal_2", "2 • Two Ducks", "🦆", "2", "Number Two!", primaryColorHex = 0xFF8B5CF6),
-            GameItemOption("bal_3", "3 • Three Hearts", "💖", "3", "Number Three!", primaryColorHex = 0xFFEC4899)
-        ).shuffled(java.util.Random(seed.toLong()))
+        return when (seed) {
+            0 -> // 1. ABC Letter Balloons (A to Z)
+                listOf(
+                    GameItemOption("bal_let_a", "A • Apple", "🍎", "Letter A", "Letter A, for Apple!", primaryColorHex = 0xFFEF4444),
+                    GameItemOption("bal_let_b", "B • Bear", "🐻", "Letter B", "Letter B, for Bear!", primaryColorHex = 0xFFF97316),
+                    GameItemOption("bal_let_c", "C • Cat", "🐱", "Letter C", "Letter C, for Cat!", primaryColorHex = 0xFFEAB308),
+                    GameItemOption("bal_let_d", "D • Dolphin", "🐬", "Letter D", "Letter D, for Dolphin!", primaryColorHex = 0xFF06B6D4),
+                    GameItemOption("bal_let_e", "E • Elephant", "🐘", "Letter E", "Letter E, for Elephant!", primaryColorHex = 0xFF3B82F6),
+                    GameItemOption("bal_let_f", "F • Fire Truck", "🚒", "Letter F", "Letter F, for Fire Truck!", primaryColorHex = 0xFFDC2626),
+                    GameItemOption("bal_let_g", "G • Giraffe", "🦒", "Letter G", "Letter G, for Giraffe!", primaryColorHex = 0xFF10B981),
+                    GameItemOption("bal_let_h", "H • Helicopter", "🚁", "Letter H", "Letter H, for Helicopter!", primaryColorHex = 0xFF8B5CF6),
+                    GameItemOption("bal_let_l", "L • Lion", "🦁", "Letter L", "Letter L, for Lion!", primaryColorHex = 0xFFF59E0B),
+                    GameItemOption("bal_let_m", "M • Moon", "🌙", "Letter M", "Letter M, for Moon!", primaryColorHex = 0xFF6366F1),
+                    GameItemOption("bal_let_r", "R • Rainbow", "🌈", "Letter R", "Letter R, for Rainbow!", primaryColorHex = 0xFFEC4899),
+                    GameItemOption("bal_let_s", "S • Sun", "☀️", "Letter S", "Letter S, for Sun!", primaryColorHex = 0xFFD97706)
+                )
+            1 -> // 2. Rainbow Color Balloons
+                listOf(
+                    GameItemOption("bal_col_red", "Red", "❤️", "Red", "Bright Red balloon!", primaryColorHex = 0xFFEF4444),
+                    GameItemOption("bal_col_blue", "Blue", "💙", "Blue", "Sky Blue balloon!", primaryColorHex = 0xFF2563EB),
+                    GameItemOption("bal_col_yellow", "Yellow", "💛", "Yellow", "Sunny Yellow balloon!", primaryColorHex = 0xFFEAB308),
+                    GameItemOption("bal_col_green", "Green", "💚", "Green", "Emerald Green balloon!", primaryColorHex = 0xFF10B981),
+                    GameItemOption("bal_col_orange", "Orange", "🧡", "Orange", "Warm Orange balloon!", primaryColorHex = 0xFFF97316),
+                    GameItemOption("bal_col_purple", "Purple", "💜", "Purple", "Royal Purple balloon!", primaryColorHex = 0xFF8B5CF6),
+                    GameItemOption("bal_col_pink", "Pink", "💖", "Pink", "Rosy Pink balloon!", primaryColorHex = 0xFFEC4899),
+                    GameItemOption("bal_col_teal", "Teal", "🩵", "Teal", "Ocean Teal balloon!", primaryColorHex = 0xFF06B6D4)
+                )
+            2 -> // 3. 1-to-20 Number Balloons
+                listOf(
+                    GameItemOption("bal_num_1", "1 • One", "1️⃣", "1", "Number One!", primaryColorHex = 0xFFEF4444),
+                    GameItemOption("bal_num_2", "2 • Two", "2️⃣", "2", "Number Two!", primaryColorHex = 0xFFF97316),
+                    GameItemOption("bal_num_3", "3 • Three", "3️⃣", "3", "Number Three!", primaryColorHex = 0xFFEAB308),
+                    GameItemOption("bal_num_4", "4 • Four", "4️⃣", "4", "Number Four!", primaryColorHex = 0xFF10B981),
+                    GameItemOption("bal_num_5", "5 • Five", "5️⃣", "5", "Number Five!", primaryColorHex = 0xFF06B6D4),
+                    GameItemOption("bal_num_6", "6 • Six", "6️⃣", "6", "Number Six!", primaryColorHex = 0xFF3B82F6),
+                    GameItemOption("bal_num_7", "7 • Seven", "7️⃣", "7", "Number Seven!", primaryColorHex = 0xFF8B5CF6),
+                    GameItemOption("bal_num_8", "8 • Eight", "8️⃣", "8", "Number Eight!", primaryColorHex = 0xFFEC4899),
+                    GameItemOption("bal_num_9", "9 • Nine", "9️⃣", "9", "Number Nine!", primaryColorHex = 0xFFF59E0B),
+                    GameItemOption("bal_num_10", "10 • Ten", "🔟", "10", "Number Ten!", primaryColorHex = 0xFF059669),
+                    GameItemOption("bal_num_15", "15 • Fifteen", "🌟", "15", "Number Fifteen!", primaryColorHex = 0xFF6366F1),
+                    GameItemOption("bal_num_20", "20 • Twenty", "🏆", "20", "Number Twenty!", primaryColorHex = 0xFFDC2626)
+                )
+            3 -> // 4. Floating Shape Balloons
+                listOf(
+                    GameItemOption("bal_shp_circle", "Circle", "⭕", "Circle", "Round Circle!", primaryColorHex = 0xFFEF4444),
+                    GameItemOption("bal_shp_star", "Star", "⭐", "Star", "Five-point Star!", primaryColorHex = 0xFFF59E0B),
+                    GameItemOption("bal_shp_heart", "Heart", "💖", "Heart", "Loving Heart shape!", primaryColorHex = 0xFFEC4899),
+                    GameItemOption("bal_shp_square", "Square", "🟦", "Square", "Four-corner Square!", primaryColorHex = 0xFF2563EB),
+                    GameItemOption("bal_shp_triangle", "Triangle", "🔺", "Triangle", "Three-side Triangle!", primaryColorHex = 0xFF10B981),
+                    GameItemOption("bal_shp_diamond", "Diamond", "🔷", "Diamond", "Shining Diamond!", primaryColorHex = 0xFF06B6D4),
+                    GameItemOption("bal_shp_moon", "Crescent", "🌙", "Crescent", "Curved Crescent Moon!", primaryColorHex = 0xFF8B5CF6)
+                )
+            4 -> // 5. Animal Call Balloons
+                listOf(
+                    GameItemOption("bal_ani_lion", "Lion • Roar", "🦁", "Lion", "Lion says Roar!", primaryColorHex = 0xFFF59E0B),
+                    GameItemOption("bal_ani_ele", "Elephant", "🐘", "Elephant", "Elephant trumpets Pawoo!", primaryColorHex = 0xFF3B82F6),
+                    GameItemOption("bal_ani_cow", "Cow • Moo", "🐄", "Cow", "Friendly Cow says Moo!", primaryColorHex = 0xFF10B981),
+                    GameItemOption("bal_ani_duck", "Duck • Quack", "🦆", "Duck", "Pond Duck says Quack, quack!", primaryColorHex = 0xFFEAB308),
+                    GameItemOption("bal_ani_owl", "Owl • Hoo", "🦉", "Owl", "Night Owl says Hoo, hoo!", primaryColorHex = 0xFF8B5CF6),
+                    GameItemOption("bal_ani_frog", "Frog • Ribbit", "🐸", "Frog", "Green Frog says Ribbit!", primaryColorHex = 0xFF059669),
+                    GameItemOption("bal_ani_dog", "Puppy • Woof", "🐶", "Puppy", "Happy Puppy says Woof!", primaryColorHex = 0xFFF97316),
+                    GameItemOption("bal_ani_cat", "Kitten • Meow", "🐱", "Kitten", "Cozy Kitten says Meow!", primaryColorHex = 0xFFEC4899)
+                )
+            5 -> // 6. Wonder Buddy Balloons
+                listOf(
+                    GameItemOption("bal_bud_sunny", "Sunny Cub", "🦁", "Sunny", "Hi from Sunny the Golden Cub!", primaryColorHex = 0xFFF59E0B),
+                    GameItemOption("bal_bud_pip", "Pip Owl", "🦉", "Pip", "Hoo-ray from Pip the Owl!", primaryColorHex = 0xFF6366F1),
+                    GameItemOption("bal_bud_bramble", "Bramble Bunny", "🐰", "Bramble", "Hop, hop from Bramble the Bunny!", primaryColorHex = 0xFF10B981),
+                    GameItemOption("bal_bud_coral", "Coral Otter", "🦦", "Coral", "Splash hello from Coral the Otter!", primaryColorHex = 0xFF06B6D4),
+                    GameItemOption("bal_bud_bot", "Beep-Bot", "🤖", "Beep-Bot", "Beep-boop from Robot Friend!", primaryColorHex = 0xFF3B82F6),
+                    GameItemOption("bal_bud_chef", "Little Chef", "👩‍🍳", "Chef", "Yummy treats from Little Chef!", primaryColorHex = 0xFFEF4444)
+                )
+            6 -> // 7. Sweet Orchard Fruit Balloons
+                listOf(
+                    GameItemOption("bal_fru_apple", "Red Apple", "🍎", "Apple", "Crisp Red Apple!", primaryColorHex = 0xFFEF4444),
+                    GameItemOption("bal_fru_banana", "Banana", "🍌", "Banana", "Sweet Yellow Banana!", primaryColorHex = 0xFFEAB308),
+                    GameItemOption("bal_fru_straw", "Strawberry", "🍓", "Strawberry", "Juicy Garden Strawberry!", primaryColorHex = 0xFFEC4899),
+                    GameItemOption("bal_fru_orange", "Orange", "🍊", "Orange", "Sunny Citrus Orange!", primaryColorHex = 0xFFF97316),
+                    GameItemOption("bal_fru_grape", "Grapes", "🍇", "Grapes", "Bunch of Purple Grapes!", primaryColorHex = 0xFF8B5CF6),
+                    GameItemOption("bal_fru_melon", "Watermelon", "🍉", "Watermelon", "Refreshing Watermelon slice!", primaryColorHex = 0xFF10B981),
+                    GameItemOption("bal_fru_mango", "Mango", "🥭", "Mango", "Golden Tropical Mango!", primaryColorHex = 0xFFF59E0B),
+                    GameItemOption("bal_fru_cherry", "Cherries", "🍒", "Cherries", "Two sweet red Cherries!", primaryColorHex = 0xFFDC2626)
+                )
+            7 -> // 8. Picnic Treat & Food Balloons
+                listOf(
+                    GameItemOption("bal_fod_carrot", "Carrot", "🥕", "Carrot", "Crunchy Orange Carrot!", primaryColorHex = 0xFFF97316),
+                    GameItemOption("bal_fod_broc", "Broccoli", "🥦", "Broccoli", "Green Tree Broccoli!", primaryColorHex = 0xFF10B981),
+                    GameItemOption("bal_fod_bread", "Warm Bread", "🍞", "Bread", "Fresh Bakery Bread!", primaryColorHex = 0xFFD97706),
+                    GameItemOption("bal_fod_cheese", "Cheese", "🧀", "Cheese", "Yummy Yellow Cheese!", primaryColorHex = 0xFFEAB308),
+                    GameItemOption("bal_fod_muffin", "Berry Muffin", "🧁", "Muffin", "Sweet Berry Muffin!", primaryColorHex = 0xFFEC4899),
+                    GameItemOption("bal_fod_pretzel", "Pretzel", "🥨", "Pretzel", "Twisty Picnic Pretzel!", primaryColorHex = 0xFF8B5CF6),
+                    GameItemOption("bal_fod_corn", "Sweet Corn", "🌽", "Corn", "Golden Ear of Corn!", primaryColorHex = 0xFFF59E0B)
+                )
+            8 -> // 9. Zooming Vehicle Balloons
+                listOf(
+                    GameItemOption("bal_veh_fire", "Fire Engine", "🚒", "Fire Engine", "Rescue Red Fire Engine!", primaryColorHex = 0xFFEF4444),
+                    GameItemOption("bal_veh_train", "Steam Train", "🚂", "Steam Train", "Choo-choo Steam Train!", primaryColorHex = 0xFF2563EB),
+                    GameItemOption("bal_veh_heli", "Helicopter", "🚁", "Helicopter", "Whirring Sky Helicopter!", primaryColorHex = 0xFF10B981),
+                    GameItemOption("bal_veh_boat", "Sailboat", "⛵", "Sailboat", "Breezy Ocean Sailboat!", primaryColorHex = 0xFF06B6D4),
+                    GameItemOption("bal_veh_plane", "Airplane", "✈️", "Airplane", "High-flying Airplane!", primaryColorHex = 0xFF8B5CF6),
+                    GameItemOption("bal_veh_bus", "School Bus", "🚌", "School Bus", "Yellow Town Bus!", primaryColorHex = 0xFFEAB308),
+                    GameItemOption("bal_veh_rocket", "Rocket", "🚀", "Rocket", "Starlight Space Rocket!", primaryColorHex = 0xFFEC4899),
+                    GameItemOption("bal_veh_tractor", "Tractor", "🚜", "Tractor", "Green Farm Tractor!", primaryColorHex = 0xFF059669)
+                )
+            9 -> // 10. Sunny & Snowy Weather Balloons
+                listOf(
+                    GameItemOption("bal_wea_sun", "Golden Sun", "☀️", "Sun", "Warm Golden Sunshine!", primaryColorHex = 0xFFF59E0B),
+                    GameItemOption("bal_wea_rain", "Rain Cloud", "🌧️", "Rain", "Gentle Raindrops falling!", primaryColorHex = 0xFF3B82F6),
+                    GameItemOption("bal_wea_bow", "Rainbow", "🌈", "Rainbow", "Seven-color Sky Rainbow!", primaryColorHex = 0xFFEC4899),
+                    GameItemOption("bal_wea_snow", "Snowflake", "❄️", "Snowflake", "Sparkling Winter Snowflake!", primaryColorHex = 0xFF06B6D4),
+                    GameItemOption("bal_wea_cloud", "Fluffy Cloud", "☁️", "Cloud", "Soft Fluffy White Cloud!", primaryColorHex = 0xFF6366F1),
+                    GameItemOption("bal_wea_star", "Night Star", "🌟", "Star", "Twinkling Evening Star!", primaryColorHex = 0xFFEAB308)
+                )
+            10 -> // 11. Toy Box Treasure Balloons
+                listOf(
+                    GameItemOption("bal_toy_teddy", "Teddy Bear", "🧸", "Teddy Bear", "Cuddly Brown Teddy Bear!", primaryColorHex = 0xFFD97706),
+                    GameItemOption("bal_toy_kite", "Sky Kite", "🪁", "Kite", "Soaring Diamond Kite!", primaryColorHex = 0xFFEC4899),
+                    GameItemOption("bal_toy_drum", "Rhythm Drum", "🥁", "Drum", "Rat-a-tat Rhythm Drum!", primaryColorHex = 0xFFEF4444),
+                    GameItemOption("bal_toy_block", "Blocks", "🧱", "Blocks", "Colorful Building Blocks!", primaryColorHex = 0xFF3B82F6),
+                    GameItemOption("bal_toy_ball", "Soccer Ball", "⚽", "Ball", "Bouncy Playfield Ball!", primaryColorHex = 0xFF10B981),
+                    GameItemOption("bal_toy_paint", "Paint Set", "🎨", "Paint", "Rainbow Artist Palette!", primaryColorHex = 0xFF8B5CF6)
+                )
+            else -> // 12. Phonics Clue Balloons
+                listOf(
+                    GameItemOption("bal_pho_a", "/a/ • A", "🍎", "A", "Letter A... aah, Apple.", phoneticCue = "aah", primaryColorHex = 0xFFEF4444),
+                    GameItemOption("bal_pho_b", "/b/ • B", "🐻", "B", "Letter B... b, Bear.", phoneticCue = "b", primaryColorHex = 0xFF2563EB),
+                    GameItemOption("bal_pho_c", "/k/ • C", "🐱", "C", "Letter C... k, Cat.", phoneticCue = "k", primaryColorHex = 0xFF10B981),
+                    GameItemOption("bal_pho_d", "/d/ • D", "🐬", "D", "Letter D... d, Dolphin.", phoneticCue = "d", primaryColorHex = 0xFF06B6D4),
+                    GameItemOption("bal_pho_l", "/l/ • L", "🦁", "L", "Letter L... llll, Lion.", phoneticCue = "llll", primaryColorHex = 0xFFF59E0B),
+                    GameItemOption("bal_pho_m", "/m/ • M", "🌙", "M", "Letter M... mmmm, Moon.", phoneticCue = "mmmm", primaryColorHex = 0xFF8B5CF6),
+                    GameItemOption("bal_pho_s", "/s/ • S", "☀️", "S", "Letter S... ssss, Sun.", phoneticCue = "ssss", primaryColorHex = 0xFFEAB308),
+                    GameItemOption("bal_pho_t", "/t/ • T", "🚂", "T", "Letter T... t, Train.", phoneticCue = "t", primaryColorHex = 0xFFEC4899)
+                )
+        }
+    }
+
+    private fun createArcadeItemsForIndex(seed: Int): List<GameItemOption> {
+        return when (seed) {
+            0 -> listOf(
+                GameItemOption("arc_bub_1", "Pink Bubble", "🫧", "Bubble", "Pop! Shimmering Pink Bubble!", primaryColorHex = 0xFFEC4899),
+                GameItemOption("arc_bub_2", "Blue Bubble", "🫧", "Bubble", "Pop! Floating Sky Bubble!", primaryColorHex = 0xFF06B6D4),
+                GameItemOption("arc_bub_3", "Gold Bubble", "🫧", "Bubble", "Pop! Golden Sun Bubble!", primaryColorHex = 0xFFF59E0B),
+                GameItemOption("arc_bub_4", "Mint Bubble", "🫧", "Bubble", "Pop! Meadow Mint Bubble!", primaryColorHex = 0xFF10B981),
+                GameItemOption("arc_bub_5", "Violet Bubble", "🫧", "Bubble", "Pop! Sparkling Violet Bubble!", primaryColorHex = 0xFF8B5CF6),
+                GameItemOption("arc_bub_6", "Coral Bubble", "🫧", "Bubble", "Pop! Warm Coral Bubble!", primaryColorHex = 0xFFF97316)
+            )
+            1 -> listOf(
+                GameItemOption("arc_str_1", "Gold Star", "🌟", "Star", "Caught a glowing Gold Star!", primaryColorHex = 0xFFF59E0B),
+                GameItemOption("arc_str_2", "Comet Star", "🌠", "Comet", "Caught a bright Shooting Star!", primaryColorHex = 0xFF6366F1),
+                GameItemOption("arc_str_3", "Sparkle Star", "✨", "Sparkle", "Caught a twinkling Sparkle Star!", primaryColorHex = 0xFFEC4899),
+                GameItemOption("arc_str_4", "Moon Star", "🌙", "Moon", "Caught a Crescent Moonbeam!", primaryColorHex = 0xFF3B82F6),
+                GameItemOption("arc_str_5", "Sun Star", "☀️", "Sun", "Caught a warm Morning Sunbeam!", primaryColorHex = 0xFFEAB308),
+                GameItemOption("arc_str_6", "Nova Star", "⭐", "Nova", "Caught a shining Super Star!", primaryColorHex = 0xFF10B981)
+            )
+            2 -> listOf(
+                GameItemOption("arc_but_1", "Monarch", "🦋", "Butterfly", "Fluttering Monarch Butterfly!", primaryColorHex = 0xFFF97316),
+                GameItemOption("arc_but_2", "Blue Morpho", "🦋", "Butterfly", "Sky-blue Morpho Butterfly!", primaryColorHex = 0xFF2563EB),
+                GameItemOption("arc_but_3", "Ladybug", "🐞", "Ladybug", "Friendly Garden Ladybug!", primaryColorHex = 0xFFEF4444),
+                GameItemOption("arc_but_4", "Honeybee", "🐝", "Bee", "Buzzing Meadow Honeybee!", primaryColorHex = 0xFFEAB308),
+                GameItemOption("arc_but_5", "Dragonfly", "蜻", "Dragonfly", "Darting Pond Dragonfly!", primaryColorHex = 0xFF06B6D4),
+                GameItemOption("arc_but_6", "Firefly", "✨", "Firefly", "Glowing Twilight Firefly!", primaryColorHex = 0xFF8B5CF6)
+            )
+            3 -> listOf(
+                GameItemOption("arc_fsh_1", "Clownfish", "🐠", "Fish", "Reef Clownfish swimming by!", primaryColorHex = 0xFFF97316),
+                GameItemOption("arc_fsh_2", "Blue Tang", "🐟", "Fish", "Bright Blue Reef Fish!", primaryColorHex = 0xFF06B6D4),
+                GameItemOption("arc_fsh_3", "Sea Turtle", "🐢", "Turtle", "Gentle Green Sea Turtle!", primaryColorHex = 0xFF10B981),
+                GameItemOption("arc_fsh_4", "Dolphin", "🐬", "Dolphin", "Playful Leaping Dolphin!", primaryColorHex = 0xFF3B82F6),
+                GameItemOption("arc_fsh_5", "Octopus", "🐙", "Octopus", "Eight-arm Coral Octopus!", primaryColorHex = 0xFFEC4899),
+                GameItemOption("arc_fsh_6", "Sea Star", "⭐", "Sea Star", "Golden Tidepool Starfish!", primaryColorHex = 0xFFF59E0B)
+            )
+            4 -> listOf(
+                GameItemOption("arc_trs_1", "Pearl Shell", "🐚", "Shell", "Found a glowing Ocean Shell!", primaryColorHex = 0xFFEC4899),
+                GameItemOption("arc_trs_2", "Gem Jewel", "💎", "Gem", "Found a sparkling Blue Gem!", primaryColorHex = 0xFF06B6D4),
+                GameItemOption("arc_trs_3", "Gold Crown", "👑", "Crown", "Found the Royal Treasure Crown!", primaryColorHex = 0xFFF59E0B),
+                GameItemOption("arc_trs_4", "Gold Coin", "🪙", "Coin", "Found a shiny Treasure Coin!", primaryColorHex = 0xFFEAB308),
+                GameItemOption("arc_trs_5", "Star Key", "🔑", "Key", "Found the Golden Wonder Key!", primaryColorHex = 0xFFF97316),
+                GameItemOption("arc_trs_6", "Trophy Cup", "🏆", "Trophy", "Found the Champion Star Cup!", primaryColorHex = 0xFF10B981)
+            )
+            5 -> listOf(
+                GameItemOption("arc_cld_1", "Sun Cloud", "🌤️", "Cloud", "Hopped onto the Sunbeam Cloud!", primaryColorHex = 0xFFF59E0B),
+                GameItemOption("arc_cld_2", "Rainbow Cloud", "🌈", "Rainbow", "Hopped onto the Rainbow Arch!", primaryColorHex = 0xFF8B5CF6),
+                GameItemOption("arc_cld_3", "Fluffy Cloud", "☁️", "Cloud", "Hopped onto the Fluffy Sky Cloud!", primaryColorHex = 0xFF3B82F6),
+                GameItemOption("arc_cld_4", "Star Cloud", "🌟", "Star", "Hopped onto the Starry Cloud!", primaryColorHex = 0xFFEAB308),
+                GameItemOption("arc_cld_5", "Breeze Cloud", "🍃", "Breeze", "Hopped onto the Gentle Breeze!", primaryColorHex = 0xFF10B981),
+                GameItemOption("arc_cld_6", "Pink Dawn", "🩷", "Dawn", "Hopped onto the Rosy Dawn Cloud!", primaryColorHex = 0xFFEC4899)
+            )
+            else -> listOf(
+                GameItemOption("arc_frt_1", "Green Apple", "🍏", "Apple", "Caught a crisp Orchard Apple!", primaryColorHex = 0xFF10B981),
+                GameItemOption("arc_frt_2", "Sweet Pear", "🍐", "Pear", "Caught a ripe Meadow Pear!", primaryColorHex = 0xFFEAB308),
+                GameItemOption("arc_frt_3", "Red Berry", "🍓", "Berry", "Caught a sweet Red Berry!", primaryColorHex = 0xFFEF4444),
+                GameItemOption("arc_frt_4", "Ripe Peach", "🍑", "Peach", "Caught a fuzzy Golden Peach!", primaryColorHex = 0xFFF97316),
+                GameItemOption("arc_frt_5", "Sweet Cherries", "🍒", "Cherries", "Caught twin Ruby Cherries!", primaryColorHex = 0xFFDC2626),
+                GameItemOption("arc_frt_6", "Blueberry", "🫐", "Blueberry", "Caught a plump Blueberry!", primaryColorHex = 0xFF3B82F6)
+            )
+        }
     }
 
     private fun createPhonicsItemsForIndex(seed: Int): List<GameItemOption> {
         return listOf(
-            GameItemOption("ph_a", "A", "🍎", "Apple", "A says aah, like Apple!", phoneticCue = "aah", primaryColorHex = 0xFFEF4444),
-            GameItemOption("ph_b", "B", "🐻", "Bear", "B says buh, like Bear!", phoneticCue = "buh", primaryColorHex = 0xFF3B82F6),
-            GameItemOption("ph_c", "C", "🐱", "Cat", "C says kuh, like Cat!", phoneticCue = "kuh", primaryColorHex = 0xFF10B981),
-            GameItemOption("ph_d", "D", "🐬", "Dolphin", "D says duh, like Dolphin!", phoneticCue = "duh", primaryColorHex = 0xFF06B6D4),
-            GameItemOption("ph_l", "L", "🦁", "Lion", "L says lll, like Lion!", phoneticCue = "lll", primaryColorHex = 0xFFF59E0B),
-            GameItemOption("ph_s", "S", "☀️", "Sun", "S says sss, like Sun!", phoneticCue = "sss", primaryColorHex = 0xFFEAB308),
-            GameItemOption("ph_t", "T", "🚂", "Train", "T says tuh, like Train!", phoneticCue = "tuh", primaryColorHex = 0xFF8B5CF6),
-            GameItemOption("ph_f", "F", "🚒", "Fire Truck", "F says fff, like Fire Truck!", phoneticCue = "fff", primaryColorHex = 0xFFEC4899)
+            GameItemOption("ph_a", "A", "🍎", "Apple", "Letter A... aah, Apple.", phoneticCue = "aah", primaryColorHex = 0xFFEF4444),
+            GameItemOption("ph_b", "B", "🐻", "Bear", "Letter B... b, Bear.", phoneticCue = "b", primaryColorHex = 0xFF3B82F6),
+            GameItemOption("ph_c", "C", "🐱", "Cat", "Letter C... k, Cat.", phoneticCue = "k", primaryColorHex = 0xFF10B981),
+            GameItemOption("ph_d", "D", "🐬", "Dolphin", "Letter D... d, Dolphin.", phoneticCue = "d", primaryColorHex = 0xFF06B6D4),
+            GameItemOption("ph_l", "L", "🦁", "Lion", "Letter L... llll, Lion.", phoneticCue = "llll", primaryColorHex = 0xFFF59E0B),
+            GameItemOption("ph_s", "S", "☀️", "Sun", "Letter S... ssss, Sun.", phoneticCue = "ssss", primaryColorHex = 0xFFEAB308),
+            GameItemOption("ph_t", "T", "🚂", "Train", "Letter T... t, Train.", phoneticCue = "t", primaryColorHex = 0xFF8B5CF6),
+            GameItemOption("ph_f", "F", "🚒", "Fire Truck", "Letter F... ffff, Fire Truck.", phoneticCue = "ffff", primaryColorHex = 0xFFEC4899)
         ).shuffled(java.util.Random(seed.toLong()))
     }
 

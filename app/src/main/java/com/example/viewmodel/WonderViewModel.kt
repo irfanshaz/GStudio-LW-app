@@ -4,6 +4,7 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.audio.VoiceClipManifestEntry
 import com.example.audio.WonderAudioController
 import com.example.data.ActivityProgressEntity
 import com.example.data.AdaptiveChallengeParameters
@@ -75,6 +76,7 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
             audio.musicEnabled = resolved.musicEnabled
             audio.sfxEnabled = resolved.sfxEnabled
             audio.activeBuddy = LearningBuddy.fromId(resolved.buddyId)
+            audio.setSelectedTeacherVoice(resolved.selectedVoiceId)
             resolved
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, ProfileSettingsEntity())
@@ -141,7 +143,8 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
             viewModelScope.launch {
                 repository.recordActivityOpened(screen.activity)
             }
-            audio.speakInstruction("${screen.activity.title}. ${screen.activity.instructionText}")
+            // Concise, one-action-at-a-time instruction when entering an activity
+            audio.speakInstruction(screen.activity.instructionText)
         }
         val stack = _navigationStack.value.toMutableList()
         stack.add(screen)
@@ -226,7 +229,7 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
     fun triggerShowMeDemo(activity: ActivityConfig) {
         _showDemonstrationBanner.value = !_showDemonstrationBanner.value
         if (_showDemonstrationBanner.value) {
-            audio.speakInstruction("Show Me: ${activity.showMeDemoHint}")
+            audio.speakInstruction(activity.showMeDemoHint)
         }
     }
 
@@ -238,14 +241,17 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
         activity: ActivityConfig,
         hadRetriesInRound: Boolean = false,
         nextStepIndex: Int? = null,
-        tracingAccuracyPercent: Int? = null
+        tracingAccuracyPercent: Int? = null,
+        speakMilestonePraise: Boolean = true
     ) {
         if (!hadRetriesInRound) {
             _sessionSmoothWins.value += 1
             _sessionRetries.value = 0
         }
         audio.playSuccessChime()
-        audio.speakInstruction(getCurrentBuddy().encouragement, interrupt = false)
+        if (speakMilestonePraise) {
+            audio.speakSincereSuccess()
+        }
         viewModelScope.launch {
             repository.recordActivityMilestone(
                 activity = activity,
@@ -261,7 +267,7 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
         _sessionRetries.value += 1
         _sessionSmoothWins.value = 0
         audio.playGentleRetryTone()
-        audio.speakInstruction(gentlePrompt)
+        audio.speakPatientRetry(gentlePrompt)
         viewModelScope.launch {
             repository.recordGentleRetry(activity)
         }
@@ -286,8 +292,23 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             repository.updateAgeAndBuddy(ageBand, buddy)
             audio.activeBuddy = buddy
-            audio.speakInstruction("Updated to ${ageBand.label} with ${buddy.displayName}!")
+            audio.speakInstruction("Updated to ${ageBand.label} with companion ${buddy.displayName}.")
         }
+    }
+
+    fun selectAndPreviewTeacherVoice(voiceId: String) {
+        viewModelScope.launch {
+            repository.updateSelectedVoice(voiceId)
+            audio.previewVoiceOption(voiceId)
+        }
+    }
+
+    fun previewTeacherVoice(voiceId: String) {
+        audio.previewVoiceOption(voiceId)
+    }
+
+    fun playTeacherAuditionClip(entry: VoiceClipManifestEntry) {
+        audio.playAuditionClip(entry)
     }
 
     fun updateAudioMotionAndAdaptiveSettings(
@@ -298,6 +319,9 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
         autoAdaptiveDifficulty: Boolean
     ) {
         viewModelScope.launch {
+            if (!narrationEnabled) {
+                audio.stopSpeechOnly()
+            }
             repository.updateAudioAndMotionSettings(
                 narrationEnabled = narrationEnabled,
                 musicEnabled = musicEnabled,

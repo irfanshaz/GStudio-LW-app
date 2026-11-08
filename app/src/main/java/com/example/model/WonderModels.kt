@@ -57,10 +57,10 @@ enum class LearningBuddy(
         displayName = "Sunny the Cub",
         species = "Golden Explorer Cub",
         emoji = "🦁",
-        greeting = "Hi friend! I'm Sunny the Cub. Let's explore Little Wonder World together!",
-        encouragement = "Roar-some job! Let's try another!",
-        voicePitch = 1.12f,
-        voiceRate = 0.92f,
+        greeting = "Let's play together! Pick a world to explore.",
+        encouragement = "You found it! Nice looking.",
+        voicePitch = 1.00f,
+        voiceRate = 0.90f,
         accentColor = Color(0xFFF59E0B)
     ),
     PIP_OWL(
@@ -68,9 +68,9 @@ enum class LearningBuddy(
         displayName = "Pip the Owl",
         species = "Starlight Little Owl",
         emoji = "🦉",
-        greeting = "Hoo-hoo! I'm Pip the Owl. Ready for clever puzzles and stories?",
-        encouragement = "Hoo-ray! You figured it out!",
-        voicePitch = 1.22f,
+        greeting = "Hello! Let's look at stories and puzzles together.",
+        encouragement = "Right there! You figured it out.",
+        voicePitch = 1.00f,
         voiceRate = 0.90f,
         accentColor = Color(0xFF6366F1)
     ),
@@ -79,10 +79,10 @@ enum class LearningBuddy(
         displayName = "Bramble the Bunny",
         species = "Meadow Hop Bunny",
         emoji = "🐰",
-        greeting = "Hop, hop, hello! I'm Bramble. Let's paint, sing, and sort colors!",
-        encouragement = "Bouncy and bright! Wonderful try!",
-        voicePitch = 1.28f,
-        voiceRate = 0.95f,
+        greeting = "Let's paint, make music, and sort colors together.",
+        encouragement = "That's the one! Great looking.",
+        voicePitch = 1.00f,
+        voiceRate = 0.90f,
         accentColor = Color(0xFF10B981)
     ),
     CORAL_OTTER(
@@ -90,10 +90,10 @@ enum class LearningBuddy(
         displayName = "Coral the Otter",
         species = "Splashy River Otter",
         emoji = "🦦",
-        greeting = "Splash! I'm Coral the Otter. Let's test water science and animal sounds!",
-        encouragement = "Splish-splash super star!",
-        voicePitch = 1.16f,
-        voiceRate = 0.93f,
+        greeting = "Let's explore water science and animals together.",
+        encouragement = "You found it! Wonderful exploring.",
+        voicePitch = 1.00f,
+        voiceRate = 0.90f,
         accentColor = Color(0xFF06B6D4)
     );
 

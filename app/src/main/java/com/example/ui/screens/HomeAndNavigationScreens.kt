@@ -118,33 +118,30 @@ fun OnboardingScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "✨🌈", fontSize = 30.sp)
+                    Spacer(Modifier.width(10.dp))
                     Text(
-                        text = "Welcome to Little Wonder World!",
+                        text = "Little Wonder World",
                         style = MaterialTheme.typography.headlineLarge,
                         color = DeepSlateInk
                     )
-                    Text(
-                        text = "Pick an age band and your speaking Learning Buddy (change anytime in Parent Corner)",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MutedSlateText
-                    )
                 }
                 Button(
-                    onClick = { onListenPreview(selectedBuddy.greeting) },
+                    onClick = { onListenPreview(com.example.audio.VoiceAssetManifest.STANDARD_PREVIEW_SENTENCE) },
                     colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
                     shape = RoundedCornerShape(20.dp),
                     modifier = Modifier
                         .height(48.dp)
                         .testTag("onboarding_listen_button")
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Hear Buddy Greeting", tint = DeepSlateInk)
+                    Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Preview Teacher Voice", tint = DeepSlateInk)
                     Spacer(Modifier.width(6.dp))
-                    Text("Hear Buddy", color = DeepSlateInk, fontWeight = FontWeight.Bold)
+                    Text("Preview Teacher Voice", color = DeepSlateInk, fontWeight = FontWeight.Bold)
                 }
             }
 
-            // Middle: Age Bands + 4 Speaking Learning Buddies side by side in Landscape
+            // Middle: Age Bands + 4 Visual Play Buddy Companions side by side in Landscape
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -181,7 +178,7 @@ fun OnboardingScreen(
                                     .clip(RoundedCornerShape(16.dp))
                                     .clickable {
                                         selectedAge = age
-                                        onListenPreview("${age.label}. ${age.subtitle}")
+                                        onListenPreview(age.label)
                                     }
                                     .testTag("age_band_${age.id}"),
                                 color = if (isSelected) ActionContinueBlue.copy(alpha = 0.14f) else SoftCreamCard,
@@ -198,18 +195,23 @@ fun OnboardingScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Column(modifier = Modifier.weight(1f)) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                                    ) {
                                         Text(
-                                            text = age.label,
-                                            style = MaterialTheme.typography.titleMedium,
-                                            color = DeepSlateInk
+                                            text = when (age) {
+                                                AgeBand.TODDLER_2_3 -> "🐣"
+                                                AgeBand.PRESCHOOL_4_5 -> "🦊"
+                                                AgeBand.KINDER_5_6 -> "🚀"
+                                            },
+                                            fontSize = 30.sp
                                         )
                                         Text(
-                                            text = age.subtitle,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontSize = 12.sp,
-                                            color = MutedSlateText,
-                                            maxLines = 2
+                                            text = age.label,
+                                            style = MaterialTheme.typography.titleLarge,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            color = DeepSlateInk
                                         )
                                     }
                                     if (isSelected) {
@@ -226,7 +228,7 @@ fun OnboardingScreen(
                     }
                 }
 
-                // Step 2: 4 Original Speaking Learning Buddies
+                // Step 2: 4 Visual Play Buddy Companions
                 Card(
                     modifier = Modifier
                         .weight(0.58f)
@@ -242,7 +244,7 @@ fun OnboardingScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "2. Pick Your Speaking Buddy",
+                            text = "2. Pick Your Play Companion",
                             style = MaterialTheme.typography.titleLarge,
                             color = DeepSlateInk
                         )
@@ -558,20 +560,14 @@ fun HomeScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("🦁🚂", fontSize = 24.sp)
+                                Text("🦁🚂", fontSize = 28.sp)
                                 Spacer(Modifier.width(10.dp))
-                                Column {
-                                    Text(
-                                        text = "Watch Wonder Reels",
-                                        style = MaterialTheme.typography.titleMedium,
-                                        color = PlaySurfaceWhite
-                                    )
-                                    Text(
-                                        text = "Swipe Animal & Object Videos!",
-                                        fontSize = 12.sp,
-                                        color = Color(0xFF93C5FD)
-                                    )
-                                }
+                                Text(
+                                    text = "Wonder Reels",
+                                    style = MaterialTheme.typography.titleLarge,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = PlaySurfaceWhite
+                                )
                             }
                             Surface(
                                 color = ActionPlayGreen,
@@ -658,43 +654,36 @@ private fun FeaturedSpotlightCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Surface(
-                    color = accentColor,
-                    shape = RoundedCornerShape(10.dp)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.weight(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(62.dp)
+                        .clip(CircleShape)
+                        .background(accentColor.copy(alpha = 0.22f)),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = badgeText,
-                        color = PlaySurfaceWhite,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
-                    )
+                    Text(text = emoji, fontSize = 30.sp)
                 }
-                Spacer(Modifier.height(4.dp))
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleLarge,
-                    color = DeepSlateInk
-                )
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 12.sp,
-                    color = MutedSlateText,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    fontWeight = FontWeight.ExtraBold,
+                    color = DeepSlateInk,
+                    maxLines = 1
                 )
             }
-            Spacer(Modifier.width(8.dp))
-            Box(
-                modifier = Modifier
-                    .size(54.dp)
-                    .clip(CircleShape)
-                    .background(accentColor.copy(alpha = 0.22f)),
-                contentAlignment = Alignment.Center
+            Surface(
+                color = accentColor,
+                shape = CircleShape,
+                modifier = Modifier.size(38.dp)
             ) {
-                Text(text = emoji, fontSize = 24.sp)
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(Icons.Default.PlayArrow, contentDescription = title, tint = PlaySurfaceWhite)
+                }
             }
         }
     }
@@ -734,58 +723,51 @@ private fun LandTileCard(
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        listOf(land.accentColor.copy(alpha = 0.14f), PlaySurfaceWhite)
+                        listOf(land.accentColor.copy(alpha = 0.16f), PlaySurfaceWhite)
                     )
                 )
                 .padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.End
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(44.dp)
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(land.accentColor.copy(alpha = 0.24f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = land.emoji, fontSize = 24.sp)
-                }
                 Surface(
                     color = SoftCreamCard,
                     shape = RoundedCornerShape(12.dp),
                     border = BorderStroke(1.dp, land.accentColor.copy(alpha = 0.5f))
                 ) {
                     Text(
-                        text = "$worldCount Worlds • ⭐ $starsEarned",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
+                        text = "⭐ $starsEarned",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.ExtraBold,
                         color = DeepSlateInk,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                     )
                 }
             }
 
-            Column {
-                Text(
-                    text = land.title,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = DeepSlateInk,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = land.subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 12.sp,
-                    color = MutedSlateText,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(land.accentColor.copy(alpha = 0.24f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = land.emoji, fontSize = 36.sp)
             }
+
+            Text(
+                text = land.title,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.ExtraBold,
+                color = DeepSlateInk,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }
@@ -1293,54 +1275,53 @@ fun LandWorldsScreen(
                                 shape = RoundedCornerShape(24.dp),
                                 shadowElevation = 4.dp
                             ) {
-                                Row(
+                                Column(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .background(
-                                            Brush.horizontalGradient(
-                                                listOf(world.accentColor.copy(alpha = 0.16f), PlaySurfaceWhite)
+                                            Brush.verticalGradient(
+                                                listOf(world.accentColor.copy(alpha = 0.18f), PlaySurfaceWhite)
                                             )
                                         )
-                                        .padding(16.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                        .padding(14.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    Column(modifier = Modifier.weight(1f)) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.End
+                                    ) {
                                         Surface(
                                             color = world.accentColor.copy(alpha = 0.2f),
                                             shape = RoundedCornerShape(10.dp)
                                         ) {
                                             Text(
-                                                text = "World ${world.number} • ${worldActivities.size} Games • ⭐ $earnedStars",
+                                                text = "⭐ $earnedStars",
                                                 fontSize = 12.sp,
-                                                fontWeight = FontWeight.Bold,
+                                                fontWeight = FontWeight.ExtraBold,
                                                 color = DeepSlateInk,
-                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                                             )
                                         }
-                                        Spacer(Modifier.height(6.dp))
-                                        Text(
-                                            text = world.title,
-                                            style = MaterialTheme.typography.headlineMedium,
-                                            color = DeepSlateInk
-                                        )
-                                        Text(
-                                            text = world.subtitle,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            color = MutedSlateText,
-                                            maxLines = 2
-                                        )
                                     }
-                                    Spacer(Modifier.width(12.dp))
                                     Box(
                                         modifier = Modifier
-                                            .size(64.dp)
+                                            .size(72.dp)
                                             .clip(CircleShape)
                                             .background(world.accentColor.copy(alpha = 0.24f)),
                                         contentAlignment = Alignment.Center
                                     ) {
-                                        Text(text = world.emoji, fontSize = 32.sp)
+                                        Text(text = world.emoji, fontSize = 40.sp)
                                     }
+                                    Text(
+                                        text = world.title,
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = DeepSlateInk,
+                                        textAlign = TextAlign.Center,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
                                 }
                             }
                         } else {
@@ -1530,7 +1511,8 @@ fun WorldActivitiesScreen(
                                 Column(
                                     modifier = Modifier
                                         .fillMaxSize()
-                                        .padding(12.dp),
+                                        .padding(10.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Row(
@@ -1538,59 +1520,50 @@ fun WorldActivitiesScreen(
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                            Box(
-                                                modifier = Modifier
-                                                    .size(38.dp)
-                                                    .clip(RoundedCornerShape(12.dp))
-                                                    .background(world.accentColor.copy(alpha = 0.22f)),
-                                                contentAlignment = Alignment.Center
-                                            ) {
-                                                Text(text = activity.emoji, fontSize = 20.sp)
-                                            }
-                                            Spacer(Modifier.width(8.dp))
-                                            Text(
-                                                text = "#${activity.indexInWorld}",
-                                                fontWeight = FontWeight.Bold,
-                                                fontSize = 13.sp,
-                                                color = MutedSlateText
-                                            )
-                                        }
+                                        Text(
+                                            text = "${activity.indexInWorld}",
+                                            fontWeight = FontWeight.ExtraBold,
+                                            fontSize = 12.sp,
+                                            color = MutedSlateText
+                                        )
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             if (isFav) {
                                                 Icon(
                                                     Icons.Default.Favorite,
                                                     contentDescription = "Favorite",
                                                     tint = ActionFavoritePink,
-                                                    modifier = Modifier.size(18.dp)
+                                                    modifier = Modifier.size(16.dp)
                                                 )
-                                                Spacer(Modifier.width(4.dp))
+                                                Spacer(Modifier.width(3.dp))
                                             }
                                             Text(
-                                                text = "⭐ $stars/5",
+                                                text = "⭐ $stars",
                                                 fontSize = 12.sp,
-                                                fontWeight = FontWeight.Bold,
+                                                fontWeight = FontWeight.ExtraBold,
                                                 color = DeepSlateInk
                                             )
                                         }
                                     }
 
-                                    Column {
-                                        Text(
-                                            text = activity.title,
-                                            style = MaterialTheme.typography.titleMedium,
-                                            color = DeepSlateInk,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis
-                                        )
-                                        Text(
-                                            text = activity.subtitle,
-                                            fontSize = 12.sp,
-                                            color = MutedSlateText,
-                                            maxLines = 2,
-                                            overflow = TextOverflow.Ellipsis
-                                        )
+                                    Box(
+                                        modifier = Modifier
+                                            .size(54.dp)
+                                            .clip(CircleShape)
+                                            .background(world.accentColor.copy(alpha = 0.22f)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(text = activity.emoji, fontSize = 30.sp)
                                     }
+
+                                    Text(
+                                        text = activity.title,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        color = DeepSlateInk,
+                                        textAlign = TextAlign.Center,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
                                 }
                             }
                         } else {

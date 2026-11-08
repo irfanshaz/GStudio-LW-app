@@ -10,6 +10,8 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "profile_settings")
@@ -17,6 +19,7 @@ data class ProfileSettingsEntity(
     @PrimaryKey val id: Int = 1,
     val ageBandId: String = "4-5",
     val buddyId: String = "sunny_cub",
+    val selectedVoiceId: String = "teacher_warm_default",
     val narrationEnabled: Boolean = true,
     val musicEnabled: Boolean = true,
     val sfxEnabled: Boolean = true,
@@ -139,13 +142,21 @@ interface WonderDao {
         FamilyMemberEntity::class,
         CustomMediaOverrideEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class WonderDatabase : RoomDatabase() {
     abstract fun wonderDao(): WonderDao
 
     companion object {
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE profile_settings ADD COLUMN selectedVoiceId TEXT NOT NULL DEFAULT 'teacher_warm_default'"
+                )
+            }
+        }
+
         @Volatile
         private var INSTANCE: WonderDatabase? = null
 
@@ -156,6 +167,7 @@ abstract class WonderDatabase : RoomDatabase() {
                     WonderDatabase::class.java,
                     "little_wonder_world_v1.db"
                 )
+                    .addMigrations(MIGRATION_2_3)
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance

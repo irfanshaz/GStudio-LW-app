@@ -766,10 +766,10 @@ fun PhonicsWordQuizEngine(
     val pool = remember(activity.id) {
         activity.items.ifEmpty {
             listOf(
-                GameItemOption("p1", "A", "🍎", "Apple", "A says aah, like Apple!", phoneticCue = "aah"),
-                GameItemOption("p2", "B", "🐻", "Bear", "B says buh, like Bear!", phoneticCue = "buh"),
-                GameItemOption("p3", "C", "🐱", "Cat", "C says kuh, like Cat!", phoneticCue = "kuh"),
-                GameItemOption("p4", "D", "🐬", "Dolphin", "D says duh, like Dolphin!", phoneticCue = "duh")
+                GameItemOption("p1", "A", "🍎", "Apple", "Letter A... aah, Apple.", phoneticCue = "aah"),
+                GameItemOption("p2", "B", "🐻", "Bear", "Letter B... b, Bear.", phoneticCue = "b"),
+                GameItemOption("p3", "C", "🐱", "Cat", "Letter C... k, Cat.", phoneticCue = "k"),
+                GameItemOption("p4", "D", "🐬", "Dolphin", "Letter D... d, Dolphin.", phoneticCue = "d")
             )
         }
     }
@@ -1076,7 +1076,12 @@ fun StorybookReaderEngine(
                     color = DeepSlateInk
                 )
                 Button(
-                    onClick = { viewModel.audio.speakInstruction(currentPage.narrationText) },
+                    onClick = {
+                        viewModel.audio.speakStoryPage(
+                            narrationText = currentPage.narrationText,
+                            interactivePrompt = currentPage.interactivePrompt
+                        )
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
                     shape = RoundedCornerShape(16.dp)
                 ) {

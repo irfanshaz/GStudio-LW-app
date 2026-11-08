@@ -46,6 +46,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -59,6 +60,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.audio.VoiceAssetManifest
 import com.example.data.ActivityProgressEntity
 import com.example.data.AdaptiveLearningEngine
 import com.example.data.CustomMediaOverrideEntity
@@ -506,12 +508,17 @@ private fun ParentCornerUnlockedContent(
                                     }
                                 }
 
-                                // Speaking Learning Buddy Selector
+                                // Visual Play Companion Buddy Selector
                                 Spacer(Modifier.height(4.dp))
                                 Text(
-                                    text = "Speaking Learning Buddy",
+                                    text = "Visual Play Companion Buddy",
                                     style = MaterialTheme.typography.titleLarge,
                                     color = DeepSlateInk
+                                )
+                                Text(
+                                    text = "Selects the visual character companion on screen. All companions share the approved Warm Preschool Teacher voice rather than pitch-shifting the same voice.",
+                                    fontSize = 12.sp,
+                                    color = MutedSlateText
                                 )
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
@@ -544,6 +551,261 @@ private fun ParentCornerUnlockedContent(
                                                     style = MaterialTheme.typography.titleMedium,
                                                     fontSize = 14.sp,
                                                     color = DeepSlateInk
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Honest Teacher Voice Selector + 6-Line Audition Studio + Line-to-File Manifest
+                    item {
+                        val availableVoices by viewModel.audio.availableTeacherVoices.collectAsState()
+                        val lastAuditionId by viewModel.audio.lastAuditionClipId.collectAsState()
+                        var showFullVoiceManifest by remember { mutableStateOf(false) }
+
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .testTag("parent_voice_audition_card"),
+                            shape = RoundedCornerShape(22.dp),
+                            colors = CardDefaults.cardColors(containerColor = PlaySurfaceWhite)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = "Warm Preschool Teacher Voice & 6-Line Audition",
+                                            style = MaterialTheme.typography.titleLarge,
+                                            color = DeepSlateInk
+                                        )
+                                        Text(
+                                            text = "Honest Voice Selector: Uses the approved Warm Preschool Teacher voice as default. A second option appears ONLY if a genuinely distinct offline speaker exists on this device (never pitch/speed shifts).",
+                                            fontSize = 12.sp,
+                                            color = MutedSlateText
+                                        )
+                                    }
+                                    Spacer(Modifier.width(8.dp))
+                                    Button(
+                                        onClick = {
+                                            viewModel.updateAudioMotionAndAdaptiveSettings(
+                                                narrationEnabled = !settings.narrationEnabled,
+                                                musicEnabled = settings.musicEnabled,
+                                                sfxEnabled = settings.sfxEnabled,
+                                                reducedMotion = settings.reducedMotion,
+                                                autoAdaptiveDifficulty = settings.autoAdaptiveDifficulty
+                                            )
+                                        },
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = if (settings.narrationEnabled) ActionPlayGreen else ActionRetryOrange
+                                        ),
+                                        shape = RoundedCornerShape(14.dp),
+                                        modifier = Modifier.testTag("teacher_voice_mute_button")
+                                    ) {
+                                        Text(
+                                            text = if (settings.narrationEnabled) "🔊 Voice ON (Tap to Mute)" else "🔇 Voice Muted (Tap to Unmute)",
+                                            color = PlaySurfaceWhite,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 12.sp
+                                        )
+                                    }
+                                }
+
+                                // Honest Voice Selector Options (Preview with identical sentence)
+                                Text(
+                                    text = "Preview Sentence: \"${VoiceAssetManifest.STANDARD_PREVIEW_SENTENCE}\"",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = ActionContinueBlue
+                                )
+
+                                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    availableVoices.forEach { voiceOpt ->
+                                        val isSelected = settings.selectedVoiceId == voiceOpt.id ||
+                                            (availableVoices.size == 1 && voiceOpt.isDefaultTeacher)
+                                        Surface(
+                                            color = if (isSelected) ActionContinueBlue.copy(alpha = 0.12f) else SoftCreamCard,
+                                            border = BorderStroke(
+                                                width = if (isSelected) 2.5.dp else 1.dp,
+                                                color = if (isSelected) ActionContinueBlue else Color(0xFFCBD5E1)
+                                            ),
+                                            shape = RoundedCornerShape(16.dp),
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .clickable {
+                                                    viewModel.selectAndPreviewTeacherVoice(voiceOpt.id)
+                                                }
+                                                .testTag("voice_option_${voiceOpt.id}")
+                                        ) {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(12.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Column(modifier = Modifier.weight(1f)) {
+                                                    Text(
+                                                        text = if (isSelected) "✓ ${voiceOpt.displayName}" else voiceOpt.displayName,
+                                                        style = MaterialTheme.typography.titleMedium,
+                                                        color = DeepSlateInk
+                                                    )
+                                                    Text(
+                                                        text = voiceOpt.description,
+                                                        fontSize = 12.sp,
+                                                        color = MutedSlateText
+                                                    )
+                                                    Text(
+                                                        text = "Quality Status: ${voiceOpt.qualityStatus.label}",
+                                                        fontSize = 11.sp,
+                                                        fontWeight = FontWeight.SemiBold,
+                                                        color = ActionRetryOrange
+                                                    )
+                                                }
+                                                Spacer(Modifier.width(10.dp))
+                                                Button(
+                                                    onClick = { viewModel.selectAndPreviewTeacherVoice(voiceOpt.id) },
+                                                    colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
+                                                    shape = RoundedCornerShape(14.dp),
+                                                    modifier = Modifier.testTag("preview_voice_${voiceOpt.id}")
+                                                ) {
+                                                    Text(
+                                                        text = "▶ Preview Voice",
+                                                        color = DeepSlateInk,
+                                                        fontWeight = FontWeight.Bold,
+                                                        fontSize = 12.sp
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // 6-Line Teacher Audition Suite (Review before mass-producing studio clips)
+                                Spacer(Modifier.height(4.dp))
+                                Text(
+                                    text = "6-Line Teacher Audition (Review Performance by Activity)",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = DeepSlateInk
+                                )
+                                Text(
+                                    text = "Tap any line below to audition Instruction, Discovery, Patient Retry, Sincere Success, Storytime, and Schwa-Free Phonics (/m/ & /s/ pure phoneme clips).",
+                                    fontSize = 12.sp,
+                                    color = MutedSlateText
+                                )
+
+                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    VoiceAssetManifest.sixAuditionLines.forEach { clip ->
+                                        val isPlayingThis = lastAuditionId == clip.clipId
+                                        Surface(
+                                            color = if (isPlayingThis) ActionListenAmber.copy(alpha = 0.20f) else SoftCreamCard,
+                                            border = BorderStroke(1.dp, if (isPlayingThis) ActionListenAmber else Color(0xFFE2E8F0)),
+                                            shape = RoundedCornerShape(14.dp),
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Column(modifier = Modifier.weight(1f)) {
+                                                    Text(
+                                                        text = "${clip.category.displayName}: \"${clip.displayCaption}\"",
+                                                        fontWeight = FontWeight.Bold,
+                                                        fontSize = 13.sp,
+                                                        color = DeepSlateInk
+                                                    )
+                                                    Text(
+                                                        text = "Direction: ${clip.performanceDirection} • Target File: res/raw/${clip.expectedRawFileName}",
+                                                        fontSize = 11.sp,
+                                                        color = MutedSlateText
+                                                    )
+                                                }
+                                                Spacer(Modifier.width(8.dp))
+                                                Button(
+                                                    onClick = { viewModel.playTeacherAuditionClip(clip) },
+                                                    colors = ButtonDefaults.buttonColors(containerColor = ActionContinueBlue),
+                                                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                                                    shape = RoundedCornerShape(12.dp),
+                                                    modifier = Modifier.testTag("audition_play_${clip.clipId}")
+                                                ) {
+                                                    Text("▶ Audition", color = PlaySurfaceWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Toggleable Line-to-File Manifest & Screens Using Device Speech
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = "Manifest: ${VoiceAssetManifest.allManifestEntries.size} directed clips • 2 bundled pure phoneme WAVs (/m/, /s/)",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MutedSlateText
+                                    )
+                                    TextButton(
+                                        onClick = { showFullVoiceManifest = !showFullVoiceManifest },
+                                        modifier = Modifier.testTag("toggle_voice_manifest_button")
+                                    ) {
+                                        Text(
+                                            text = if (showFullVoiceManifest) "Hide Line-to-File Manifest ▲" else "View Line-to-File Manifest & Device Speech List ▼",
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                }
+
+                                if (showFullVoiceManifest) {
+                                    Surface(
+                                        color = SoftCreamCard,
+                                        shape = RoundedCornerShape(14.dp),
+                                        border = BorderStroke(1.dp, Color(0xFFCBD5E1)),
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Column(
+                                            modifier = Modifier.padding(12.dp),
+                                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                                        ) {
+                                            Text(
+                                                text = "Screens Using Dynamic On-Device Speech (Fallback Inventory):",
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 13.sp,
+                                                color = DeepSlateInk
+                                            )
+                                            VoiceAssetManifest.screensUsingDynamicDeviceSpeech.forEach { (screenName, note) ->
+                                                Text(
+                                                    text = "• $screenName: $note",
+                                                    fontSize = 11.sp,
+                                                    color = MutedSlateText
+                                                )
+                                            }
+                                            Spacer(Modifier.height(4.dp))
+                                            Text(
+                                                text = "Schwa-Free Phonics & Core Line-to-File Manifest (A–Z Separate Letter Name + Pure Sound):",
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 13.sp,
+                                                color = DeepSlateInk
+                                            )
+                                            VoiceAssetManifest.phonicsManifest.values.take(10).forEach { p ->
+                                                Text(
+                                                    text = "• ${p.letter}: ${p.letterNameFile} | ${p.letterSoundFile} -> ${p.ipaSymbol} (${p.pureSoundScript}) — ${p.teacherNote}",
+                                                    fontSize = 11.sp,
+                                                    color = MutedSlateText
                                                 )
                                             }
                                         }
