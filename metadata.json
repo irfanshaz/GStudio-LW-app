@@ -1,0 +1,6 @@
+{
+  "name": "Little Wonder World",
+  "description": "Offline preschool learning and discovery app for ages 2–6 with 6 Learning Lands, 27 Worlds, 257 activities, and Wonder Reels.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

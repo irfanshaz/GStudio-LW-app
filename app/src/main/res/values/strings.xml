@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Wonder World</string>
+    <string name="app_full_title">Little Wonder World</string>
+    <string name="app_subtitle">Play, Listen, Create &amp; Discover Offline</string>
+    <string name="action_home">Home</string>
+    <string name="action_back">Back</string>
+    <string name="action_replay">Replay</string>
+    <string name="action_next">Next</string>
+    <string name="action_show_me">Show Me</string>
+    <string name="action_listen">Listen</string>
+    <string name="action_toy_box">Toy Box</string>
+    <string name="action_real_world">Real World &amp; Reels</string>
+    <string name="action_surprise_play">Surprise Play</string>
+    <string name="action_parent_corner">Parent Corner</string>
+    <string name="action_family_album">My Family Album</string>
+    <string name="mode_scroll_cards">Scroll Cards</string>
+    <string name="mode_wonder_reels">Wonder Reels</string>
+    <string name="category_animals">Animals</string>
+    <string name="category_objects">Objects</string>
+    <string name="category_lessons">Films &amp; Lessons</string>
+    <string name="parent_gate_title">Grown-Up Gate</string>
+    <string name="parent_gate_subtitle">Solve this quick math puzzle to enter Parent Corner</string>
+</resources>
