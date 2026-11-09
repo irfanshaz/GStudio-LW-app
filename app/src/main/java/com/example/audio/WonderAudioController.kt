@@ -348,7 +348,9 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         clipId: String? = null,
         interrupt: Boolean = true
     ) {
+        if (!interrupt && (_isTeacherSpeaking.value || speechSequenceJob?.isActive == true)) return
         _lastSpokenCaption.value = text
+        stopSpeechOnly()
         if (!narrationEnabled) return
 
         if (clipId != null && tryPlayBundledRawVoiceClip(clipId)) {
@@ -585,9 +587,8 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         _lastSpokenCaption.value = displayCaption
         if (!narrationEnabled) return
 
-        val token = latestSpeechToken.incrementAndGet()
-        speechSequenceJob?.cancel()
-        runCatching { tts?.stop() }
+        stopSpeechOnly()
+        val token = latestSpeechToken.get()
 
         // Play bundled pure phoneme WAV clip for /m/ and /s/ when speaking pure letter sounds
         if (speakSoundNotName && (upper == 'M' || upper == 'S')) {
@@ -774,9 +775,8 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         ignoreMuteForPreview: Boolean
     ) {
         if (!narrationEnabled && !ignoreMuteForPreview) return
-        val token = latestSpeechToken.incrementAndGet()
-        speechSequenceJob?.cancel()
-        runCatching { tts?.stop() }
+        stopSpeechOnly()
+        val token = latestSpeechToken.get()
 
         val cleanText = sanitizeForWarmSpeech(text)
         if (isTtsReady) {
