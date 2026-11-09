@@ -816,6 +816,7 @@ fun TracingStudioEngine(
     val awardedStepsInSession = remember(activity.id, replayKey) { mutableStateListOf<Int>() }
     var hadRetries by remember(safeStep, replayKey) { mutableStateOf(false) }
     var isGlyphCompleted by remember(safeStep, replayKey) { mutableStateOf(false) }
+    var usedAssistance by remember(safeStep, replayKey) { mutableStateOf(false) }
     var isAssistedTapMode by remember(safeStep, replayKey) { mutableStateOf(false) }
     var assistedTapCheckpointIdx by remember(safeStep, safeStrokeIdx, replayKey) { mutableIntStateOf(0) }
 
@@ -877,7 +878,7 @@ fun TracingStudioEngine(
         // Combine completed strokes with active stroke coverage so multi-stroke progress is smooth and accurate
         val completedFraction = completedStrokeIndices.size.toFloat() / latestTotalStrokes.coerceAtLeast(1).toFloat()
         val currentContribution = singleStrokeEval.coverageRatio / latestTotalStrokes.coerceAtLeast(1).toFloat()
-        val combinedCoverage = if (isGlyphCompleted) 1.0f else (completedFraction + currentContribution).coerceIn(0f, 1f)
+        val combinedCoverage = if (isGlyphCompleted) 1.0f else (completedFraction + currentContribution).coerceIn(0f, 0.99f)
         val combinedPct = (combinedCoverage * 100f).roundToInt()
 
         val baseMsg = singleStrokeEval.feedbackMessage.substringBeforeLast("(").trim()
@@ -888,6 +889,7 @@ fun TracingStudioEngine(
     }
 
     fun handleStrokeSuccess(eval: TracingEvaluationResult, fromAssistedTap: Boolean) {
+        usedAssistance = usedAssistance || fromAssistedTap
         if (!completedStrokeIndices.contains(latestSafeStrokeIdx)) {
             completedStrokeIndices.add(latestSafeStrokeIdx)
             strokeAccuracies.add(eval.accuracyPercent)
@@ -908,7 +910,7 @@ fun TracingStudioEngine(
                 coverageRatio = 1.0f,
                 strokePassed = true,
                 accuracyPercent = strokeAccuracies.average().roundToInt(),
-                feedbackMessage = if (fromAssistedTap) {
+                feedbackMessage = if (usedAssistance) {
                     "🌟 Assisted Tap-Along complete for $latestActiveGlyph ($latestActiveWord)!"
                 } else {
                     "🌟 Wonderful tracing of $latestActiveGlyph ($latestActiveWord)!"
@@ -922,7 +924,7 @@ fun TracingStudioEngine(
                     activity = activity,
                     hadRetriesInRound = hadRetries,
                     nextStepIndex = nextSavedIdx,
-                    tracingAccuracyPercent = if (fromAssistedTap) null else finalEval.accuracyPercent
+                    tracingAccuracyPercent = if (usedAssistance) null else finalEval.accuracyPercent
                 )
             } else {
                 viewModel.audio.playSuccessChime()
@@ -1436,6 +1438,7 @@ fun TracingStudioEngine(
                             assistedTapCheckpointIdx = 0
                             isAssistedTapMode = false
                             isGlyphCompleted = false
+                            usedAssistance = false
                             isDeckComplete = false
                             currentEval = TracingEvaluationResult(
                                 coverageRatio = 0f,

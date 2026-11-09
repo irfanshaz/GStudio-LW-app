@@ -992,7 +992,7 @@ object TracingStudioDeckRegistry {
         val templateSpan = hypot(cpMaxX - cpMinX, cpMaxY - cpMinY)
 
         val isTinyDotTemplate = templateSpan < hitRadius * 0.75f
-        val isTapCluster = !isTinyDotTemplate && userSpan < max(20f, templateSpan * 0.25f)
+        val isTapCluster = !isTinyDotTemplate && userSpan < templateSpan * 0.25f
 
         // 2. Compute unordered checkpoint coverage
         val coveredFlags = BooleanArray(checkpointPixels.size) { idx ->
@@ -1075,14 +1075,14 @@ object TracingStudioDeckRegistry {
             !isShortcutAcrossShape &&
             startedNearStart &&
             reachedNearFinish &&
-            effectiveCoverage >= max(requiredCoverageRatio, 0.85f)
+            effectiveCoverage >= max(requiredCoverageRatio, if (isToddlerBand) 0.80f else 0.85f)
 
-        val accuracyPct = if (passed) {
-            ((effectiveCoverage * 0.7f + (1f - offPathRatio.coerceIn(0f, 0.5f)) * 0.3f) * 100f)
-                .roundToInt()
-                .coerceIn(65, 100)
+        val travelRatio = if (isTinyDotTemplate) 1f else (drawnLength / guideLength).coerceIn(0f, 1f)
+        val measuredAccuracy = (effectiveCoverage * (1f - offPathRatio) * travelRatio * 100f).roundToInt()
+        val accuracyPct = if (passed && offPathCount == 0 && coveredCount == checkpointPixels.size) {
+            measuredAccuracy
         } else {
-            (effectiveCoverage * (1f - offPathRatio) * 100f).roundToInt()
+            measuredAccuracy.coerceAtMost(99)
         }
 
         val message = when {

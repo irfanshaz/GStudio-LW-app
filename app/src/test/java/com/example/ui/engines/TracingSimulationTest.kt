@@ -36,7 +36,26 @@ class TracingSimulationTest {
         val result = TracingStudioDeckRegistry.evaluateStrokeAttempt(
             TracingStrokeSpec(guide), guide, guide.map { listOf(it) }, 12f, .55f, true)
         assertFalse(result.strokePassed)
+        assertEquals(0, result.accuracyPercent)
     }
+    @Test fun exactTracesPassAcrossAllDecksAndCanvasSizes() {
+        for (height in listOf(180f, 300f, 480f)) {
+            for (deck in 1..12) {
+                TracingStudioDeckRegistry.getDeckForActivity("w04_tracing_$deck").forEach { glyph ->
+                    glyph.strokes.forEachIndexed { index, stroke ->
+                        val points = stroke.points.map {
+                            TracingStudioDeckRegistry.mapNormalizedToCanvas(it, height * 1.6f, height)
+                        }
+                        val result = TracingStudioDeckRegistry.evaluateStrokeAttempt(
+                            stroke, points, listOf(points), 12f, .55f, true
+                        )
+                        assertTrue("Deck $deck, ${glyph.glyph}, stroke $index, height $height", result.strokePassed)
+                    }
+                }
+            }
+        }
+    }
+
     @Test fun distanceUsesContinuousGuide() {
         assertEquals(3f, TracingStudioDeckRegistry.distanceToGuide(
             Offset(10f, 3f), listOf(Offset.Zero, Offset(20f, 0f))), .001f)

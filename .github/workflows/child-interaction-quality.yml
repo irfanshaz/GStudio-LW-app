@@ -24,12 +24,31 @@ jobs:
           if [ ! -f debug.keystore ]; then
             keytool -genkeypair -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -validity 10000
           fi
-      - run: gradle testDebugUnitTest assembleDebug --no-daemon
+      - run: gradle testDebugUnitTest assembleDebug assembleDebugAndroidTest --no-daemon
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+          sudo udevadm settle
+          test -r /dev/kvm && test -w /dev/kvm
+      - name: Simulate child interactions on Android 35
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          profile: pixel_2
+          disable-animations: true
+          emulator-boot-timeout: 300
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect
+          script: bash scripts/validate-child-interactions.sh
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: child-interaction-validation
           path: |
+            child-interaction-evidence/
             app/build/reports/tests/
             app/build/test-results/
             app/build/outputs/apk/debug/
