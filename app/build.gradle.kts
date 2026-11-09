@@ -178,4 +178,5 @@ val stageOfflineMedia by tasks.registering {
     }
   }
 }
-android.sourceSets.getByName("main").assets.srcDir(files(offlineMediaDir).builtBy(stageOfflineMedia))
+android.sourceSets.getByName("main").assets.srcDir(offlineMediaDir)
+tasks.matching { it.name == "preBuild" }.configureEach { dependsOn(stageOfflineMedia) }
