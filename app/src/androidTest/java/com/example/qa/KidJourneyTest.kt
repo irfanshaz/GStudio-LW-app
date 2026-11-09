@@ -20,17 +20,25 @@ import java.io.File
 class KidJourneyTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
-    private val output get() = File(instrumentation.targetContext.getExternalFilesDir(null), "kid-qa").apply { mkdirs() }
+    private val output get() = File(instrumentation.targetContext.filesDir, "kid-qa").apply { mkdirs() }
     private lateinit var vm: WonderViewModel
     private fun node(tag: String) = compose.onNodeWithTag(tag)
-    private fun visible(tag: String) { node(tag).assertIsDisplayed() }
-    private fun click(tag: String) { node(tag).performClick(); compose.waitForIdle() }
+    private fun settle() = compose.mainClock.advanceTimeBy(96)
+    private fun visible(tag: String) {
+        settle()
+        node(tag).assertIsDisplayed()
+    }
+    private fun click(tag: String) {
+        visible(tag)
+        node(tag).performClick()
+        settle()
+    }
     private fun open(screen: WonderScreen) {
         compose.runOnIdle { vm.navigateHome(); vm.navigateTo(screen) }
-        compose.waitForIdle()
+        settle()
     }
     private fun evidence(name: String) {
-        compose.waitForIdle()
+        settle()
         File(output, "$name.txt").writeText(compose.onRoot().printToString())
         instrumentation.uiAutomation.takeScreenshot()?.let { bitmap ->
             File(output, "$name.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
@@ -49,12 +57,16 @@ class KidJourneyTest {
         }
     }
     @Before fun onboard() {
+        compose.mainClock.autoAdvance = false
         compose.activityRule.scenario.onActivity { vm = ViewModelProvider(it)[WonderViewModel::class.java] }
         compose.waitUntil(15000) {
-            compose.onAllNodesWithTag("onboarding_screen").fetchSemanticsNodes().isNotEmpty() || vm.settingsState.value.onboardingCompleted
+            settle()
+            compose.onAllNodesWithTag("onboarding_screen").fetchSemanticsNodes().isNotEmpty() ||
+                vm.settingsState.value.onboardingCompleted
         }
         if (!vm.settingsState.value.onboardingCompleted) {
-            node("start_playing_button").performClick()
+            evidence("onboarding")
+            click("start_playing_button")
         }
         compose.waitUntil(10000) { vm.settingsState.value.onboardingCompleted }
         compose.runOnIdle { vm.navigateHome() }
@@ -75,6 +87,7 @@ class KidJourneyTest {
                 }
                 if (!record(activity.id) {
                     visible("activity_tile_${activity.id}")
+                    android.util.Log.i("KidQA", "Opening ${activity.id}")
                     click("activity_tile_${activity.id}")
                     visible("activity_play_screen_${activity.id}")
                     evidence("activity_${activity.id}")
@@ -105,22 +118,28 @@ class KidJourneyTest {
         evidence("parent_gate")
         click("parent_gate_back_button")
         visible("home_screen")
+    }
+
+    @Test fun realWorldAndReelsNavigation() {
         click("home_real_world_button")
         visible("real_world_screen")
         evidence("real_world")
         click("mode_wonder_reels_button")
-        visible("wonder_reels_pager_container")
         evidence("reels")
+        visible("wonder_reels_pager_container")
         compose.activityRule.scenario.onActivity { it.onBackPressedDispatcher.onBackPressed() }
         visible("real_world_scroll_grid")
         click("real_world_home_button")
         visible("home_screen")
+    }
+
+    @Test fun everyLandAndWorldRoute() {
         for (land in WonderCatalogRegistry.worlds.map { it.landId }.distinct()) {
-            node("land_card_${land.id}").performClick()
+            click("land_card_${land.id}")
             visible("land_worlds_screen_${land.id}")
             evidence("land_${land.id}")
             for (world in WonderCatalogRegistry.getWorldsForLand(land)) {
-                node("world_card_${world.id}").performClick()
+                click("world_card_${world.id}")
                 visible("world_activities_screen_${world.id}")
                 click("world_back_button")
                 visible("land_worlds_screen_${land.id}")
@@ -134,7 +153,7 @@ class KidJourneyTest {
         val activity = WonderCatalogRegistry.getActivityById("w04_tracing_1")!!
         for (age in AgeBand.entries) {
             compose.runOnIdle { vm.updateAgeAndBuddy(age, vm.getCurrentBuddy()) }
-            compose.waitUntil(10000) { vm.getCurrentAgeBand() == age }
+            compose.waitUntil(10000) { settle(); vm.getCurrentAgeBand() == age }
             open(WonderScreen.ActivityPlay(activity))
             evidence("trace_${age.id}_before")
             node("tracing_canvas").performTouchInput {
@@ -152,11 +171,30 @@ class KidJourneyTest {
         }
     }
 
+    @Test fun tracingLetterNumberShapeGuideGallery() {
+        // Record every offered guide for the four core decks, including pen-independent outlines.
+        for ((id, count) in listOf("w04_tracing_1" to 26, "w04_tracing_4" to 26,
+            "w04_tracing_6" to 10, "w04_tracing_8" to 5)) {
+            open(WonderScreen.ActivityPlay(WonderCatalogRegistry.getActivityById(id)!!))
+            repeat(count) { index ->
+                evidence("guide_${id}_${index.toString().padStart(2, '0')}")
+                click("tracing_skip_button")
+            }
+        }
+    }
+
     @Test fun tracingAdvertisedRangeStartsWithCorrectLetter() {
         // This is an acceptance assertion, deliberately not a snapshot of today's implementation.
-        val activity = WonderCatalogRegistry.getActivityById("w04_tracing_2")!!
-        open(WonderScreen.ActivityPlay(activity))
-        evidence("tracing_range_contract")
-        compose.onNodeWithText("I", useUnmergedTree = true).assertExists()
+        val expected = mapOf(2 to "I", 3 to "Q", 5 to "n", 7 to "6", 9 to "｜",
+            10 to "⌒", 11 to "⚡", 12 to "C")
+        val failures = expected.count { (index, glyph) ->
+            val id = "w04_tracing_$index"
+            !record("contract_$id") {
+                open(WonderScreen.ActivityPlay(WonderCatalogRegistry.getActivityById(id)!!))
+                evidence("contract_$id")
+                compose.onNodeWithText(glyph, useUnmergedTree = true).assertExists()
+            }
+        }
+        org.junit.Assert.assertEquals("Tracing decks with the wrong opening guide", 0, failures)
     }
 }

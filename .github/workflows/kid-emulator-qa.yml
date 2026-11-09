@@ -31,11 +31,27 @@ jobs:
           packages: 'platforms;android-36.1'
       - name: Debug signer
         run: keytool -genkeypair -keystore debug.keystore -storepass android -keypass android -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 365 -dname CN=AndroidDebug
+      - uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/gradle-9.3.1-bin.zip
+          key: gradle-9.3.1-bin-b266d5ff
       - name: Download and verify Gradle
         run: |
-          curl -fL --retry 3 --retry-all-errors --connect-timeout 20 --max-time 180 https://github.com/gradle/gradle-distributions/releases/download/v9.3.1/gradle-9.3.1-bin.zip -o "$RUNNER_TEMP/gradle-9.3.1-bin.zip"
-          echo "b266d5ff6b90eada6dc3b20cb090e3731302e553a27c5d3e4df1f0d76beaff06  $RUNNER_TEMP/gradle-9.3.1-bin.zip" | sha256sum --check
-          sed -i "s|^distributionUrl=.*|distributionUrl=file\\:$RUNNER_TEMP/gradle-9.3.1-bin.zip|" gradle/wrapper/gradle-wrapper.properties
+          archive="$RUNNER_TEMP/gradle-9.3.1-bin.zip"
+          checksum=b266d5ff6b90eada6dc3b20cb090e3731302e553a27c5d3e4df1f0d76beaff06
+          if ! echo "$checksum  $archive" | sha256sum --check --status; then
+            for url in \
+              https://downloads.gradle.org/distributions/gradle-9.3.1-bin.zip \
+              https://services.gradle.org/distributions/gradle-9.3.1-bin.zip \
+              "https://github.com/gradle/gradle-distributions/releases/download/v9.3.1/gradle-9.3.1-bin.zip?qa=$GITHUB_RUN_ID"; do
+              if curl -fsSL --connect-timeout 20 --max-time 120 "$url" -o "$archive" &&
+                  echo "$checksum  $archive" | sha256sum --check; then
+                break
+              fi
+            done
+          fi
+          echo "$checksum  $archive" | sha256sum --check
+          sed -i "s|^distributionUrl=.*|distributionUrl=file:$archive|" gradle/wrapper/gradle-wrapper.properties
           ./gradlew --version
       - name: Build app and instrumented tests
         run: ./gradlew --no-daemon :app:testDebugUnitTest :app:assembleDebug :app:assembleDebugAndroidTest
