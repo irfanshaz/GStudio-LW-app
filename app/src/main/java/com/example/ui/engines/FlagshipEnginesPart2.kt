@@ -1607,10 +1607,6 @@ fun StorybookReaderEngine(
                         Button(
                             onClick = {
                                 pageIdx = 0
-                                viewModel.audio.speakStoryPage(
-                                    narrationText = pages.first().narrationText,
-                                    interactivePrompt = pages.first().interactivePrompt
-                                )
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = SoftCreamCard, contentColor = DeepSlateInk),
                             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
@@ -1713,26 +1709,18 @@ fun StorybookReaderEngine(
                                 if (isReadAgainChoice && pageIdx == pages.lastIndex) {
                                     if (!completedAtLeastOnce) {
                                         completedAtLeastOnce = true
-                                        viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = hadRetries)
+                                        viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = hadRetries, speakMilestonePraise = false)
                                     }
                                     pageIdx = 0
-                                    viewModel.audio.speakStoryPage(
-                                        narrationText = pages.first().narrationText,
-                                        interactivePrompt = pages.first().interactivePrompt
-                                    )
                                 } else if (isCorrectChoice) {
                                     if (pageIdx < pages.lastIndex) {
                                         pageIdx += 1
                                     } else {
                                         if (!completedAtLeastOnce) {
                                             completedAtLeastOnce = true
-                                            viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = hadRetries)
+                                            viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = hadRetries, speakMilestonePraise = false)
                                         }
                                         pageIdx = 0
-                                        viewModel.audio.speakStoryPage(
-                                            narrationText = pages.first().narrationText,
-                                            interactivePrompt = pages.first().interactivePrompt
-                                        )
                                     }
                                 } else {
                                     hadRetries = true

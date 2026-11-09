@@ -50,6 +50,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
     private var isTtsReady = false
     private var speechSequenceJob: Job? = null
+    private var voiceStreamId: Int = 0
     private var duckRestoreJob: Job? = null
 
     // Monotonic token to discard stale speech when a child pops several balloons rapidly
@@ -593,7 +594,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
             val pureSampleId = if (upper == 'M') voicePhonicsMPureId else voicePhonicsSPureId
             speechSequenceJob = scope.launch {
                 activateMusicDucking(1400L)
-                playSample(pureSampleId, volume = 0.72f)
+                playVoiceSample(pureSampleId, volume = 0.72f)
                 delay(420L)
                 if (token == latestSpeechToken.get() && isTtsReady && entry != null) {
                     speakNowWithCategory(
@@ -720,6 +721,8 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
             _isTeacherSpeaking.value = false
             _backgroundMusicDuckVolume.value = 1.0f
             tts?.stop()
+            soundPool.stop(voiceStreamId)
+            voiceStreamId = 0
         }
     }
 
@@ -747,7 +750,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         val cachedSoundId = rawVoiceClipSoundPoolIds[rawName]
         if (cachedSoundId != null && cachedSoundId != 0) {
             activateMusicDucking(1400L)
-            playSample(cachedSoundId, volume = 0.85f)
+            playVoiceSample(cachedSoundId, volume = 0.85f)
             return true
         }
         val resId = appContext.resources.getIdentifier(rawName, "raw", appContext.packageName)
@@ -755,9 +758,10 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
             val loadedId = soundPool.load(appContext, resId, 1)
             rawVoiceClipSoundPoolIds[rawName] = loadedId
             activateMusicDucking(1400L)
-            scope.launch {
+            val token = latestSpeechToken.get()
+            speechSequenceJob = scope.launch {
                 delay(45L)
-                playSample(loadedId, volume = 0.85f)
+                if (token == latestSpeechToken.get()) playVoiceSample(loadedId, volume = 0.85f)
             }
             return true
         }
@@ -818,6 +822,14 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
             delay(durationMs)
             _isTeacherSpeaking.value = false
             _backgroundMusicDuckVolume.value = 1.0f
+        }
+    }
+
+    private fun playVoiceSample(soundId: Int, volume: Float) {
+        if (soundId == 0) return
+        runCatching {
+            soundPool.stop(voiceStreamId)
+            voiceStreamId = soundPool.play(soundId, volume, volume, 1, 0, 1f)
         }
     }
 

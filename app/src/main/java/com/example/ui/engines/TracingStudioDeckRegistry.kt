@@ -1061,7 +1061,15 @@ object TracingStudioDeckRegistry {
         val coveragePct = (effectiveCoverage * 100f).roundToInt()
         val scribbleRejected = offPathRatio > 0.12f
 
-        val passed = !isTapCluster &&
+        val guideLength = checkpointPixels.zipWithNext().sumOf { (a, b) ->
+            (b - a).getDistance().toDouble()
+        }.toFloat()
+        val drawnLength = rawSegments.sumOf { segment ->
+            segment.zipWithNext().sumOf { (a, b) -> (b - a).getDistance().toDouble() }
+        }.toFloat()
+        val hasContinuousTravel = isTinyDotTemplate || drawnLength >= guideLength * 0.80f
+
+        val passed = hasContinuousTravel && !isTapCluster &&
             !isReversed &&
             !scribbleRejected &&
             !isShortcutAcrossShape &&
@@ -1082,7 +1090,7 @@ object TracingStudioDeckRegistry {
             scribbleRejected -> "Stay on the dots! ($coveragePct%)"
             isReversed -> "Start at the green star ⭐! ($coveragePct%)"
             !startedNearStart -> "Start here at the green star ⭐! ($coveragePct%)"
-            isTapCluster -> "Slide your finger along the dots! ($coveragePct%)"
+            !hasContinuousTravel || isTapCluster -> "Slide your finger along the dots! ($coveragePct%)"
             isShortcutAcrossShape -> "Follow all the turns along the dots! ($coveragePct%)"
             else -> "Keep going to the finish dot! ($coveragePct%)"
         }

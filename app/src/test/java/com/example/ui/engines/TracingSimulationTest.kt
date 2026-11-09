@@ -31,6 +31,12 @@ class TracingSimulationTest {
     @Test fun scribbleFails() {
         assertFalse(evaluate(guide.flatMap { listOf(it, it + Offset(0f, 100f), it) }).strokePassed)
     }
+
+    @Test fun isolatedCheckpointTapsDoNotPass() {
+        val result = TracingStudioDeckRegistry.evaluateStrokeAttempt(
+            TracingStrokeSpec(guide), guide, guide.map { listOf(it) }, 12f, .55f, true)
+        assertFalse(result.strokePassed)
+    }
     @Test fun distanceUsesContinuousGuide() {
         assertEquals(3f, TracingStudioDeckRegistry.distanceToGuide(
             Offset(10f, 3f), listOf(Offset.Zero, Offset(20f, 0f))), .001f)
