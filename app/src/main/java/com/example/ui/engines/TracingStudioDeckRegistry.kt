@@ -937,6 +937,17 @@ object TracingStudioDeckRegistry {
      * Evaluates a user's stroke attempt against the active [TracingStrokeSpec] in pixel space.
      * Both the UI meter and the status feedback read from this single returned [TracingEvaluationResult].
      */
+    internal fun distanceToGuide(point: Offset, guide: List<Offset>): Float {
+        if (guide.size == 1) return (point - guide.first()).getDistance()
+        return guide.zipWithNext().minOf { (a, b) ->
+            val delta = b - a
+            val lengthSquared = delta.x * delta.x + delta.y * delta.y
+            val t = if (lengthSquared == 0f) 0f else
+                (((point.x - a.x) * delta.x + (point.y - a.y) * delta.y) / lengthSquared).coerceIn(0f, 1f)
+            (point - (a + delta * t)).getDistance()
+        }
+    }
+
     fun evaluateStrokeAttempt(
         strokeSpec: TracingStrokeSpec,
         checkpointPixels: List<Offset>,
@@ -964,8 +975,8 @@ object TracingStudioDeckRegistry {
             )
         }
 
-        val hitRadius = tolerancePx * if (isToddlerBand) 1.25f else 1.05f
-        val offPathRadius = hitRadius * 1.40f
+        val hitRadius = tolerancePx
+        val offPathRadius = hitRadius
 
         // 1. Check for single tap or tiny cluster
         val minX = resampled.minOf { it.x }
@@ -1024,7 +1035,7 @@ object TracingStudioDeckRegistry {
 
         // 5. Off-path ratio (detect random scribbling or cutting straight across a closed shape/zigzag)
         val offPathCount = resampled.count { up ->
-            checkpointPixels.none { cp -> hypot(up.x - cp.x, up.y - cp.y) <= offPathRadius }
+            distanceToGuide(up, checkpointPixels) > offPathRadius
         }
         val offPathRatio = offPathCount.toFloat() / resampled.size.toFloat()
 
@@ -1048,7 +1059,7 @@ object TracingStudioDeckRegistry {
         }.coerceIn(0f, 1f)
 
         val coveragePct = (effectiveCoverage * 100f).roundToInt()
-        val scribbleRejected = offPathRatio > 0.45f && resampled.size > 10
+        val scribbleRejected = offPathRatio > 0.12f
 
         val passed = !isTapCluster &&
             !isReversed &&
@@ -1056,14 +1067,14 @@ object TracingStudioDeckRegistry {
             !isShortcutAcrossShape &&
             startedNearStart &&
             reachedNearFinish &&
-            effectiveCoverage >= requiredCoverageRatio
+            effectiveCoverage >= max(requiredCoverageRatio, 0.85f)
 
         val accuracyPct = if (passed) {
             ((effectiveCoverage * 0.7f + (1f - offPathRatio.coerceIn(0f, 0.5f)) * 0.3f) * 100f)
                 .roundToInt()
                 .coerceIn(65, 100)
         } else {
-            coveragePct
+            (effectiveCoverage * (1f - offPathRatio) * 100f).roundToInt()
         }
 
         val message = when {

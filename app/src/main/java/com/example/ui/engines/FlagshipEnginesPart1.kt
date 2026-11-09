@@ -803,6 +803,7 @@ fun TracingStudioEngine(
     val activeStrokeSpec = strokes[safeStrokeIdx]
 
     // Track completed strokes in the current glyph and user segments (preserving pen lifts!)
+    val strokeAccuracies = remember(safeStep, replayKey) { mutableStateListOf<Int>() }
     val completedStrokeIndices = remember(safeStep, replayKey) { mutableStateListOf<Int>() }
     val userSegmentsForCurrentStroke = remember(safeStep, safeStrokeIdx, replayKey) {
         mutableStateListOf<List<Offset>>()
@@ -837,7 +838,7 @@ fun TracingStudioEngine(
     }
 
     val density = LocalDensity.current
-    val tolerancePx = with(density) { adaptive.tracingToleranceDp.dp.toPx() }
+    val tolerancePx = with(density) { (adaptive.tracingToleranceDp * 0.3f).coerceIn(10f, 20f).dp.toPx() }
     val isToddlerBand = adaptive.baseAgeBand == AgeBand.TODDLER_2_3
 
     var canvasSize by remember { mutableStateOf(Offset(600f, 340f)) }
@@ -889,6 +890,7 @@ fun TracingStudioEngine(
     fun handleStrokeSuccess(eval: TracingEvaluationResult, fromAssistedTap: Boolean) {
         if (!completedStrokeIndices.contains(latestSafeStrokeIdx)) {
             completedStrokeIndices.add(latestSafeStrokeIdx)
+            strokeAccuracies.add(eval.accuracyPercent)
         }
         if (latestSafeStrokeIdx < latestTotalStrokes - 1) {
             val nextStroke = latestSafeStrokeIdx + 1
@@ -905,10 +907,11 @@ fun TracingStudioEngine(
             val finalEval = eval.copy(
                 coverageRatio = 1.0f,
                 strokePassed = true,
+                accuracyPercent = strokeAccuracies.average().roundToInt(),
                 feedbackMessage = if (fromAssistedTap) {
-                    "🌟 Assisted Tap-Along complete for $latestActiveGlyph ($latestActiveWord)! (100%)"
+                    "🌟 Assisted Tap-Along complete for $latestActiveGlyph ($latestActiveWord)!"
                 } else {
-                    "🌟 Wonderful tracing of $latestActiveGlyph ($latestActiveWord)! (100%)"
+                    "🌟 Wonderful tracing of $latestActiveGlyph ($latestActiveWord)!"
                 }
             )
             currentEval = finalEval
@@ -1348,7 +1351,7 @@ fun TracingStudioEngine(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Effort & Path Coverage: ${currentEval.coveragePercent}%",
+                            text = if (isGlyphCompleted) "Completed" else "Stroke progress: ${currentEval.coveragePercent}%",
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
                             color = MutedSlateText,
@@ -1428,6 +1431,7 @@ fun TracingStudioEngine(
                             userSegmentsForCurrentStroke.clear()
                             liveDragPoints.clear()
                             completedStrokeIndices.clear()
+                            strokeAccuracies.clear()
                             currentStrokeIdx = 0
                             assistedTapCheckpointIdx = 0
                             isAssistedTapMode = false

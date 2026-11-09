@@ -279,13 +279,14 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
         hadRetriesInRound: Boolean = false,
         nextStepIndex: Int? = null,
         tracingAccuracyPercent: Int? = null,
-        speakMilestonePraise: Boolean = true
+        speakMilestonePraise: Boolean = true,
+        playMilestoneChime: Boolean = true
     ) {
         if (!hadRetriesInRound) {
             _sessionSmoothWins.value += 1
             _sessionRetries.value = 0
         }
-        audio.playSuccessChime()
+        if (playMilestoneChime) audio.playSuccessChime()
         if (speakMilestonePraise) {
             audio.speakSincereSuccess()
         }
