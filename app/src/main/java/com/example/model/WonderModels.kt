@@ -276,6 +276,8 @@ data class RealWorldMediaItem(
     val secondaryColor: Color,
     @DrawableRes val bundledDrawableRes: Int? = null,
     val bundledVideoAssetPath: String? = null,
+    val bundledImageAssetPath: String? = null,
+    val bundledAudioAssetPath: String? = null,
     val subtitles: List<String> = emptyList(),
     val manifest: MediaManifestEntry
 )

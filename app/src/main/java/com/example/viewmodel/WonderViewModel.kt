@@ -68,6 +68,24 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
     private val database = WonderDatabase.getInstance(application)
     private val repository = WonderRepository(application, database.wonderDao())
     val audio = WonderAudioController(application)
+    val offlineMedia by lazy { com.example.data.OfflineMediaCatalog(application) }
+    private val mediaPrefs = application.getSharedPreferences("media_playback", 0)
+    private val _autoMediaAudio = MutableStateFlow(mediaPrefs.getBoolean("auto_audio", true))
+    val autoMediaAudio: StateFlow<Boolean> = _autoMediaAudio
+
+    fun setAutoMediaAudio(enabled: Boolean) {
+        mediaPrefs.edit().putBoolean("auto_audio", enabled).apply()
+        _autoMediaAudio.value = enabled
+        if (!enabled) audio.stopAllAudio()
+    }
+
+    fun listenToMedia(item: com.example.model.RealWorldMediaItem) {
+        audio.playMediaSound(
+            item.bundledAudioAssetPath,
+            item.title,
+            narration = item.category == com.example.model.RealMediaCategory.FILM_LESSON
+        )
+    }
 
     val settingsState: StateFlow<ProfileSettingsEntity> = repository.settingsFlow
         .combine(MutableStateFlow(ProfileSettingsEntity())) { dbSettings, fallback ->

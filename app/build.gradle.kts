@@ -1,3 +1,6 @@
+import java.security.MessageDigest
+import java.util.zip.ZipFile
+import groovy.json.JsonSlurper
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
 
 plugins {
@@ -59,6 +62,7 @@ android {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
   }
+  androidResources { noCompress += "mp3" }
   buildFeatures {
     compose = true
     buildConfig = true
@@ -142,3 +146,36 @@ dependencies {
   "ksp"(libs.androidx.room.compiler)
   // "ksp"(libs.moshi.kotlin.codegen)
 }
+
+// Package only indexed assets from the checked-in media packs.
+val mediaIndex = layout.projectDirectory.file("src/main/assets/real-world-index.json")
+val mediaPacks = rootProject.layout.projectDirectory.dir("public/assets/aistudio")
+val offlineMediaDir = layout.buildDirectory.dir("generated/offlineMedia")
+val stageOfflineMedia by tasks.registering {
+  inputs.file(mediaIndex)
+  inputs.files(fileTree(mediaPacks.asFile) { include("*.zip") })
+  outputs.dir(offlineMediaDir)
+  doLast {
+    val index = JsonSlurper().parse(mediaIndex.asFile) as Map<*, *>
+    val files = index["files"] as Map<*, *>
+    val destination = offlineMediaDir.get().asFile
+    destination.deleteRecursively()
+    files.entries.groupBy { (it.value as Map<*, *>)["archive"] as String }.forEach { (archive, entries) ->
+      ZipFile(mediaPacks.file(archive).asFile).use { zip ->
+        entries.forEach { (path, record) ->
+          val metadata = record as Map<*, *>
+          val entry = requireNotNull(zip.getEntry(metadata["entry"] as String))
+          val bytes = zip.getInputStream(entry).use { it.readBytes() }
+          val digest = MessageDigest.getInstance("SHA-256").digest(bytes)
+            .joinToString("") { "%02x".format(it) }
+          check(digest == metadata["sha256"]) { "Media changed: $path. Regenerate the index." }
+          val output = destination.resolve("real-world/$path")
+          check(output.canonicalFile.toPath().startsWith(destination.canonicalFile.toPath()))
+          output.parentFile.mkdirs()
+          output.writeBytes(bytes)
+        }
+      }
+    }
+  }
+}
+android.sourceSets.getByName("main").assets.srcDir(files(offlineMediaDir).builtBy(stageOfflineMedia))

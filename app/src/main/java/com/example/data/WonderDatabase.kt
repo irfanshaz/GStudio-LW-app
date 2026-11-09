@@ -168,7 +168,6 @@ abstract class WonderDatabase : RoomDatabase() {
                     "little_wonder_world_v1.db"
                 )
                     .addMigrations(MIGRATION_2_3)
-                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

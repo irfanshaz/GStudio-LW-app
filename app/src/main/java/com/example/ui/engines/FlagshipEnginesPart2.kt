@@ -2,6 +2,7 @@ package com.example.ui.engines
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,6 +40,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -107,12 +110,13 @@ fun AnimalSafariSoundsEngine(
     var roundIdx by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var hadRetries by remember(roundIdx, replayKey) { mutableStateOf(false) }
 
-    val choices = remember(allItems, roundIdx, adaptive.effectiveChoiceCount) {
-        val count = adaptive.effectiveChoiceCount.coerceIn(2, allItems.size)
+    val round = remember(allItems, roundIdx, adaptive.effectiveChoiceCount, replayKey) {
+        val count = adaptive.effectiveChoiceCount.coerceIn(1, allItems.size)
         val rotated = allItems.drop(roundIdx % allItems.size) + allItems.take(roundIdx % allItems.size)
         rotated.take(count)
     }
-    val target = choices.first()
+    val target = round.first()
+    val choices = remember(round, replayKey) { round.shuffled() }
     var promptMessage by remember(roundIdx, replayKey) {
         mutableStateOf("Listen and tap: Where is the ${target.label}?")
     }
@@ -135,11 +139,9 @@ fun AnimalSafariSoundsEngine(
             )
             Button(
                 onClick = {
-                    viewModel.audio.playAnimalOrObjectSignature(
-                        baseFreqHz = 320f,
-                        label = target.label,
-                        spokenFact = target.spokenText
-                    )
+                    val media = viewModel.offlineMedia.find(target.label)
+                    if (media != null) viewModel.listenToMedia(media)
+                    else viewModel.audio.playMediaSound(null, target.label)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
                 shape = RoundedCornerShape(16.dp),
@@ -147,7 +149,7 @@ fun AnimalSafariSoundsEngine(
             ) {
                 Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null, tint = DeepSlateInk)
                 Spacer(Modifier.width(6.dp))
-                Text("Hear ${target.label} Call", color = DeepSlateInk, fontWeight = FontWeight.Bold)
+                Text("Listen", color = DeepSlateInk, fontWeight = FontWeight.Bold)
             }
         }
 
@@ -777,12 +779,13 @@ fun PhonicsWordQuizEngine(
     var speakPureSound by remember { mutableStateOf(true) }
     var hadRetries by remember(stepIdx, replayKey) { mutableStateOf(false) }
 
-    val choices = remember(pool, stepIdx, adaptive.effectiveChoiceCount) {
-        val count = adaptive.effectiveChoiceCount.coerceIn(2, pool.size)
+    val round = remember(pool, stepIdx, adaptive.effectiveChoiceCount, replayKey) {
+        val count = adaptive.effectiveChoiceCount.coerceIn(1, pool.size)
         val rotated = pool.drop(stepIdx % pool.size) + pool.take(stepIdx % pool.size)
         rotated.take(count)
     }
-    val target = choices.first()
+    val target = round.first()
+    val choices = remember(round, replayKey) { round.shuffled() }
 
     Column(
         modifier = Modifier
@@ -897,8 +900,61 @@ fun NumbersMathCounterEngine(
     replayKey: Int,
     viewModel: WonderViewModel
 ) {
+    val journey = when (activity.id) {
+        "w08_math_9" -> 1..50
+        "w08_math_10" -> 51..100
+        else -> null
+    }
     var targetCount by remember(activity.id, replayKey) {
-        mutableIntStateOf(((savedStepIndex % 6) + 2).coerceIn(2, 8))
+        mutableIntStateOf(
+            journey?.let { savedStepIndex.takeIf { step -> step in it } ?: it.first }
+                ?: ((savedStepIndex % 6) + 2).coerceIn(2, 8)
+        )
+    }
+    var hadRetries by remember(targetCount, replayKey) { mutableStateOf(false) }
+    var journeyComplete by remember(activity.id, replayKey) { mutableStateOf(false) }
+    if (journey != null) {
+        val answers = remember(targetCount) {
+            (listOf(targetCount) + journey.filter { it != targetCount }
+                .sortedBy { kotlin.math.abs(it - targetCount) }.take(2)).shuffled()
+        }
+        Column(
+            Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                if (journeyComplete) "You reached ${journey.last}!" else "Find $targetCount",
+                style = MaterialTheme.typography.headlineLarge
+            )
+            if (journeyComplete) {
+                Button(onClick = { targetCount = journey.first; journeyComplete = false }) {
+                    Text("Start Again")
+                }
+            } else {
+                Button(onClick = { viewModel.audio.speakInstruction("Find $targetCount") }) {
+                    Text("Listen")
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    answers.forEach { number ->
+                        Button(onClick = {
+                            if (number == targetCount) {
+                                val next = (targetCount + 1).coerceAtMost(journey.last)
+                                viewModel.onActivityMilestoneCompleted(
+                                    activity, hadRetriesInRound = hadRetries, nextStepIndex = next
+                                )
+                                if (targetCount == journey.last) journeyComplete = true
+                                else targetCount = next
+                            } else {
+                                hadRetries = true
+                                viewModel.onGentleRetryNeeded(activity, "Look for $targetCount.")
+                            }
+                        }) { Text(number.toString(), fontSize = 32.sp) }
+                    }
+                }
+            }
+        }
+        return
     }
     val tappedIndices = remember(targetCount, replayKey) { mutableStateListOf<Int>() }
     val itemSpec = activity.items.firstOrNull() ?: GameItemOption("num_star", "Stars", "⭐", "3", "Count the stars!")
@@ -958,7 +1014,7 @@ fun NumbersMathCounterEngine(
         val options = remember(targetCount, adaptive.effectiveChoiceCount) {
             listOf(targetCount, (targetCount % 8) + 1, ((targetCount + 2) % 9) + 1)
                 .distinct()
-                .take(adaptive.effectiveChoiceCount.coerceAtLeast(2))
+                .take(adaptive.effectiveChoiceCount.coerceAtLeast(2)).shuffled()
         }
         Row(
             modifier = Modifier
@@ -972,11 +1028,12 @@ fun NumbersMathCounterEngine(
                         if (num == targetCount) {
                             viewModel.onActivityMilestoneCompleted(
                                 activity = activity,
-                                hadRetriesInRound = false,
+                                hadRetriesInRound = hadRetries,
                                 nextStepIndex = targetCount
                             )
                             targetCount = (targetCount % 7) + 2
                         } else {
+                            hadRetries = true
                             viewModel.onGentleRetryNeeded(activity, "Let's count again together—there are $targetCount!")
                         }
                     },
@@ -1489,6 +1546,17 @@ fun FlashcardAndFamilyEngine(
     var cardIdx by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var quizMode by remember(activity.id) { mutableStateOf(isFamilyQuiz) }
     val currentCard = cards[cardIdx % cards.size]
+    val media = if (activity.worldId == "w26_family") null else viewModel.offlineMedia.find(currentCard.label)
+    val autoplay by viewModel.autoMediaAudio.collectAsState()
+    fun listen() {
+        if (media != null) viewModel.listenToMedia(media)
+        else viewModel.audio.playMediaSound(null, currentCard.label)
+    }
+    LaunchedEffect(currentCard.id, quizMode) {
+        viewModel.audio.stopAllAudio()
+        if (!quizMode && autoplay) listen()
+    }
+    DisposableEffect(Unit) { onDispose { viewModel.audio.stopAllAudio() } }
 
     Column(
         modifier = Modifier
@@ -1523,12 +1591,24 @@ fun FlashcardAndFamilyEngine(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 8.dp)
+                    .pointerInput(cards.size) {
+                        var dragY = 0f
+                        detectVerticalDragGestures(
+                            onDragStart = { dragY = 0f },
+                            onDragEnd = {
+                                if (dragY < -48.dp.toPx()) cardIdx = (cardIdx + 1).coerceAtMost(cards.lastIndex)
+                                if (dragY > 48.dp.toPx()) cardIdx = (cardIdx - 1).coerceAtLeast(0)
+                            },
+                            onVerticalDrag = { change, amount -> change.consume(); dragY += amount }
+                        )
+                    },
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                    onClick = { cardIdx = if (cardIdx > 0) cardIdx - 1 else cards.lastIndex },
+                    onClick = { cardIdx = (cardIdx - 1).coerceAtLeast(0) },
+                    enabled = cardIdx > 0,
                     colors = ButtonDefaults.buttonColors(containerColor = SoftCreamCard, contentColor = DeepSlateInk),
                     shape = CircleShape,
                     modifier = Modifier.size(56.dp)
@@ -1541,9 +1621,7 @@ fun FlashcardAndFamilyEngine(
                         .weight(1f)
                         .fillMaxHeight()
                         .clip(RoundedCornerShape(26.dp))
-                        .clickable {
-                            viewModel.audio.speakInstruction(currentCard.spokenText)
-                        },
+                        .clickable { listen() },
                     color = SoftCreamCard,
                     border = BorderStroke(3.dp, Color(currentCard.primaryColorHex)),
                     shape = RoundedCornerShape(26.dp)
@@ -1563,6 +1641,13 @@ fun FlashcardAndFamilyEngine(
                                 modifier = Modifier
                                     .size(160.dp)
                                     .clip(RoundedCornerShape(22.dp))
+                            )
+                        } else if (media?.bundledImageAssetPath != null) {
+                            AsyncImage(
+                                model = "file:///android_asset/${media.bundledImageAssetPath}",
+                                contentDescription = currentCard.label,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.size(160.dp)
                             )
                         } else if (currentCard.drawableRes != null) {
                             Image(
@@ -1594,13 +1679,13 @@ fun FlashcardAndFamilyEngine(
                                 color = MutedSlateText
                             )
                             Button(
-                                onClick = { viewModel.audio.speakInstruction(currentCard.spokenText) },
+                                onClick = { listen() },
                                 colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
                                 shape = RoundedCornerShape(16.dp)
                             ) {
                                 Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null, tint = DeepSlateInk)
                                 Spacer(Modifier.width(6.dp))
-                                Text("Hear Name", color = DeepSlateInk, fontWeight = FontWeight.Bold)
+                                Text("Listen", color = DeepSlateInk, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -1608,8 +1693,9 @@ fun FlashcardAndFamilyEngine(
 
                 Button(
                     onClick = {
-                        cardIdx = (cardIdx + 1) % cards.size
-                        if (cardIdx == 0) {
+                        if (cardIdx < cards.lastIndex) cardIdx += 1
+                        else {
+                            cardIdx = 0
                             viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false)
                         }
                     },
@@ -1617,7 +1703,7 @@ fun FlashcardAndFamilyEngine(
                     shape = CircleShape,
                     modifier = Modifier.size(56.dp)
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next", tint = PlaySurfaceWhite)
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = if (cardIdx == cards.lastIndex) "Start Again" else "Next", tint = PlaySurfaceWhite)
                 }
             }
         } else {

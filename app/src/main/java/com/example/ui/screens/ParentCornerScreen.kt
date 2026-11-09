@@ -45,6 +45,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -66,7 +67,6 @@ import com.example.data.AdaptiveLearningEngine
 import com.example.data.CustomMediaOverrideEntity
 import com.example.data.FamilyMemberEntity
 import com.example.data.ProfileSettingsEntity
-import com.example.data.RealWorldMediaRegistry
 import com.example.data.SavedArtworkEntity
 import com.example.model.AgeBand
 import com.example.model.LearningBuddy
@@ -848,6 +848,15 @@ private fun ParentCornerUnlockedContent(
                                     }
                                 )
 
+                                val autoMediaAudio by viewModel.autoMediaAudio.collectAsStateWithLifecycle()
+                                ParentSettingToggleRow(
+                                    title = "Play media sound automatically",
+                                    subtitle = "Listen stays available when automatic sound is off.",
+                                    checked = autoMediaAudio,
+                                    testTag = "toggle_auto_media_audio",
+                                    onCheckedChange = viewModel::setAutoMediaAudio
+                                )
+
                                 ParentSettingToggleRow(
                                     title = "Spoken Narration & Phonics Voice (Offline TTS)",
                                     subtitle = "Reads instructions, stories, and phonetic letter sounds aloud",
@@ -935,6 +944,7 @@ private fun ParentCornerUnlockedContent(
                     // TAB 3: Real World Media Manifest & Google Flow Video Importer
                     item {
                         MediaManifestAndGoogleFlowCard(
+                            allMedia = viewModel.offlineMedia.items,
                             mediaOverrides = mediaOverrides,
                             onImportMedia = { mediaId, uri, isVideo ->
                                 viewModel.importGoogleFlowMedia(mediaId, uri, isVideo)
@@ -1353,14 +1363,12 @@ private fun FamilyAlbumManagerCard(
 
 @Composable
 private fun MediaManifestAndGoogleFlowCard(
+    allMedia: List<com.example.model.RealWorldMediaItem>,
     mediaOverrides: List<CustomMediaOverrideEntity>,
     onImportMedia: (String, android.net.Uri, Boolean) -> Unit,
     onRemoveOverride: (String) -> Unit
 ) {
-    val summary = remember(mediaOverrides) {
-        RealWorldMediaRegistry.buildManifestSummary(mediaOverrides.size)
-    }
-    val allMedia = remember { RealWorldMediaRegistry.allMediaItems }
+    if (allMedia.isEmpty()) return
     var selectedTargetId by remember { mutableStateOf(allMedia.first().id) }
     var importAsVideo by remember { mutableStateOf(true) }
 
@@ -1387,7 +1395,7 @@ private fun MediaManifestAndGoogleFlowCard(
                 color = DeepSlateInk
             )
             Text(
-                text = "Reconciled inventory of Animals (64), Objects (71), and Narrated Lessons/Films (22). You can attach your own Google Flow .mp4 video clips or custom images to any item below for instant playback inside Wonder Reels.",
+                text = "These counts reflect files packaged for offline playback. You can attach your own MP4 or picture to any listed item.",
                 fontSize = 13.sp,
                 color = MutedSlateText
             )
@@ -1398,29 +1406,29 @@ private fun MediaManifestAndGoogleFlowCard(
             ) {
                 MetricPillCard(
                     label = "Animals Pack",
-                    value = "${summary.expectedAnimals} Verified",
-                    sub = "123-Atlas Reconciled",
+                    value = "${allMedia.count { it.category.id == "animal" }}",
+                    sub = "Cards with bundled media",
                     color = ActionPlayGreen,
                     modifier = Modifier.weight(1f)
                 )
                 MetricPillCard(
                     label = "Objects Pack",
-                    value = "${summary.expectedObjects} Verified",
-                    sub = "Sound & Action Cards",
+                    value = "${allMedia.count { it.category.id == "object" }}",
+                    sub = "Cards with bundled media",
                     color = ActionContinueBlue,
                     modifier = Modifier.weight(1f)
                 )
                 MetricPillCard(
                     label = "Lessons & Films",
-                    value = "${summary.expectedLessonsAndFilms} Verified",
-                    sub = "16 Lessons + 6 Films",
+                    value = "${allMedia.count { it.category.id == "film_lesson" && it.bundledVideoAssetPath != null }}",
+                    sub = "Bundled lesson videos",
                     color = ActionListenAmber,
                     modifier = Modifier.weight(1f)
                 )
                 MetricPillCard(
-                    label = "AI & Flow Clips",
-                    value = "${summary.aiGeneratedStartingFramesCount + summary.userCustomOverridesCount}",
-                    sub = "${summary.userCustomOverridesCount} User Flow Imports",
+                    label = "Bundled Audio",
+                    value = "${allMedia.count { it.bundledAudioAssetPath != null }}",
+                    sub = "${mediaOverrides.size} local overrides",
                     color = Color(0xFF8B5CF6),
                     modifier = Modifier.weight(1f)
                 )
@@ -1433,7 +1441,7 @@ private fun MediaManifestAndGoogleFlowCard(
                 color = DeepSlateInk
             )
 
-            allMedia.take(10).forEach { item ->
+            allMedia.forEach { item ->
                 val override = mediaOverrides.find { it.mediaId == item.id }
                 Surface(
                     color = SoftCreamCard,
@@ -1454,7 +1462,7 @@ private fun MediaManifestAndGoogleFlowCard(
                                 color = DeepSlateInk
                             )
                             Text(
-                                text = "Path: ${override?.localVideoPath ?: override?.localImagePath ?: item.manifest.exactPathOrResource} • SHA: ${item.manifest.checksumSha256Prefix}",
+                                text = listOfNotNull(item.bundledImageAssetPath, item.bundledVideoAssetPath, item.bundledAudioAssetPath).joinToString(" • ") { it.substringAfterLast('/') },
                                 fontSize = 11.sp,
                                 color = MutedSlateText
                             )

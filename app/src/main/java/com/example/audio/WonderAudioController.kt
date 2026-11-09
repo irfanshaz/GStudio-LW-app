@@ -6,6 +6,7 @@ import android.media.AudioFormat
 import android.media.AudioTrack
 import android.media.SoundPool
 import android.os.Bundle
+import android.media.MediaPlayer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.speech.tts.Voice
@@ -67,7 +68,6 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
     private val xyloSoundIds = IntArray(8)
 
     // Cache of resolved raw resource IDs for studio voice clips in res/raw/
-    private val rawVoiceClipSoundPoolIds = mutableMapOf<String, Int>()
 
     // Distinct offline system Voice objects keyed by TeacherVoiceOption.id
     private val distinctSystemVoicesById = mutableMapOf<String, Voice>()
@@ -682,31 +682,49 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         playSample(sfxWaterSplashId, volume = 0.50f, rate = rate)
     }
 
-    /**
-     * Plays a warm marimba chime and then speaks the animal/object discovery line
-     * with gentle wonder and room to look.
-     */
-    fun playAnimalOrObjectSignature(baseFreqHz: Float, label: String, spokenFact: String) {
-        val token = latestSpeechToken.incrementAndGet()
-        _lastSpokenCaption.value = "$label — $spokenFact"
-        speechSequenceJob?.cancel()
-        runCatching { tts?.stop() }
+    private var mediaSound: MediaPlayer? = null
 
-        if (sfxEnabled) {
-            val idx = ((baseFreqHz.toInt() / 45) % 8).coerceIn(0, 7)
-            playSample(xyloSoundIds[idx], volume = 0.28f)
+    fun playMediaSound(assetPath: String?, label: String, narration: Boolean = false) {
+        stopAllAudio()
+        if (assetPath == null) {
+            speakInstruction(label)
+            return
         }
-        if (narrationEnabled && isTtsReady) {
-            speechSequenceJob = scope.launch {
-                delay(110L)
-                if (token == latestSpeechToken.get()) {
-                    speakNowWithCategory(
-                        text = sanitizeForWarmSpeech("$label... $spokenFact"),
-                        category = VoicePerformanceCategory.DISCOVERY
-                    )
+        if (narration && !narrationEnabled || !narration && !sfxEnabled) return
+        val player = MediaPlayer()
+        mediaSound = player
+        try {
+            appContext.assets.openFd(assetPath).use { asset ->
+                player.setDataSource(asset.fileDescriptor, asset.startOffset, asset.length)
+            }
+            player.setOnPreparedListener {
+                if (mediaSound === player) {
+                    activateMusicDucking(it.duration.toLong().coerceAtLeast(1))
+                    it.start()
                 }
             }
+            player.setOnCompletionListener { if (mediaSound === it) stopMediaSound() }
+            player.setOnErrorListener { failed, _, _ ->
+                if (mediaSound === failed) stopMediaSound()
+                true
+            }
+            player.prepareAsync()
+        } catch (_: Exception) {
+            stopMediaSound()
+            speakInstruction(label)
         }
+    }
+
+    private fun stopMediaSound() {
+        val player = mediaSound
+        mediaSound = null
+        player?.release()
+    }
+
+    // Legacy call sites with no matched recording use the name, never an imitation call.
+    @Suppress("UNUSED_PARAMETER")
+    fun playAnimalOrObjectSignature(baseFreqHz: Float, label: String, spokenFact: String) {
+        playMediaSound(null, label)
     }
 
     /**
@@ -714,6 +732,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
      */
     fun stopSpeechOnly() {
         runCatching {
+            stopMediaSound()
             latestSpeechToken.incrementAndGet()
             speechSequenceJob?.cancel()
             duckRestoreJob?.cancel()
@@ -744,24 +763,15 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
     private fun tryPlayBundledRawVoiceClip(clipId: String): Boolean {
         val entry = VoiceAssetManifest.allManifestEntries.find { it.clipId == clipId } ?: return false
         val rawName = entry.expectedRawFileName.substringBeforeLast(".")
-        val cachedSoundId = rawVoiceClipSoundPoolIds[rawName]
-        if (cachedSoundId != null && cachedSoundId != 0) {
-            activateMusicDucking(1400L)
-            playSample(cachedSoundId, volume = 0.85f)
-            return true
-        }
         val resId = appContext.resources.getIdentifier(rawName, "raw", appContext.packageName)
-        if (resId != 0) {
-            val loadedId = soundPool.load(appContext, resId, 1)
-            rawVoiceClipSoundPoolIds[rawName] = loadedId
-            activateMusicDucking(1400L)
-            scope.launch {
-                delay(45L)
-                playSample(loadedId, volume = 0.85f)
-            }
-            return true
-        }
-        return false
+        if (resId == 0) return false
+        val player = runCatching { MediaPlayer.create(appContext, resId) }.getOrNull() ?: return false
+        stopMediaSound()
+        mediaSound = player
+        player.setOnCompletionListener { if (mediaSound === it) stopMediaSound() }
+        activateMusicDucking(player.duration.toLong().coerceAtLeast(1))
+        player.start()
+        return true
     }
 
     private fun speakDirectedInternal(
@@ -894,7 +904,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
 
         val DEFAULT_TEACHER_VOICE_OPTION = TeacherVoiceOption(
             id = DEFAULT_TEACHER_VOICE_ID,
-            displayName = "Ms. Clara — Warm Preschool Teacher (Default)",
+            displayName = "Device voice (offline fallback)",
             description = "Natural adult female teacher voice with comfortable pitch, gentle pauses, and schwa-free phonics.",
             isDefaultTeacher = true,
             systemVoiceName = null,

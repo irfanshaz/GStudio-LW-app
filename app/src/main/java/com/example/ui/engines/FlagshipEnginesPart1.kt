@@ -74,6 +74,11 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.boundsInWindow
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -501,6 +506,7 @@ fun SortingBasketsEngine(
         allItems.filter { it.categoryOrTarget in baskets }
     }
 
+    val basketBounds = remember(baskets) { mutableStateMapOf<String, Rect>() }
     val sortedIds = remember(activity.id, replayKey) { mutableStateListOf<String>() }
     var selectedItem by remember(activity.id, replayKey) { mutableStateOf<GameItemOption?>(null) }
     var feedbackMessage by remember(activity.id, replayKey) {
@@ -578,6 +584,8 @@ fun SortingBasketsEngine(
         ) {
             remainingItems.forEach { item ->
                 val isSelected = selectedItem?.id == item.id
+                var dragStart by remember(item.id) { mutableStateOf(Offset.Zero) }
+                var coordinates by remember(item.id) { mutableStateOf<LayoutCoordinates?>(null) }
                 var dragOffset by remember(item.id) { mutableStateOf(Offset.Zero) }
                 val cardSizeDp = (108f * item.sizeScale.coerceIn(0.75f, 1.32f)).dp
 
@@ -585,6 +593,7 @@ fun SortingBasketsEngine(
                     modifier = Modifier
                         .size(cardSizeDp)
                         .offset { IntOffset(dragOffset.x.roundToInt(), dragOffset.y.roundToInt()) }
+                        .onGloballyPositioned { coordinates = it }
                         .clip(RoundedCornerShape(22.dp))
                         .clickable {
                             selectedItem = item
@@ -593,21 +602,15 @@ fun SortingBasketsEngine(
                         }
                         .pointerInput(item.id, baskets) {
                             detectDragGestures(
-                                onDragStart = { selectedItem = item },
+                                onDragStart = { position ->
+                                    selectedItem = item
+                                    dragStart = coordinates?.takeIf { it.isAttached }
+                                        ?.localToWindow(position) ?: Offset.Unspecified
+                                },
                                 onDragEnd = {
-                                    if (dragOffset.y > 70f) {
-                                        // Determine basket by horizontal drag direction
-                                        val basketIndex = when {
-                                            baskets.size == 2 -> if (dragOffset.x < 0f) 0 else 1
-                                            else -> when {
-                                                dragOffset.x < -80f -> 0
-                                                dragOffset.x > 80f -> (baskets.size - 1)
-                                                else -> (baskets.size / 2)
-                                            }
-                                        }
-                                        val targetBasket = baskets.getOrElse(basketIndex) { item.categoryOrTarget }
-                                        attemptSort(item, targetBasket)
-                                    }
+                                    val release = dragStart + dragOffset
+                                    val basket = baskets.firstOrNull { basketBounds[it]?.contains(release) == true }
+                                    if (basket != null) attemptSort(item, basket)
                                     dragOffset = Offset.Zero
                                 },
                                 onDragCancel = { dragOffset = Offset.Zero },
@@ -686,6 +689,7 @@ fun SortingBasketsEngine(
                                 attemptSort(current, basketName)
                             }
                         }
+                        .onGloballyPositioned { basketBounds[basketName] = it.boundsInWindow() }
                         .testTag("sort_basket_$index"),
                     color = if (highlightScaffold) Color(matchingColor).copy(alpha = 0.28f) else Color(matchingColor).copy(alpha = 0.12f),
                     border = BorderStroke(

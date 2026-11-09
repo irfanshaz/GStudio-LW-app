@@ -1,0 +1,1973 @@
+{
+  "items": [
+    {
+      "id": "wild_elephant",
+      "kind": "animals",
+      "title": "Elephant",
+      "facts": [
+        "Elephants are the largest living land animals on Earth and have super long trunks!",
+        "An elephant uses its versatile trunk to drink water, pick up food, and even say hello to friends."
+      ],
+      "image": "real-world/animals/wild/elephant.webp",
+      "audio": "real-world/audio/animal_sounds/elephant_trumpet.mp3",
+      "video": "real-world/videos/animals/elephant_movement.mp4"
+    },
+    {
+      "id": "wild_lion",
+      "kind": "animals",
+      "title": "Lion",
+      "facts": [
+        "Male lions have large, magnificent manes of hair that protect their necks.",
+        "A lion's mighty roar can be heard from up to 8 kilometers (5 miles) away!"
+      ],
+      "image": "real-world/animals/wild/lion.webp",
+      "audio": "real-world/audio/animal_sounds/lion_roar.mp3"
+    },
+    {
+      "id": "wild_tiger",
+      "kind": "animals",
+      "title": "Tiger",
+      "facts": [
+        "Every tiger has a completely unique pattern of black stripes, just like human fingerprints!",
+        "Unlike many house cats, tigers love water and are wonderful swimmers who cool off in lakes."
+      ],
+      "image": "real-world/animals/wild/tiger.webp"
+    },
+    {
+      "id": "domestic_dog",
+      "kind": "animals",
+      "title": "Dog",
+      "facts": [
+        "Dogs communicate their feelings with their tails; a happy wag often means they are joyful!",
+        "A dog's sense of smell is up to 100,000 times stronger than a human's sense of smell."
+      ],
+      "image": "real-world/animals/domestic/dog.webp",
+      "audio": "real-world/audio/animal_sounds/dog_bark.mp3",
+      "video": "real-world/videos/animals/dog_movement.mp4"
+    },
+    {
+      "id": "domestic_cat",
+      "kind": "animals",
+      "title": "Cat",
+      "facts": [
+        "Cats make a gentle vibrating sound called a purr when they feel safe, calm, and happy.",
+        "Cats use their flexible whiskers to feel the world around them and check if spaces are wide enough."
+      ],
+      "image": "real-world/animals/domestic/cat.webp",
+      "video": "real-world/videos/animals/cat_movement.mp4"
+    },
+    {
+      "id": "lesson_wild_and_domestic_animals_pilot",
+      "kind": "lessons",
+      "title": "Meet the Animals: Wild and Domestic Friends",
+      "facts": [
+        "Animal Kingdom Introduction"
+      ],
+      "image": "real-world/thumbnails/wild_and_domestic_animals_thumb.webp",
+      "audio": "real-world/audio/narration/wild_and_domestic_animals_lesson_en.mp3",
+      "video": "real-world/videos/animal_lessons/wild_and_domestic_animals_lesson.mp4"
+    },
+    {
+      "id": "fruit_apple",
+      "kind": "objects",
+      "title": "Apple",
+      "facts": [
+        "Apples are sweet, crunchy fruits that grow on trees in orchards and are full of healthy vitamins."
+      ],
+      "image": "real-world/objects/fruits/apple.webp"
+    },
+    {
+      "id": "fruit_banana",
+      "kind": "objects",
+      "title": "Banana",
+      "facts": [
+        "Bananas grow in sunny warm places and give our bodies great energy to run and play."
+      ],
+      "image": "real-world/objects/fruits/banana.webp"
+    },
+    {
+      "id": "fruit_mango",
+      "kind": "objects",
+      "title": "Mango",
+      "facts": [
+        "The mango is known as the King of Fruits! It is wonderfully sweet, juicy, and delicious."
+      ],
+      "image": "real-world/objects/fruits/mango.webp"
+    },
+    {
+      "id": "vehicle_bus",
+      "kind": "objects",
+      "title": "Bus",
+      "facts": [
+        "Buses carry many passengers together safely through town, to school, and across cities."
+      ],
+      "image": "real-world/objects/vehicles/bus.webp"
+    },
+    {
+      "id": "vehicle_car",
+      "kind": "objects",
+      "title": "Car",
+      "facts": [
+        "Cars help families travel together comfortably on roads and highways."
+      ],
+      "image": "real-world/objects/vehicles/car.webp"
+    },
+    {
+      "id": "domestic_cow",
+      "kind": "animals",
+      "title": "Cow",
+      "facts": [
+        "Cows are gentle farm animals that give us fresh, nutritious milk every day!",
+        "Cows love chewing grass for hours and enjoy resting in sunny green meadows."
+      ],
+      "image": "real-world/animals/domestic/cow.webp",
+      "audio": "real-world/audio/animal_sounds/cow_moo.mp3",
+      "video": "real-world/videos/animals/cow_movement.mp4"
+    },
+    {
+      "id": "domestic_buffalo",
+      "kind": "animals",
+      "title": "Buffalo",
+      "facts": [
+        "Water buffaloes love cooling off in shallow ponds and rivers on warm days!",
+        "They have strong curved horns and help farmers plow fields."
+      ],
+      "image": "real-world/animals/domestic/buffalo.webp"
+    },
+    {
+      "id": "domestic_goat",
+      "kind": "animals",
+      "title": "Goat",
+      "facts": [
+        "Goats are nimble climbers with great balance and love hopping on rocks!",
+        "Baby goats are called 'kids' and love jumping and playing together."
+      ],
+      "image": "real-world/animals/domestic/goat.webp",
+      "video": "real-world/videos/animals/goat_movement.mp4"
+    },
+    {
+      "id": "domestic_sheep",
+      "kind": "animals",
+      "title": "Sheep",
+      "facts": [
+        "Sheep grow thick, soft, curly wool coats that keep us warm in winter sweaters!",
+        "Sheep love staying together in friendly groups called flocks."
+      ],
+      "image": "real-world/animals/domestic/sheep.webp"
+    },
+    {
+      "id": "domestic_horse",
+      "kind": "animals",
+      "title": "Horse",
+      "facts": [
+        "Horses can run very fast and have strong legs with hard hooves!",
+        "Horses can sleep both lying down and standing up by locking their leg joints."
+      ],
+      "image": "real-world/animals/domestic/horse.webp",
+      "audio": "real-world/audio/animal_sounds/horse_neigh.mp3",
+      "video": "real-world/videos/animals/horse_movement.mp4"
+    },
+    {
+      "id": "domestic_donkey",
+      "kind": "animals",
+      "title": "Donkey",
+      "facts": [
+        "Donkeys have large ears that help them hear sounds from far away and stay cool!",
+        "They are very patient, sure-footed helpers for farmers."
+      ],
+      "image": "real-world/animals/domestic/donkey.webp"
+    },
+    {
+      "id": "domestic_pig",
+      "kind": "animals",
+      "title": "Pig",
+      "facts": [
+        "Pigs are among the smartest farm animals and use their flat snouts to sniff out food!",
+        "Pigs roll in cool mud to protect their skin from the hot sun."
+      ],
+      "image": "real-world/animals/domestic/pig.webp"
+    },
+    {
+      "id": "domestic_rabbit",
+      "kind": "animals",
+      "title": "Rabbit",
+      "facts": [
+        "Rabbits have long ears to listen carefully and powerful back legs for hopping!",
+        "When rabbits are super happy, they jump and twist in the air in a move called a 'binky'."
+      ],
+      "image": "real-world/animals/domestic/rabbit.webp"
+    },
+    {
+      "id": "domestic_camel",
+      "kind": "animals",
+      "title": "Camel",
+      "facts": [
+        "Camels are called the 'Ships of the Desert' and store energy-rich fat in their humps!",
+        "Camels have long eyelashes and special nostrils that keep blowing desert sand out."
+      ],
+      "image": "real-world/animals/domestic/camel.webp"
+    },
+    {
+      "id": "lesson_farm_animals",
+      "kind": "lessons",
+      "title": "Animal Sounds — Farm Animals",
+      "facts": [
+        "Animal Sounds — Farm Animals"
+      ],
+      "image": "real-world/thumbnails/farm_animals_thumb.webp",
+      "audio": "real-world/audio/narration/farm_animals_lesson_en.mp3",
+      "video": "real-world/videos/animal_lessons/farm_animals_lesson.mp4"
+    },
+    {
+      "id": "lesson_fruits_colors",
+      "kind": "lessons",
+      "title": "Fruits and Their Colors",
+      "facts": [
+        "Fruits and Their Colors"
+      ],
+      "image": "real-world/thumbnails/fruits_and_colors_thumb.webp",
+      "audio": "real-world/audio/narration/fruits_and_colors_lesson_en.mp3",
+      "video": "real-world/videos/object_lessons/fruits_and_colors_lesson.mp4"
+    },
+    {
+      "id": "lesson_shapes_around_us",
+      "kind": "lessons",
+      "title": "Shapes Around Us",
+      "facts": [
+        "Shapes Around Us"
+      ],
+      "image": "real-world/thumbnails/shapes_around_us_thumb.webp",
+      "audio": "real-world/audio/narration/shapes_around_us_lesson_en.mp3",
+      "video": "real-world/videos/object_lessons/shapes_around_us_lesson.mp4"
+    },
+    {
+      "id": "fruit_orange",
+      "kind": "objects",
+      "title": "Orange",
+      "facts": [
+        "Oranges are juicy citrus fruits packed with Vitamin C to keep us healthy and strong."
+      ],
+      "image": "real-world/objects/fruits/orange.webp"
+    },
+    {
+      "id": "fruit_grapes",
+      "kind": "objects",
+      "title": "Grapes",
+      "facts": [
+        "Grapes grow in bunches on vines and are bite-sized sweet treats!"
+      ],
+      "image": "real-world/objects/fruits/grapes.webp"
+    },
+    {
+      "id": "fruit_watermelon",
+      "kind": "objects",
+      "title": "Watermelon",
+      "facts": [
+        "Watermelons have a green striped rind and sweet, refreshing red fruit inside!"
+      ],
+      "image": "real-world/objects/fruits/watermelon.webp"
+    },
+    {
+      "id": "fruit_pineapple",
+      "kind": "objects",
+      "title": "Pineapple",
+      "facts": [
+        "Pineapples wear a spiky green crown of leaves and are sweet and tangy inside."
+      ],
+      "image": "real-world/objects/fruits/pineapple.webp"
+    },
+    {
+      "id": "fruit_strawberry",
+      "kind": "objects",
+      "title": "Strawberry",
+      "facts": [
+        "Strawberries are heart-shaped red berries with tiny seeds on the outside!"
+      ],
+      "image": "real-world/objects/fruits/strawberry.webp"
+    },
+    {
+      "id": "fruit_guava",
+      "kind": "objects",
+      "title": "Guava",
+      "facts": [
+        "Guavas are fragrant tropical fruits that are crunchy and full of vitamins."
+      ],
+      "image": "real-world/objects/fruits/guava.webp"
+    },
+    {
+      "id": "fruit_papaya",
+      "kind": "objects",
+      "title": "Papaya",
+      "facts": [
+        "Ripe papayas have soft, sweet orange flesh that is great for tummy health."
+      ],
+      "image": "real-world/objects/fruits/papaya.webp"
+    },
+    {
+      "id": "fruit_pomegranate",
+      "kind": "objects",
+      "title": "Pomegranate",
+      "facts": [
+        "Inside a pomegranate are hundreds of shiny red jewel-like seeds called arils!"
+      ],
+      "image": "real-world/objects/fruits/pomegranate.webp"
+    },
+    {
+      "id": "fruit_coconut",
+      "kind": "objects",
+      "title": "Coconut",
+      "facts": [
+        "Coconuts grow high on palm trees and hold refreshing coconut water and white meat inside."
+      ],
+      "image": "real-world/objects/fruits/coconut.webp"
+    },
+    {
+      "id": "wild_giraffe",
+      "kind": "animals",
+      "title": "Giraffe",
+      "facts": [
+        "Giraffes are the tallest animals on Earth—their necks can reach high treetop leaves!",
+        "A giraffe's tongue is super long (up to 45 cm) and purplish-blue to protect it from sunburn."
+      ],
+      "image": "real-world/animals/wild/giraffe.webp"
+    },
+    {
+      "id": "lesson_wild_animals_safari",
+      "kind": "lessons",
+      "title": "Animal Sounds — Wild Animals",
+      "facts": [
+        "Animal Sounds — Wild Animals"
+      ],
+      "image": "real-world/thumbnails/wild_animals_safari_thumb.webp",
+      "audio": "real-world/audio/narration/wild_animals_safari_lesson_en.mp3",
+      "video": "real-world/videos/animal_lessons/wild_animals_safari_lesson.mp4"
+    },
+    {
+      "id": "lesson_animals_and_babies",
+      "kind": "lessons",
+      "title": "Animals and Their Babies",
+      "facts": [
+        "Animals and Their Babies"
+      ],
+      "image": "real-world/thumbnails/animals_and_babies_thumb.webp",
+      "audio": "real-world/audio/narration/animals_and_babies_lesson_en.mp3",
+      "video": "real-world/videos/animal_lessons/animals_and_babies_lesson.mp4"
+    },
+    {
+      "id": "lesson_vegetables_healthy",
+      "kind": "lessons",
+      "title": "Vegetables and Healthy Food",
+      "facts": [
+        "Vegetables and Healthy Food"
+      ],
+      "image": "real-world/thumbnails/vegetables_healthy_food_thumb.webp",
+      "audio": "real-world/audio/narration/vegetables_healthy_food_lesson_en.mp3",
+      "video": "real-world/videos/object_lessons/vegetables_healthy_food_lesson.mp4"
+    },
+    {
+      "id": "veg_carrot",
+      "kind": "objects",
+      "title": "Carrot",
+      "facts": [
+        "Carrots are crunchy orange root vegetables rich in Vitamin A that help our eyes see clearly!"
+      ],
+      "image": "real-world/objects/vegetables/carrot.webp"
+    },
+    {
+      "id": "bird_peacock",
+      "kind": "animals",
+      "title": "Peacock",
+      "facts": [
+        "The Indian Peacock is famous for its shimmering blue neck and fan of colorful eye-spotted feathers!",
+        "Peacocks love dancing by spreading their grand tail feathers when the monsoon rain clouds arrive."
+      ],
+      "image": "real-world/animals/birds/peacock.webp"
+    },
+    {
+      "id": "bird_parrot",
+      "kind": "animals",
+      "title": "Parrot",
+      "facts": [
+        "Parrots have bright green feathers and strong curved red beaks for cracking nuts!",
+        "Parrots are super clever birds that can learn to mimic human words and sounds."
+      ],
+      "image": "real-world/animals/birds/parrot.webp"
+    },
+    {
+      "id": "bird_crow",
+      "kind": "animals",
+      "title": "Crow",
+      "facts": [
+        "Crows are glossy black birds and are among the most intelligent problem-solvers in nature!",
+        "Remember the story of the thirsty crow who dropped pebbles into a pitcher to raise the water?"
+      ],
+      "image": "real-world/animals/birds/crow.webp"
+    },
+    {
+      "id": "bird_sparrow",
+      "kind": "animals",
+      "title": "Sparrow",
+      "facts": [
+        "House sparrows are tiny, cheerful brown-and-gray birds that hop quickly on two feet!",
+        "Sparrows build cozy cup-shaped nests out of dry grass and soft feathers."
+      ],
+      "image": "real-world/animals/birds/sparrow.webp"
+    },
+    {
+      "id": "bird_pigeon",
+      "kind": "animals",
+      "title": "Pigeon",
+      "facts": [
+        "Pigeons have a remarkable sense of direction and can find their way home from hundreds of miles away!",
+        "When pigeons walk, they bob their heads gently to keep their vision steady."
+      ],
+      "image": "real-world/animals/birds/pigeon.webp"
+    },
+    {
+      "id": "bird_eagle",
+      "kind": "animals",
+      "title": "Eagle",
+      "facts": [
+        "Eagles have huge wingspans that let them glide high above the clouds on warm air currents!",
+        "An eagle's eyesight is up to 8 times sharper than a human's eyesight."
+      ],
+      "image": "real-world/animals/birds/eagle.webp"
+    },
+    {
+      "id": "bird_owl",
+      "kind": "animals",
+      "title": "Owl",
+      "facts": [
+        "Owls are nocturnal birds that stay awake at night and have big round eyes to see in the dark!",
+        "Owls can turn their heads almost all the way around (up to 270 degrees) without moving their shoulders!"
+      ],
+      "image": "real-world/animals/birds/owl.webp"
+    },
+    {
+      "id": "bird_duck",
+      "kind": "animals",
+      "title": "Duck",
+      "facts": [
+        "Ducks have webbed feet that work like paddles to help them swim smoothly across ponds!",
+        "Duck feathers have a natural waterproof coating so their feathers stay dry even when diving."
+      ],
+      "image": "real-world/animals/birds/duck.webp"
+    },
+    {
+      "id": "bird_hen",
+      "kind": "animals",
+      "title": "Hen",
+      "facts": [
+        "Hens are caring mother birds on the farm that lay nutritious eggs and keep their chicks warm under their wings!",
+        "Hens scratch the soil with their feet to find tasty seeds."
+      ],
+      "image": "real-world/animals/birds/hen.webp"
+    },
+    {
+      "id": "bird_rooster",
+      "kind": "animals",
+      "title": "Rooster",
+      "facts": [
+        "The rooster has a bright red comb on top of its head and wakes up the farm at sunrise!",
+        "Roosters have shiny, colorful tail feathers and stand on high fences to sing in the morning."
+      ],
+      "image": "real-world/animals/birds/rooster.webp"
+    },
+    {
+      "id": "bird_penguin",
+      "kind": "animals",
+      "title": "Penguin",
+      "facts": [
+        "Penguins are birds that cannot fly in the air, but they 'fly' underwater using their flippers as champion swimmers!",
+        "Their black-and-white feathers look just like a fancy tuxedo suit."
+      ],
+      "image": "real-world/animals/birds/penguin.webp"
+    },
+    {
+      "id": "bird_flamingo",
+      "kind": "animals",
+      "title": "Flamingo",
+      "facts": [
+        "Flamingos get their gorgeous pink feather color from the beta-carotene in the tiny shrimp and algae they eat!",
+        "Flamingos love standing comfortably on just one long leg in shallow water."
+      ],
+      "image": "real-world/animals/birds/flamingo.webp"
+    },
+    {
+      "id": "bird_ostrich",
+      "kind": "animals",
+      "title": "Ostrich",
+      "facts": [
+        "The ostrich is the largest and heaviest bird in the world and lays the biggest eggs of any bird!",
+        "Even though ostriches cannot fly, their long legs let them run faster than a horse."
+      ],
+      "image": "real-world/animals/birds/ostrich.webp"
+    },
+    {
+      "id": "lesson_birds_and_sounds",
+      "kind": "lessons",
+      "title": "Birds and Their Sounds",
+      "facts": [
+        "Birds and Their Sounds"
+      ],
+      "image": "real-world/thumbnails/birds_and_their_sounds_thumb.webp",
+      "audio": "real-world/audio/narration/birds_and_their_sounds_lesson_en.mp3",
+      "video": "real-world/videos/animal_lessons/birds_and_their_sounds_lesson.mp4"
+    },
+    {
+      "id": "lesson_vehicles_transport",
+      "kind": "lessons",
+      "title": "Vehicles and Transportation",
+      "facts": [
+        "Vehicles and Transportation"
+      ],
+      "image": "real-world/thumbnails/vehicles_and_transportation_thumb.webp",
+      "audio": "real-world/audio/narration/vehicles_and_transportation_lesson_en.mp3",
+      "video": "real-world/videos/object_lessons/vehicles_and_transportation_lesson.mp4"
+    },
+    {
+      "id": "lesson_road_safety",
+      "kind": "lessons",
+      "title": "Road Safety for Children",
+      "facts": [
+        "Road Safety for Children"
+      ],
+      "image": "real-world/thumbnails/road_safety_for_children_thumb.webp",
+      "audio": "real-world/audio/narration/road_safety_for_children_lesson_en.mp3",
+      "video": "real-world/videos/good_habits/road_safety_for_children_lesson.mp4"
+    },
+    {
+      "id": "lesson_counting_1_to_10",
+      "kind": "lessons",
+      "title": "Counting Objects from 1 to 10",
+      "facts": [
+        "Counting Objects from 1 to 10"
+      ],
+      "image": "real-world/thumbnails/counting_objects_1_to_10_thumb.webp",
+      "audio": "real-world/audio/narration/counting_objects_1_to_10_lesson_en.mp3",
+      "video": "real-world/videos/numbers/counting_objects_1_to_10_lesson.mp4"
+    },
+    {
+      "id": "vehicle_train",
+      "kind": "objects",
+      "title": "Train",
+      "facts": [
+        "Trains roll smoothly on steel railway tracks and carry passengers and goods across long distances!"
+      ],
+      "image": "real-world/objects/vehicles/train.webp"
+    },
+    {
+      "id": "vehicle_aeroplane",
+      "kind": "objects",
+      "title": "Aeroplane",
+      "facts": [
+        "Aeroplanes have big wings and jet engines to fly high above the clouds across countries and oceans!"
+      ],
+      "image": "real-world/objects/vehicles/aeroplane.webp"
+    },
+    {
+      "id": "vehicle_helicopter",
+      "kind": "objects",
+      "title": "Helicopter",
+      "facts": [
+        "Helicopters have spinning rotor blades on top that let them hover in one spot and take off straight up!"
+      ],
+      "image": "real-world/objects/vehicles/helicopter.webp"
+    },
+    {
+      "id": "vehicle_bicycle",
+      "kind": "objects",
+      "title": "Bicycle",
+      "facts": [
+        "A bicycle has two wheels and pedals that we push with our feet for fun, healthy exercise!"
+      ],
+      "image": "real-world/objects/vehicles/bicycle.webp"
+    },
+    {
+      "id": "vehicle_motorcycle",
+      "kind": "objects",
+      "title": "Motorcycle",
+      "facts": [
+        "A motorcycle is a two-wheeled motor vehicle—riders always wear a strong safety helmet!"
+      ],
+      "image": "real-world/objects/vehicles/motorcycle.webp"
+    },
+    {
+      "id": "vehicle_tractor",
+      "kind": "objects",
+      "title": "Tractor",
+      "facts": [
+        "Tractors have huge, deep-treaded back wheels to help farmers plow soil and pull farm trailers."
+      ],
+      "image": "real-world/objects/vehicles/tractor.webp"
+    },
+    {
+      "id": "vehicle_truck",
+      "kind": "objects",
+      "title": "Truck",
+      "facts": [
+        "Trucks are strong cargo vehicles that carry food, building materials, and supplies to stores."
+      ],
+      "image": "real-world/objects/vehicles/truck.webp"
+    },
+    {
+      "id": "vehicle_boat",
+      "kind": "objects",
+      "title": "Boat",
+      "facts": [
+        "Boats float gently on lakes and rivers using oars, sails, or small motors."
+      ],
+      "image": "real-world/objects/vehicles/boat.webp"
+    },
+    {
+      "id": "vehicle_ship",
+      "kind": "objects",
+      "title": "Ship",
+      "facts": [
+        "Giant ships sail across deep oceans carrying travelers and containers around the world."
+      ],
+      "image": "real-world/objects/vehicles/ship.webp"
+    },
+    {
+      "id": "vehicle_ambulance",
+      "kind": "objects",
+      "title": "Ambulance",
+      "facts": [
+        "An ambulance has flashing lights and a siren to carry paramedics and help sick people get to the hospital fast."
+      ],
+      "image": "real-world/objects/vehicles/ambulance.webp"
+    },
+    {
+      "id": "vehicle_fire_engine",
+      "kind": "objects",
+      "title": "Fire Engine",
+      "facts": [
+        "A bright red fire engine carries brave firefighters, long ladders, and water hoses to put out fires!"
+      ],
+      "image": "real-world/objects/vehicles/fire_engine.webp"
+    },
+    {
+      "id": "aquatic_dolphin",
+      "kind": "animals",
+      "title": "Dolphin",
+      "facts": [
+        "Dolphins are friendly, intelligent marine mammals that breathe air through a blowhole on top of their head!",
+        "Dolphins talk to each other under the sea using clicks and whistles and love leaping over waves."
+      ],
+      "image": "real-world/animals/aquatic/dolphin.webp"
+    },
+    {
+      "id": "aquatic_whale",
+      "kind": "animals",
+      "title": "Whale",
+      "facts": [
+        "The Blue Whale is the largest animal ever to live on Earth—even bigger than the biggest dinosaurs!",
+        "Whales sing deep, gentle underwater songs that travel for miles through the ocean."
+      ],
+      "image": "real-world/animals/aquatic/whale.webp",
+      "audio": "real-world/audio/animal_sounds/whale_song.mp3"
+    },
+    {
+      "id": "aquatic_shark",
+      "kind": "animals",
+      "title": "Shark",
+      "facts": [
+        "Sharks have skeletons made of flexible cartilage instead of hard bone, helping them swim swiftly!",
+        "A shark's triangular dorsal fin glides through the water to keep it balanced."
+      ],
+      "image": "real-world/animals/aquatic/shark.webp"
+    },
+    {
+      "id": "aquatic_octopus",
+      "kind": "animals",
+      "title": "Octopus",
+      "facts": [
+        "An octopus has eight flexible arms lined with little suction cups and three hearts!",
+        "Octopuses are masters of camouflage and can change their skin color in the blink of an eye."
+      ],
+      "image": "real-world/animals/aquatic/octopus.webp"
+    },
+    {
+      "id": "aquatic_sea_turtle",
+      "kind": "animals",
+      "title": "Sea Turtle",
+      "facts": [
+        "Sea turtles have a hard protective shell and flipper-like legs that let them glide gracefully through the ocean!",
+        "Mother sea turtles return to the exact same sandy beach where they were born to lay their eggs."
+      ],
+      "image": "real-world/animals/aquatic/sea_turtle.webp"
+    },
+    {
+      "id": "aquatic_crab",
+      "kind": "animals",
+      "title": "Crab",
+      "facts": [
+        "Crabs have ten legs—their front two legs have strong pincers called claws!",
+        "Because of the way their leg joints bend, crabs love walking sideways across the sandy beach."
+      ],
+      "image": "real-world/animals/aquatic/crab.webp"
+    },
+    {
+      "id": "aquatic_jellyfish",
+      "kind": "animals",
+      "title": "Jellyfish",
+      "facts": [
+        "Jellyfish have umbrella-shaped bells that pulse gently to float through the water—and they are 95% water!",
+        "Jellyfish have drifted through Earth's oceans for hundreds of millions of years."
+      ],
+      "image": "real-world/animals/aquatic/jellyfish.webp"
+    },
+    {
+      "id": "aquatic_seahorse",
+      "kind": "animals",
+      "title": "Seahorse",
+      "facts": [
+        "A seahorse is a tiny fish with a head shaped like a little horse and a curly tail that holds onto seagrass!",
+        "Unlike most animals, it is the father seahorse who carries the babies in a safe pouch until they hatch."
+      ],
+      "image": "real-world/animals/aquatic/seahorse.webp"
+    },
+    {
+      "id": "aquatic_starfish",
+      "kind": "animals",
+      "title": "Starfish",
+      "facts": [
+        "Most starfish have five arms radiating from the center like a star in the sky!",
+        "Underneath its arms, a starfish has hundreds of tiny tube feet that help it crawl and hold onto rocks."
+      ],
+      "image": "real-world/animals/aquatic/starfish.webp"
+    },
+    {
+      "id": "insect_butterfly",
+      "kind": "animals",
+      "title": "Butterfly",
+      "facts": [
+        "Butterflies start life as tiny caterpillars before transforming inside a chrysalis into winged beauties!",
+        "Butterflies taste flower petals with special sensors on their feet."
+      ],
+      "image": "real-world/animals/insects/butterfly.webp"
+    },
+    {
+      "id": "insect_honeybee",
+      "kind": "animals",
+      "title": "Honeybee",
+      "facts": [
+        "Honeybees visit thousands of flowers to collect nectar and make golden sweet honey in hexagonal wax combs!",
+        "By carrying pollen from flower to flower, bees help apple, mango, and vegetable plants grow fruit."
+      ],
+      "image": "real-world/animals/insects/honeybee.webp"
+    },
+    {
+      "id": "insect_ant",
+      "kind": "animals",
+      "title": "Ant",
+      "facts": [
+        "Ants are super strong—a tiny ant can lift and carry leaves and crumbs up to 20 times its own body weight!",
+        "Ants live in big underground cities called colonies and work together as a team."
+      ],
+      "image": "real-world/animals/insects/ant.webp"
+    },
+    {
+      "id": "insect_dragonfly",
+      "kind": "animals",
+      "title": "Dragonfly",
+      "facts": [
+        "Dragonflies have four shimmering transparent wings that let them hover in mid-air and even fly backward!",
+        "Their big compound eyes allow them to see in almost every direction at once."
+      ],
+      "image": "real-world/animals/insects/dragonfly.webp"
+    },
+    {
+      "id": "insect_grasshopper",
+      "kind": "animals",
+      "title": "Grasshopper",
+      "facts": [
+        "Grasshoppers have long, spring-loaded hind legs that launch them high into the air like little catapults!",
+        "They make cheerful summer music by rubbing their back legs against their wings."
+      ],
+      "image": "real-world/animals/insects/grasshopper.webp"
+    },
+    {
+      "id": "insect_ladybug",
+      "kind": "animals",
+      "title": "Ladybug",
+      "facts": [
+        "Ladybugs look like shiny red domes with neat black polka dots—and underneath their red shell are hidden wings!",
+        "Gardeners love ladybugs because they protect flowers and vegetables from tiny pests."
+      ],
+      "image": "real-world/animals/insects/ladybug.webp"
+    },
+    {
+      "id": "insect_spider",
+      "kind": "animals",
+      "title": "Spider",
+      "facts": [
+        "Spiders are arachnids with eight legs, and they spin intricate, silky geometric webs that sparkle with morning dew!",
+        "Spider silk is stronger than steel thread of the same thickness."
+      ],
+      "image": "real-world/animals/insects/spider.webp"
+    },
+    {
+      "id": "insect_snail",
+      "kind": "animals",
+      "title": "Snail",
+      "facts": [
+        "A snail carries its spiral shell house right on its back wherever it goes and can tuck inside when it wants to rest!",
+        "Snails glide smoothly on a single muscular foot and have tiny eyes at the tips of their tentacles."
+      ],
+      "image": "real-world/animals/insects/snail.webp"
+    },
+    {
+      "id": "reptile_frog",
+      "kind": "animals",
+      "title": "Frog",
+      "facts": [
+        "Frogs are amphibians that hatch in water as swimming tadpoles and grow legs to hop onto land!",
+        "Tree frogs have sticky round pads on their toes to climb smooth green leaves."
+      ],
+      "image": "real-world/animals/reptiles/frog.webp"
+    },
+    {
+      "id": "reptile_crocodile",
+      "kind": "animals",
+      "title": "Crocodile",
+      "facts": [
+        "Crocodiles have tough, scaly armor plates along their backs that warm up like solar panels in the sun!",
+        "When a crocodile rests on the riverbank with its mouth open, it is actually cooling itself down."
+      ],
+      "image": "real-world/animals/reptiles/crocodile.webp"
+    },
+    {
+      "id": "reptile_snake",
+      "kind": "animals",
+      "title": "Snake",
+      "facts": [
+        "Snakes have no legs at all, yet they glide smoothly across the ground and up trees using special belly scales!",
+        "Snakes flick their forked tongues in and out to smell the air around them."
+      ],
+      "image": "real-world/animals/reptiles/snake.webp"
+    },
+    {
+      "id": "reptile_lizard",
+      "kind": "animals",
+      "title": "Lizard",
+      "facts": [
+        "Lizards are cold-blooded reptiles that love doing little push-ups on warm sunny rocks in the morning!",
+        "Many lizards can safely regrow their tail if it ever gets caught."
+      ],
+      "image": "real-world/animals/reptiles/lizard.webp"
+    },
+    {
+      "id": "reptile_chameleon",
+      "kind": "animals",
+      "title": "Chameleon",
+      "facts": [
+        "Chameleons can change the color of their skin to match their mood, temperature, and leafy surroundings!",
+        "A chameleon's two eyes can look in two completely different directions at the same time."
+      ],
+      "image": "real-world/animals/reptiles/chameleon.webp"
+    },
+    {
+      "id": "reptile_tortoise",
+      "kind": "animals",
+      "title": "Tortoise",
+      "facts": [
+        "A tortoise walks on land with sturdy, elephant-like feet and carries a high, domed protective shell!",
+        "Tortoises walk slowly and peacefully, and they can live for more than 100 years!"
+      ],
+      "image": "real-world/animals/reptiles/tortoise.webp"
+    },
+    {
+      "id": "lesson_good_habits_brushing",
+      "kind": "lessons",
+      "title": "Good Habits — Brushing Teeth",
+      "facts": [
+        "Good Habits — Brushing Teeth"
+      ],
+      "image": "real-world/thumbnails/brushing_teeth_thumb.webp",
+      "audio": "real-world/audio/narration/brushing_teeth_lesson_en.mp3",
+      "video": "real-world/videos/good_habits/brushing_teeth_lesson.mp4"
+    },
+    {
+      "id": "lesson_good_habits_washing_hands",
+      "kind": "lessons",
+      "title": "Good Habits — Washing Hands",
+      "facts": [
+        "Good Habits — Washing Hands"
+      ],
+      "image": "real-world/thumbnails/washing_hands_thumb.webp",
+      "audio": "real-world/audio/narration/washing_hands_lesson_en.mp3",
+      "video": "real-world/videos/good_habits/washing_hands_lesson.mp4"
+    },
+    {
+      "id": "lesson_weather_and_seasons",
+      "kind": "lessons",
+      "title": "Weather and Seasons",
+      "facts": [
+        "Weather and Seasons"
+      ],
+      "image": "real-world/thumbnails/weather_and_seasons_thumb.webp",
+      "audio": "real-world/audio/narration/weather_and_seasons_lesson_en.mp3",
+      "video": "real-world/videos/science/weather_and_seasons_lesson.mp4"
+    },
+    {
+      "id": "lesson_day_and_night",
+      "kind": "lessons",
+      "title": "Day and Night",
+      "facts": [
+        "Day and Night"
+      ],
+      "image": "real-world/thumbnails/day_and_night_thumb.webp",
+      "audio": "real-world/audio/narration/day_and_night_lesson_en.mp3",
+      "video": "real-world/videos/science/day_and_night_lesson.mp4"
+    },
+    {
+      "id": "lesson_solar_system",
+      "kind": "lessons",
+      "title": "Our Solar System — Introduction",
+      "facts": [
+        "Our Solar System — Introduction"
+      ],
+      "image": "real-world/thumbnails/solar_system_intro_thumb.webp",
+      "audio": "real-world/audio/narration/solar_system_intro_lesson_en.mp3",
+      "video": "real-world/videos/science/solar_system_intro_lesson.mp4"
+    },
+    {
+      "id": "everyday_ball",
+      "kind": "objects",
+      "title": "Ball",
+      "facts": [
+        "A round, bouncy play ball is great for kicking, catching, and rolling with friends outdoors!"
+      ],
+      "image": "real-world/objects/everyday/ball.webp"
+    },
+    {
+      "id": "everyday_book",
+      "kind": "objects",
+      "title": "Book",
+      "facts": [
+        "Books are filled with stories, pictures, and knowledge that take our imagination on wonderful adventures!"
+      ],
+      "image": "real-world/objects/everyday/book.webp"
+    },
+    {
+      "id": "everyday_pencil",
+      "kind": "objects",
+      "title": "Pencil",
+      "facts": [
+        "We hold a pencil to write letters, numbers, and draw creative pictures on paper."
+      ],
+      "image": "real-world/objects/everyday/pencil.webp"
+    },
+    {
+      "id": "everyday_chair",
+      "kind": "objects",
+      "title": "Chair",
+      "facts": [
+        "A sturdy chair has four legs and a backrest so we can sit comfortably while reading or eating."
+      ],
+      "image": "real-world/objects/everyday/chair.webp"
+    },
+    {
+      "id": "everyday_table",
+      "kind": "objects",
+      "title": "Table",
+      "facts": [
+        "A table has a flat top where families gather to eat meals, study, and build puzzles."
+      ],
+      "image": "real-world/objects/everyday/table.webp"
+    },
+    {
+      "id": "everyday_clock",
+      "kind": "objects",
+      "title": "Clock",
+      "facts": [
+        "A clock has numbers from 1 to 12 and moving hands that tell us the time of day!"
+      ],
+      "image": "real-world/objects/everyday/clock.webp"
+    },
+    {
+      "id": "everyday_umbrella",
+      "kind": "objects",
+      "title": "Umbrella",
+      "facts": [
+        "An umbrella opens like a canopy overhead to keep us dry in the rain and shaded from hot sun."
+      ],
+      "image": "real-world/objects/everyday/umbrella.webp"
+    },
+    {
+      "id": "everyday_shoes",
+      "kind": "objects",
+      "title": "Shoes",
+      "facts": [
+        "We wear comfortable shoes on our feet to protect them when walking, running, and playing outside."
+      ],
+      "image": "real-world/objects/everyday/shoes.webp"
+    },
+    {
+      "id": "everyday_bag",
+      "kind": "objects",
+      "title": "Bag",
+      "facts": [
+        "A school backpack bag has shoulder straps to carry our books, pencils, and lunchbox neatly."
+      ],
+      "image": "real-world/objects/everyday/bag.webp"
+    },
+    {
+      "id": "everyday_bottle",
+      "kind": "objects",
+      "title": "Bottle",
+      "facts": [
+        "A reusable water bottle keeps clean drinking water ready so we stay hydrated all day!"
+      ],
+      "image": "real-world/objects/everyday/bottle.webp"
+    },
+    {
+      "id": "everyday_cup",
+      "kind": "objects",
+      "title": "Cup",
+      "facts": [
+        "A cup has a curved handle so we can hold it safely to drink warm milk or water."
+      ],
+      "image": "real-world/objects/everyday/cup.webp"
+    },
+    {
+      "id": "everyday_spoon",
+      "kind": "objects",
+      "title": "Spoon",
+      "facts": [
+        "We use a clean spoon to scoop and eat soup, rice, yogurt, and cereal."
+      ],
+      "image": "real-world/objects/everyday/spoon.webp"
+    },
+    {
+      "id": "everyday_toothbrush",
+      "kind": "objects",
+      "title": "Toothbrush",
+      "facts": [
+        "A toothbrush has soft bristles that clean our teeth every morning and night for a bright smile!"
+      ],
+      "image": "real-world/objects/everyday/toothbrush.webp"
+    },
+    {
+      "id": "everyday_bed",
+      "kind": "objects",
+      "title": "Bed",
+      "facts": [
+        "A cozy bed has a soft mattress, pillow, and blanket where we sleep and recharge every night."
+      ],
+      "image": "real-world/objects/everyday/bed.webp"
+    },
+    {
+      "id": "nature_rainbow",
+      "kind": "objects",
+      "title": "Rainbow",
+      "facts": [
+        "A rainbow appears in the sky when sunlight shines through raindrops, showing seven glowing colors!"
+      ],
+      "image": "real-world/objects/nature/rainbow.webp"
+    },
+    {
+      "id": "nature_sun",
+      "kind": "objects",
+      "title": "Sun",
+      "facts": [
+        "The Sun is a bright star at the center of our solar system that gives Earth warm daylight and helps plants grow!"
+      ],
+      "image": "real-world/objects/nature/sun.webp"
+    },
+    {
+      "id": "nature_moon",
+      "kind": "objects",
+      "title": "Moon",
+      "facts": [
+        "The Moon shines softly in the night sky and changes shape from a thin crescent to a bright full circle!"
+      ],
+      "image": "real-world/objects/nature/moon.webp"
+    },
+    {
+      "id": "nature_stars",
+      "kind": "objects",
+      "title": "Stars",
+      "facts": [
+        "Stars are distant suns twinkling across the night sky in beautiful patterns called constellations."
+      ],
+      "image": "real-world/objects/nature/stars.webp"
+    },
+    {
+      "id": "nature_cloud",
+      "kind": "objects",
+      "title": "Cloud",
+      "facts": [
+        "Clouds float in the sky and are made of tiny water droplets that bring refreshing rain to the Earth."
+      ],
+      "image": "real-world/objects/nature/cloud.webp"
+    },
+    {
+      "id": "nature_tree",
+      "kind": "objects",
+      "title": "Tree",
+      "facts": [
+        "Trees have deep roots, a sturdy trunk, and green leaves that make fresh oxygen for us to breathe!"
+      ],
+      "image": "real-world/objects/nature/tree.webp"
+    },
+    {
+      "id": "nature_flower",
+      "kind": "objects",
+      "title": "Flower",
+      "facts": [
+        "Flowers bloom with colorful petals and sweet fragrance, inviting bees and butterflies to visit."
+      ],
+      "image": "real-world/objects/nature/flower.webp"
+    },
+    {
+      "id": "nature_mountain",
+      "kind": "objects",
+      "title": "Mountain",
+      "facts": [
+        "Mountains are giant landforms that rise high into the sky, often crowned with white snow at the peak!"
+      ],
+      "image": "real-world/objects/nature/mountain.webp"
+    },
+    {
+      "id": "nature_river",
+      "kind": "objects",
+      "title": "River",
+      "facts": [
+        "A river is a flowing ribbon of fresh water that travels from mountains down through valleys to the sea."
+      ],
+      "image": "real-world/objects/nature/river.webp"
+    },
+    {
+      "id": "nature_waterfall",
+      "kind": "objects",
+      "title": "Waterfall",
+      "facts": [
+        "A waterfall happens where a river tumbles over a high rocky cliff into a misty pool below!"
+      ],
+      "image": "real-world/objects/nature/waterfall.webp"
+    },
+    {
+      "id": "nature_ocean",
+      "kind": "objects",
+      "title": "Ocean",
+      "facts": [
+        "The ocean is a vast body of salty water that covers most of our planet and is home to whales, dolphins, and coral reefs!"
+      ],
+      "image": "real-world/objects/nature/ocean.webp"
+    }
+  ],
+  "files": {
+    "animals/wild/elephant.webp": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/wild/elephant.webp",
+      "sha256": "a410ca4460acb13666008f7e3180e46cc539ddcc4065a3cecc7f2673e95efc3d"
+    },
+    "audio/animal_sounds/elephant_trumpet.mp3": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "audio/animal_sounds/elephant_trumpet.mp3",
+      "sha256": "8739bc5eadeabe2d3c176d3588e94e6ce8d857abba0e65a4cfd5f0002e3199ac"
+    },
+    "videos/animals/elephant_movement.mp4": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "videos/animals/elephant_movement.mp4",
+      "sha256": "3dfde10410b7cca1949a8ec26b3a8568dfd309378a359c5f863049a60e1c8971"
+    },
+    "animals/wild/lion.webp": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/wild/lion.webp",
+      "sha256": "c1a5f5eeba2f4e58928da8e1c79702cc76bf3c90d2eeae3f16bca6613ad367a8"
+    },
+    "audio/animal_sounds/lion_roar.mp3": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "audio/animal_sounds/lion_roar.mp3",
+      "sha256": "60913aefd2c62002dc1bf977e25ab5bcf50c3f2ca2e605f6e33493c15d695fa4"
+    },
+    "animals/wild/tiger.webp": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/wild/tiger.webp",
+      "sha256": "67054138a6167c8afe94e82dfb5b539d840ebf52a267185f16b4dea28dc89840"
+    },
+    "animals/domestic/dog.webp": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/domestic/dog.webp",
+      "sha256": "7550e9d231e479d94be8ec0ff8a233b2f87ec6a6c16ffcf89757d3d9303e42ed"
+    },
+    "audio/animal_sounds/dog_bark.mp3": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "audio/animal_sounds/dog_bark.mp3",
+      "sha256": "dcbafd5e0aab642c29d9fd8ac62acd07f1a9069b9603cbd34cb48f1c0569358a"
+    },
+    "videos/animals/dog_movement.mp4": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "videos/animals/dog_movement.mp4",
+      "sha256": "930c70b8da7c1e83667471bf8653586b0d3f0ca2de83e70cb6fc6b378251d9a3"
+    },
+    "animals/domestic/cat.webp": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/domestic/cat.webp",
+      "sha256": "ef85c3f9f5b2fb63bfaa58394d42d919b05151423baf543b428c7fbc92d0ba16"
+    },
+    "videos/animals/cat_movement.mp4": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "videos/animals/cat_movement.mp4",
+      "sha256": "614ace19611b85b29cf42cad71a9bc6a5e2fffc0b1f6bcf66b5c73cdd4a0ac9a"
+    },
+    "thumbnails/wild_and_domestic_animals_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/wild_and_domestic_animals_thumb.webp",
+      "sha256": "529e6f86968a00e74cd334f589b5ff97cd8ae94dc661f26d2b985a4a898cc9fe"
+    },
+    "audio/narration/wild_and_domestic_animals_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/wild_and_domestic_animals_lesson_en.mp3",
+      "sha256": "3225243ab0d49aa795f7f2d31319c0367f86ec7080a524077f58b3f23b502292"
+    },
+    "videos/animal_lessons/wild_and_domestic_animals_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/animal_lessons/wild_and_domestic_animals_lesson.mp4",
+      "sha256": "d7aafd19cd5984353e73bf56d31fd87601e0731ec3a13b6e970489e464d1a89c"
+    },
+    "objects/fruits/apple.webp": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/apple.webp",
+      "sha256": "383738fbf75e358a8c6750541f4989cf68bbaabc85059490511bd16293360fbf"
+    },
+    "objects/fruits/banana.webp": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/banana.webp",
+      "sha256": "f37057daba62f5cc2b5dc5121c1159f1d51ebfe3aa9a7378b6eefbd44fda49d6"
+    },
+    "objects/fruits/mango.webp": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/mango.webp",
+      "sha256": "fcbeb3778cddafa8cd05bbebf62ba84cbfcc3b1abbea09f722718ac7e15601ea"
+    },
+    "objects/vehicles/bus.webp": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/bus.webp",
+      "sha256": "b6490241fc09a31439503cb83dbdfe9bde00597a6d51496152fd675d82c034dc"
+    },
+    "objects/vehicles/car.webp": {
+      "archive": "LWW_MediaPack_Batch01_15a8de66.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/car.webp",
+      "sha256": "2970bd9c1c29a134e9878722cdb4868c0bd524fc78ccc157327fbcc54e380fb3"
+    },
+    "animals/domestic/cow.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/domestic/cow.webp",
+      "sha256": "e55a3a34cc15248df7082183bc668e0653159b83b6bc659267595ded7d1d6ca7"
+    },
+    "audio/animal_sounds/cow_moo.mp3": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "audio/animal_sounds/cow_moo.mp3",
+      "sha256": "26fedb0b759aeb34bcb0c0aeef3babf10a12bfccd5890d7a428950353b344626"
+    },
+    "videos/animals/cow_movement.mp4": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "videos/animals/cow_movement.mp4",
+      "sha256": "da3d1a3cf9f9bdfc792e25752cc1bf2ea0abfd1a42fe33adc01284012078b94d"
+    },
+    "animals/domestic/buffalo.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/domestic/buffalo.webp",
+      "sha256": "46f3b16358c49a71ca57afc0906fc489d1c522e655c6c04c0547de14d3739c00"
+    },
+    "animals/domestic/goat.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/domestic/goat.webp",
+      "sha256": "8fb7d0379d97643412cdafb34d9193c46fd1da1ed8ea98df7f5e7b8a9b0f41a6"
+    },
+    "videos/animals/goat_movement.mp4": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "videos/animals/goat_movement.mp4",
+      "sha256": "31d10f2e941f125d4d2503923fd7f06461ef159bff038c1d2182457b54d73c29"
+    },
+    "animals/domestic/sheep.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/domestic/sheep.webp",
+      "sha256": "a43404e9f4070975021eec48a8bf5ae45e15ac7fb13537f656ba7165e2c1a4f5"
+    },
+    "animals/domestic/horse.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/domestic/horse.webp",
+      "sha256": "119501bd1c9ab45fcb3889fc57dab622096cf8390a2cd139f0f8a4256fe30a88"
+    },
+    "audio/animal_sounds/horse_neigh.mp3": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "audio/animal_sounds/horse_neigh.mp3",
+      "sha256": "c1f5e1599650ed166cf856ac33399021e549f4cdb11ebd4004618080f2df4ede"
+    },
+    "videos/animals/horse_movement.mp4": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "videos/animals/horse_movement.mp4",
+      "sha256": "8c8f036236efe411b431b1b861aa15b66f622485badb25ec75d274b32d996552"
+    },
+    "animals/domestic/donkey.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/domestic/donkey.webp",
+      "sha256": "cd0578337119f1d522fa2ab9aae0042f01a69664d01902e48d864d3a72fc35fd"
+    },
+    "animals/domestic/pig.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/domestic/pig.webp",
+      "sha256": "3412820dc347e93f8d20153bed8ae08da0ccce81f5bbcf63a50aff030a29ec6a"
+    },
+    "animals/domestic/rabbit.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/domestic/rabbit.webp",
+      "sha256": "60be18eb3dd2fbe95f9d819ec60e02b0659489782ed108805f2dcb9e0c8deeb1"
+    },
+    "animals/domestic/camel.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/domestic/camel.webp",
+      "sha256": "0964cd735871123b9a21f5dbeb25e99105de596db9368a672a09bf4fd23560e9"
+    },
+    "thumbnails/farm_animals_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/farm_animals_thumb.webp",
+      "sha256": "92c1f9b1b7e3416e0f6ccfbbbec38af736a7523869627edb47204e70350974f4"
+    },
+    "audio/narration/farm_animals_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/farm_animals_lesson_en.mp3",
+      "sha256": "ae70b553592c05cb8e3276a11afdd631148c1ec81b2f05d46305a404b618720b"
+    },
+    "videos/animal_lessons/farm_animals_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/animal_lessons/farm_animals_lesson.mp4",
+      "sha256": "6b906cca0a1cb1a6f5df5debb3ebcfc0e364c39be1427f1c711994f04eb0f529"
+    },
+    "thumbnails/fruits_and_colors_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/fruits_and_colors_thumb.webp",
+      "sha256": "4ee50519af86472e5140ca09ed37cfc14283f3afee6fe81ba15e4e799d0abda1"
+    },
+    "audio/narration/fruits_and_colors_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/fruits_and_colors_lesson_en.mp3",
+      "sha256": "1c9b2f300c5664fa1bb5e06eec40c4e5e0020ff74f4e25b2f02354bef05dc3e8"
+    },
+    "videos/object_lessons/fruits_and_colors_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/object_lessons/fruits_and_colors_lesson.mp4",
+      "sha256": "19d9ab8316ac8e1f67c65ff8b0980598c0dfe03cf6062b93df73766dc1d77d80"
+    },
+    "thumbnails/shapes_around_us_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/shapes_around_us_thumb.webp",
+      "sha256": "ac31e34b50156369968f1e396b2856f02809b7693f7fde9750e06e3b0d6f3384"
+    },
+    "audio/narration/shapes_around_us_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/shapes_around_us_lesson_en.mp3",
+      "sha256": "f24d2112c615db56e400b6e1d8e6ba699462304fb8438babddec80bafffce706"
+    },
+    "videos/object_lessons/shapes_around_us_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/object_lessons/shapes_around_us_lesson.mp4",
+      "sha256": "55ee0fe5b83aa3e2797a69d5ee4139f26d0dec64cfc677f9d2c86015e58d00c4"
+    },
+    "objects/fruits/orange.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/orange.webp",
+      "sha256": "c428048b90d77a6bf38355c16714b3d165e4ef72176fbee5e03627dc60f10fd1"
+    },
+    "objects/fruits/grapes.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/grapes.webp",
+      "sha256": "524fd0c9122722767df85f83b77c91c0f8a8c8e7bef340cde92151dc97d0f013"
+    },
+    "objects/fruits/watermelon.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/watermelon.webp",
+      "sha256": "c59d47c0afe759b283b0e954da0e6008b09cef27c40bcc0dbb9645a7d703f2f7"
+    },
+    "objects/fruits/pineapple.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/pineapple.webp",
+      "sha256": "03cf1eeaca1a2e7a39333c361dc1779de34ff14f2484529915f06a184b41e208"
+    },
+    "objects/fruits/strawberry.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/strawberry.webp",
+      "sha256": "7f615c3a0f5f30d60ad0ecdc45a16aa30fe4898caa4cbcd2e9d3e9f288b1cd62"
+    },
+    "objects/fruits/guava.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/guava.webp",
+      "sha256": "774cde1c629cfedaee34cd087586884100e6bcdd5926a01618c4f70d8bd89bd9"
+    },
+    "objects/fruits/papaya.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/papaya.webp",
+      "sha256": "8833af7f7267d9eb5cf77f9f2db8a4a1e526e9bb95de3ad3eb9153533ad5d261"
+    },
+    "objects/fruits/pomegranate.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/pomegranate.webp",
+      "sha256": "0bc88670f3e1bdfc2889335efad0374ea519094842e593d01a1f5412259f927b"
+    },
+    "objects/fruits/coconut.webp": {
+      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/fruits/coconut.webp",
+      "sha256": "763affd0365e8ef6e476d572851993a4997e6a2d95373131f50c50287d94baa2"
+    },
+    "animals/wild/giraffe.webp": {
+      "archive": "LWW_MediaPack_Batch03_0421cf3a.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/wild/giraffe.webp",
+      "sha256": "0d0e89735df90f8eedd050a03bf3698bd122e1c2218b21c88e7a573c06746440"
+    },
+    "thumbnails/wild_animals_safari_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch03_0421cf3a.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/wild_animals_safari_thumb.webp",
+      "sha256": "f9a602d24914e7ad5fcdf2b372504cf261d805cfd9f152494658b233d57f7d1b"
+    },
+    "audio/narration/wild_animals_safari_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch03_0421cf3a.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/wild_animals_safari_lesson_en.mp3",
+      "sha256": "e806316016e7ebcb9d6b5f28b33899059e1ae3cacb83f1bb0d76a29c435be42c"
+    },
+    "videos/animal_lessons/wild_animals_safari_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch03_0421cf3a.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/animal_lessons/wild_animals_safari_lesson.mp4",
+      "sha256": "8fdc95df2e1b6460e4d2884c0e80124653c93ab4a972ea1e72fde536cbe7b6b2"
+    },
+    "thumbnails/animals_and_babies_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch03_0421cf3a.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/animals_and_babies_thumb.webp",
+      "sha256": "92c1f9b1b7e3416e0f6ccfbbbec38af736a7523869627edb47204e70350974f4"
+    },
+    "audio/narration/animals_and_babies_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch03_0421cf3a.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/animals_and_babies_lesson_en.mp3",
+      "sha256": "8df77ad1d09da2e70c4cec9d38516933380b967c01165906244ddaaa7fffce3c"
+    },
+    "videos/animal_lessons/animals_and_babies_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch03_0421cf3a.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/animal_lessons/animals_and_babies_lesson.mp4",
+      "sha256": "bf4c450abd61ae9f3a0b48f1214b9b29d6665f47944ce4fd500effa18bf09f88"
+    },
+    "thumbnails/vegetables_healthy_food_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch03_0421cf3a.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/vegetables_healthy_food_thumb.webp",
+      "sha256": "5936cf1ac1685161ef35f73e079acc4b5dd4c253948990becb2ac3937d700b3a"
+    },
+    "audio/narration/vegetables_healthy_food_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch03_0421cf3a.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/vegetables_healthy_food_lesson_en.mp3",
+      "sha256": "55d328c89d7388198454d5466221d65f19907a8694c371501261f42162399e23"
+    },
+    "videos/object_lessons/vegetables_healthy_food_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch03_0421cf3a.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/object_lessons/vegetables_healthy_food_lesson.mp4",
+      "sha256": "b47dd87e83e900910156a21041d0c7051905284e033f405aa540142a61109c24"
+    },
+    "objects/vegetables/carrot.webp": {
+      "archive": "LWW_MediaPack_Batch03_0421cf3a.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vegetables/carrot.webp",
+      "sha256": "b70a5b651005f77bca6f4f36afe988e9e95ab9d20e81b7b5cb3161b5020efaff"
+    },
+    "animals/birds/peacock.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/peacock.webp",
+      "sha256": "06f786da4d187f41f8391af7f83927e736cf382193613e0f7afe4112fdcf2c10"
+    },
+    "animals/birds/parrot.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/parrot.webp",
+      "sha256": "210d36903b01aad99ec6a3fb93fdc7cdfdd9b4819245cb4dadee3f944057cbb6"
+    },
+    "animals/birds/crow.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/crow.webp",
+      "sha256": "2be67c987484efcdd4cf76075964a8f85c3b940fdff127c619aba71b514276fc"
+    },
+    "animals/birds/sparrow.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/sparrow.webp",
+      "sha256": "8b4d8b61a3cec4d49ec1902ee8dd0b6a6a85c574fb68f3381e4456fb776b1872"
+    },
+    "animals/birds/pigeon.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/pigeon.webp",
+      "sha256": "f7d10f6506c358d417ef2f806b1eeb842ddf9bd2674566c8781f06fda07d49ba"
+    },
+    "animals/birds/eagle.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/eagle.webp",
+      "sha256": "5f21d1fb12b03d30ef3b6f8487ff5f3f4bf352eadc9e792e8ddd6c78b08d8a60"
+    },
+    "animals/birds/owl.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/owl.webp",
+      "sha256": "3ee2f779de3c100824f1dbf730f2ca3e764657750aa88482573d0a460d31e085"
+    },
+    "animals/birds/duck.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/duck.webp",
+      "sha256": "18953ec6c00c3a95051952bb0b7eff30ed50a7ffb50915debe37d98ee2ae64d4"
+    },
+    "animals/birds/hen.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/hen.webp",
+      "sha256": "90bd4451099466222c483cc0e9f63620e329722c5ccef378998e6297650dfc31"
+    },
+    "animals/birds/rooster.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/rooster.webp",
+      "sha256": "b88295425f368c9c0ebdce142f5ef2ef96367845a1e5e93622826ae8d5886851"
+    },
+    "animals/birds/penguin.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/penguin.webp",
+      "sha256": "bee0d0086cdba6bd393104bda82818074c4f9e955b01f7ca6894ff130a8760df"
+    },
+    "animals/birds/flamingo.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/flamingo.webp",
+      "sha256": "d55d878e6f9eed556aa6d0b6a94e8d5c187305fa037ac500448355c2ae41c6bd"
+    },
+    "animals/birds/ostrich.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/birds/ostrich.webp",
+      "sha256": "2098931705f6ca68bc675dc2ec448877a39e16051da57d17e0b5ac385e5c4293"
+    },
+    "thumbnails/birds_and_their_sounds_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/birds_and_their_sounds_thumb.webp",
+      "sha256": "64197078328622382043f03a30eace80ae1c8b0459c98b9e8f428f8fa7749027"
+    },
+    "audio/narration/birds_and_their_sounds_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/birds_and_their_sounds_lesson_en.mp3",
+      "sha256": "9b07bd7be65b6bf1d049d43fee32428d55f1015361c8bea38fe5699e6b67c371"
+    },
+    "videos/animal_lessons/birds_and_their_sounds_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/animal_lessons/birds_and_their_sounds_lesson.mp4",
+      "sha256": "c8f07ffd40bd075eb2230ddb0fc9d1c68fa7203162744721a9a0cf5dfd1760ce"
+    },
+    "thumbnails/vehicles_and_transportation_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/vehicles_and_transportation_thumb.webp",
+      "sha256": "4073a487df448259347d95cf6cb2fe184576f6c2f931722eb8da0ae4c65a2dc4"
+    },
+    "audio/narration/vehicles_and_transportation_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/vehicles_and_transportation_lesson_en.mp3",
+      "sha256": "311190e70b2189b225315f03e9bc2a8c98d1b3aed4bd8be9c1eb51542be07e1d"
+    },
+    "videos/object_lessons/vehicles_and_transportation_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/object_lessons/vehicles_and_transportation_lesson.mp4",
+      "sha256": "1bb886673652029f008e09f02938b97b79d72467431b02dff3a9946c471e93d7"
+    },
+    "thumbnails/road_safety_for_children_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/road_safety_for_children_thumb.webp",
+      "sha256": "4073a487df448259347d95cf6cb2fe184576f6c2f931722eb8da0ae4c65a2dc4"
+    },
+    "audio/narration/road_safety_for_children_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/road_safety_for_children_lesson_en.mp3",
+      "sha256": "3c9f748c1593964c46f5e7ac6e5f904a97d69496fd70579bde2dc829e8ae0892"
+    },
+    "videos/good_habits/road_safety_for_children_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/good_habits/road_safety_for_children_lesson.mp4",
+      "sha256": "a74f30a46e534e2048955c4c260997f13cafb66f79ba984762764f25e3c47de7"
+    },
+    "thumbnails/counting_objects_1_to_10_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/counting_objects_1_to_10_thumb.webp",
+      "sha256": "4ee50519af86472e5140ca09ed37cfc14283f3afee6fe81ba15e4e799d0abda1"
+    },
+    "audio/narration/counting_objects_1_to_10_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/counting_objects_1_to_10_lesson_en.mp3",
+      "sha256": "d1da90934667a5cf00194b429babe8359c2dd4d9b1c310e328a171456228b3fc"
+    },
+    "videos/numbers/counting_objects_1_to_10_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/numbers/counting_objects_1_to_10_lesson.mp4",
+      "sha256": "b2f53ccadcd4ed3468c8042cc1c58271d83651a72040a94a07f666c3d33ff4dc"
+    },
+    "objects/vehicles/train.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/train.webp",
+      "sha256": "9e3d2c446db270f888b4c0b95e4334e141776560cb6ad14b7f43ca3742b68bb5"
+    },
+    "objects/vehicles/aeroplane.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/aeroplane.webp",
+      "sha256": "d0dfc8ebf83627f2bb62ac29a42d68c800be2a0e94a5fa57307294502de63ebe"
+    },
+    "objects/vehicles/helicopter.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/helicopter.webp",
+      "sha256": "d975629f1d598b4d069d4a9aa0cb22cdda84dde61e758138b42637fdc1940b40"
+    },
+    "objects/vehicles/bicycle.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/bicycle.webp",
+      "sha256": "2be91748ad6a2299a20eb993af74b170caaac335840d9aed4495d69a3bdfd828"
+    },
+    "objects/vehicles/motorcycle.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/motorcycle.webp",
+      "sha256": "8de0dd41b482defcd0059d997c744fa47d26aab526608e4c9dc2f1ce4c4ab6c9"
+    },
+    "objects/vehicles/tractor.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/tractor.webp",
+      "sha256": "5060569d7a8a9bbe47ae08904ce8429625706cacbfb881d065bf7792376c24a5"
+    },
+    "objects/vehicles/truck.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/truck.webp",
+      "sha256": "5ab4a2db847aeeadfc24db1caa1aec5b45b57daf2e821118086d5d54d82284e7"
+    },
+    "objects/vehicles/boat.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/boat.webp",
+      "sha256": "d8493afd11e815b282cfe713df702af38df83a61e049cb95bfbe0f80a0bc5cd2"
+    },
+    "objects/vehicles/ship.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/ship.webp",
+      "sha256": "782a5200f2cf808bb3e5d854d7d94604b5755119319c1add7f9aa79ebe52693d"
+    },
+    "objects/vehicles/ambulance.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/ambulance.webp",
+      "sha256": "aae95d3feab2a9126421aa962a266f33a6dc7a1f5462d9f910cf86dfcb9590c7"
+    },
+    "objects/vehicles/fire_engine.webp": {
+      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/vehicles/fire_engine.webp",
+      "sha256": "9f117d880721677b2e0cf2fd0ad3cef009dcf0c21b7d70a1c500b0a496db0ebc"
+    },
+    "animals/aquatic/dolphin.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/aquatic/dolphin.webp",
+      "sha256": "64b9a81846660c765bc09d08d1c2c29cbaad79269dcb0067a04757d16b7898e4"
+    },
+    "animals/aquatic/whale.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/aquatic/whale.webp",
+      "sha256": "1ba7188c63de138dd79b7a13b78a771509e2b8a8b2e4f75b7956308f9e4a5d31"
+    },
+    "audio/animal_sounds/whale_song.mp3": {
+      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "entry": "audio/animal_sounds/whale_song.mp3",
+      "sha256": "d4c075c1e9f39e628e231f91449eb9130a8ed9b660392cfb7a77dcb9ac4ce318"
+    },
+    "animals/aquatic/shark.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/aquatic/shark.webp",
+      "sha256": "67466becc0102799b17299c0d7bfef47b59d1b09b5d73aced462489b9694f135"
+    },
+    "animals/aquatic/octopus.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/aquatic/octopus.webp",
+      "sha256": "29c9064e732737d473674f31d5d5ed981c066ae6780323a75bb4b4a00142fc5e"
+    },
+    "animals/aquatic/sea_turtle.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/aquatic/sea_turtle.webp",
+      "sha256": "f16724a79372b2497a6aa7cdc1c48bd46708c049cdf9f3a6f6fd149eab617944"
+    },
+    "animals/aquatic/crab.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/aquatic/crab.webp",
+      "sha256": "25f0934744e82a224b113f20e0d536a6a1555f8842643e004ba7d964aca4b4f3"
+    },
+    "animals/aquatic/jellyfish.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/aquatic/jellyfish.webp",
+      "sha256": "de6d737a70b542cb8246c3884f2c40b3e16ba477ad3b01ecf1491055a85a4a68"
+    },
+    "animals/aquatic/seahorse.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/aquatic/seahorse.webp",
+      "sha256": "119a14bd71a7c0b888e0ee7c87ec9ff0db3a28eabd6f5028a9c202e73f7708c1"
+    },
+    "animals/aquatic/starfish.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/aquatic/starfish.webp",
+      "sha256": "fb8127be5241476a96addce3129ff61331ae405181d8c82492f4a861b33eb1ed"
+    },
+    "animals/insects/butterfly.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/insects/butterfly.webp",
+      "sha256": "7d2058935da0c06350e11f0f426cac87aa3122f92c4eba8612fc166e9f1c164e"
+    },
+    "animals/insects/honeybee.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/insects/honeybee.webp",
+      "sha256": "b0c11e3ad703eb34823f5f0a25ae12878fabfad05d88cfb7c560da7533e8b69b"
+    },
+    "animals/insects/ant.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/insects/ant.webp",
+      "sha256": "90dab9748a979a02c6fc6abae2d266d644730b483e4986b0034db99595f1b7c4"
+    },
+    "animals/insects/dragonfly.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/insects/dragonfly.webp",
+      "sha256": "df52f2666a797631d0cdb38769c044def3a94d9ce1857c9d844d5b1b0700a5b1"
+    },
+    "animals/insects/grasshopper.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/insects/grasshopper.webp",
+      "sha256": "442c3941a504f0f1eadd2e76b4baeb30dede382549c83041934c74d8d5a4d5f4"
+    },
+    "animals/insects/ladybug.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/insects/ladybug.webp",
+      "sha256": "b76ddd0a76fdd921debd5b6df1ac74e826a159702a483e2dd57a5c0e5ce38ddf"
+    },
+    "animals/insects/spider.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/insects/spider.webp",
+      "sha256": "12a8fa299363c4b082febfa278fe81075852d1102217436e28be2dfa81277a85"
+    },
+    "animals/insects/snail.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/insects/snail.webp",
+      "sha256": "fc5240ece14efdc00d1556ada2228a31454b343c722883146e72791ea8742b47"
+    },
+    "animals/reptiles/frog.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/reptiles/frog.webp",
+      "sha256": "80343ffddc2028b5521a5d4026ae2ddc7a469ce34051b396cf349463a470e2a1"
+    },
+    "animals/reptiles/crocodile.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/reptiles/crocodile.webp",
+      "sha256": "caf5869faf1ae4feb7037c3444c68c0e920371f39b43fac6a1b5fbec38bba339"
+    },
+    "animals/reptiles/snake.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/reptiles/snake.webp",
+      "sha256": "aee20a41e5e2735ef349e9296a296b560ec2e6c088f78c15a829964106d818f0"
+    },
+    "animals/reptiles/lizard.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/reptiles/lizard.webp",
+      "sha256": "e71674158f26d4d79186daf1246d05a4de3ec0ae82bb91f509aa6ce40dd5e414"
+    },
+    "animals/reptiles/chameleon.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/reptiles/chameleon.webp",
+      "sha256": "dbf2ffaf6e4222c6afd4c3f5f641e3554c1df6a1effe163914bd4a2d65674f7b"
+    },
+    "animals/reptiles/tortoise.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/animals/reptiles/tortoise.webp",
+      "sha256": "e07e8d8104e85760e075226cc017b38486e6429e3eb1fb03c7203399fd6a8444"
+    },
+    "thumbnails/brushing_teeth_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/brushing_teeth_thumb.webp",
+      "sha256": "a144febaf78097f83d04819bbdc3fd265b857db9e95072b130c0342a9c46c912"
+    },
+    "audio/narration/brushing_teeth_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/brushing_teeth_lesson_en.mp3",
+      "sha256": "f24d2112c615db56e400b6e1d8e6ba699462304fb8438babddec80bafffce706"
+    },
+    "videos/good_habits/brushing_teeth_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/good_habits/brushing_teeth_lesson.mp4",
+      "sha256": "0c9a709fd484736d5de80bc5db856ea87cb7c26f9bc36ea52a02895cb96a1a34"
+    },
+    "thumbnails/washing_hands_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/washing_hands_thumb.webp",
+      "sha256": "6b6ebe08ab9261cd817c4ff327c78d4a8a83d683a4c0d9ebac40d154fc167747"
+    },
+    "audio/narration/washing_hands_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/washing_hands_lesson_en.mp3",
+      "sha256": "5a8dbebe4d90957c9a866ea459a8f011ab82a805e193e9cfd44b4249d50290a4"
+    },
+    "videos/good_habits/washing_hands_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/good_habits/washing_hands_lesson.mp4",
+      "sha256": "5a041e2621ffb23e0945faa8fe89620f96dd26a2f5b8c4666b78c56c991845cd"
+    },
+    "thumbnails/weather_and_seasons_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/weather_and_seasons_thumb.webp",
+      "sha256": "54de70e070631b233b23c0e7af49b71a166c8a56f0102bc02c509451de66404b"
+    },
+    "audio/narration/weather_and_seasons_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/weather_and_seasons_lesson_en.mp3",
+      "sha256": "eb662286b73424681210e593ac016034583ef1fdc55055278fde30723e40000b"
+    },
+    "videos/science/weather_and_seasons_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/science/weather_and_seasons_lesson.mp4",
+      "sha256": "1639186b7db83a72699bc77029b7db5977ff6ed34c8874e5e3277d059dd4268a"
+    },
+    "thumbnails/day_and_night_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/day_and_night_thumb.webp",
+      "sha256": "54de70e070631b233b23c0e7af49b71a166c8a56f0102bc02c509451de66404b"
+    },
+    "audio/narration/day_and_night_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/day_and_night_lesson_en.mp3",
+      "sha256": "7bc10a1eda268df838d274c2e5f764fff55c3fdb9c2011d5670da8b56c10349d"
+    },
+    "videos/science/day_and_night_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/science/day_and_night_lesson.mp4",
+      "sha256": "e2dd729cb2c0e92eecc3054e3f2fa6518af3f4abdf93d3e191a95d17238add3a"
+    },
+    "thumbnails/solar_system_intro_thumb.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/thumbnails/solar_system_intro_thumb.webp",
+      "sha256": "54de70e070631b233b23c0e7af49b71a166c8a56f0102bc02c509451de66404b"
+    },
+    "audio/narration/solar_system_intro_lesson_en.mp3": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/audio/narration/solar_system_intro_lesson_en.mp3",
+      "sha256": "4e89ce115fbb017f9a6b3d390d77f741868747a3d5090f3f075cbb4fa900c58b"
+    },
+    "videos/science/solar_system_intro_lesson.mp4": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/videos/science/solar_system_intro_lesson.mp4",
+      "sha256": "40a40ddc5d3f7d694f9a6158704b72e71ce7f1f55e70a2d784b3373f1afa3119"
+    },
+    "objects/everyday/ball.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/ball.webp",
+      "sha256": "38179fa08ec196391fb15300b1995f0c6a8dc8c50e220c5ed862a14b705f26cb"
+    },
+    "objects/everyday/book.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/book.webp",
+      "sha256": "a09852611ec9834f56371ab38084a629e38ea6d5756249bdbae265f923367579"
+    },
+    "objects/everyday/pencil.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/pencil.webp",
+      "sha256": "1d752d72698f80f893e3a4d65253c16a3ae54ee9597881aa6c03c5140b5d3421"
+    },
+    "objects/everyday/chair.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/chair.webp",
+      "sha256": "c13b25e01d2c7086c2df3d24b2ed329be6e90552dc7bcbeb0bcbedf5218a6d5b"
+    },
+    "objects/everyday/table.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/table.webp",
+      "sha256": "9112e92ff77db6e1f20835233e9fb723da599ad9792fa154ea7e4b6faeb54ebc"
+    },
+    "objects/everyday/clock.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/clock.webp",
+      "sha256": "e44d592c764161082b3f5b940d20f68d94e28cf4a5b5963403be5485f32596ce"
+    },
+    "objects/everyday/umbrella.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/umbrella.webp",
+      "sha256": "460378918f3f75a18fca9e4cba97df240ffbececff3df786cb710e1a87194d62"
+    },
+    "objects/everyday/shoes.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/shoes.webp",
+      "sha256": "dea8e617f0c949aae9c25a5623af66c079e63631ac015692ecbdff428d4c477c"
+    },
+    "objects/everyday/bag.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/bag.webp",
+      "sha256": "9f6337bcd4fe8b9b43e5dd48ea0c5f1bef0d75895e232e6e4747b502c0e98167"
+    },
+    "objects/everyday/bottle.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/bottle.webp",
+      "sha256": "6e6f7b0b6c9db35607c12d8d4adcc5bfb792f80832bb4f0f0cd4c82c37e44b03"
+    },
+    "objects/everyday/cup.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/cup.webp",
+      "sha256": "c0ad3c0f317efce77ee1f9a6a657ad21a9c8267adeaf76c3ddcbe150ced410d8"
+    },
+    "objects/everyday/spoon.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/spoon.webp",
+      "sha256": "26a5bc4ecbbba16343e31e5ac3477f6284d3b57fd2bd3c5aca701a6028452d0a"
+    },
+    "objects/everyday/toothbrush.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/toothbrush.webp",
+      "sha256": "8115d841e876bba5a90530f8d2bf427eb0c04aa5f623af41b3ac3823a7789baf"
+    },
+    "objects/everyday/bed.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/everyday/bed.webp",
+      "sha256": "1f31d927e11d9bfab7f723542ab629050920bccdb61100786ff05aaaa7202b91"
+    },
+    "objects/nature/rainbow.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/nature/rainbow.webp",
+      "sha256": "9cb334eef98aae6810327701f857481e2a40be26b4372299391130293d7d2230"
+    },
+    "objects/nature/sun.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/nature/sun.webp",
+      "sha256": "c1fb78315cbe210ef757b36b7c1d364a4fd8fde8587832779d246e2ba3c6f9d9"
+    },
+    "objects/nature/moon.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/nature/moon.webp",
+      "sha256": "3273dacdaca236a25b81cb0b8dd481e80a6a79fb4c97afbb11efe783c0a49430"
+    },
+    "objects/nature/stars.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/nature/stars.webp",
+      "sha256": "067a97311e348712b3b041cf00ee677661b570a81b85e97ae7470d82b0248e36"
+    },
+    "objects/nature/cloud.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/nature/cloud.webp",
+      "sha256": "3b8403218a7acefc37aa9ef04ab926199d3b51cc6e001951a2148d1fa2cae928"
+    },
+    "objects/nature/tree.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/nature/tree.webp",
+      "sha256": "aca003ad2e9d719fde5e573586095dad56020282026dfe172f151451d35828d2"
+    },
+    "objects/nature/flower.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/nature/flower.webp",
+      "sha256": "5bfd44f4d2ad3d37748c7ca739a6ea15cf495c9dc87e98d5f30d79cab219ad71"
+    },
+    "objects/nature/mountain.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/nature/mountain.webp",
+      "sha256": "58dcdaa2bfe567b79720a4e24bc2b4bac8ab4f8281e6fdbb82b5d3b63181782f"
+    },
+    "objects/nature/river.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/nature/river.webp",
+      "sha256": "9d9ad3550aa0884a8e675d27559d111a89b6696f8dc9546ad223a0c4b72ea623"
+    },
+    "objects/nature/waterfall.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/nature/waterfall.webp",
+      "sha256": "7812f568ddd1a5cb6558e647bec88ccd28c1e46a750f50e1f9f527cbc48b5069"
+    },
+    "objects/nature/ocean.webp": {
+      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "entry": "LittleWonderWorld_MediaPack/objects/nature/ocean.webp",
+      "sha256": "136b1916a5a9588201c0e1e2117232dd2040a8f1d9e5c8fbc4da5c86d73bd204"
+    }
+  }
+}

@@ -52,6 +52,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.produceState
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.currentStateAsState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -77,7 +85,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import com.example.data.CustomMediaOverrideEntity
-import com.example.data.RealWorldMediaRegistry
 import com.example.model.RealMediaCategory
 import com.example.model.RealWorldMediaItem
 import com.example.model.ReelMotionStyle
@@ -115,7 +122,9 @@ fun RealWorldAndReelsScreen(
     mediaOverrides: List<CustomMediaOverrideEntity>,
     reducedMotion: Boolean
 ) {
-    val items = remember(category) { RealWorldMediaRegistry.getItemsByCategory(category) }
+    val items = remember(viewModel, category) {
+        viewModel.offlineMedia.items.filter { category == RealMediaCategory.ALL || it.category == category }
+    }
     val overridesMap = remember(mediaOverrides) { mediaOverrides.associateBy { it.mediaId } }
 
     DisposableEffect(Unit) {
@@ -270,11 +279,7 @@ fun RealWorldAndReelsScreen(
                         item = item,
                         overrideEntity = override,
                         onHearSoundAndFact = {
-                            viewModel.audio.playAnimalOrObjectSignature(
-                                baseFreqHz = item.soundFreqHz,
-                                label = item.title,
-                                spokenFact = item.funFacts.firstOrNull() ?: item.subtitle
-                            )
+                            viewModel.listenToMedia(item)
                         },
                         onWatchReel = {
                             viewModel.updateRealWorldMode(
@@ -288,13 +293,13 @@ fun RealWorldAndReelsScreen(
             }
         } else {
             // WONDER REELS MODE: TikTok/Reels-style vertical swipe video & living motion feed
-            WonderReelsVerticalFeed(
+            androidx.compose.runtime.key(category, initialReelIndex) { WonderReelsVerticalFeed(
                 items = items,
                 initialIndex = initialReelIndex.coerceIn(0, (items.size - 1).coerceAtLeast(0)),
                 overridesMap = overridesMap,
                 reducedMotion = reducedMotion,
                 viewModel = viewModel
-            )
+            ) }
         }
     }
 }
@@ -311,7 +316,7 @@ private fun RealWorldScrollCard(
             .fillMaxWidth()
             .height(215.dp)
             .clip(RoundedCornerShape(22.dp))
-            .clickable { onHearSoundAndFact() }
+            .clickable { onWatchReel() }
             .testTag("media_card_${item.id}"),
         color = PlaySurfaceWhite,
         border = BorderStroke(2.5.dp, item.primaryColor),
@@ -337,6 +342,13 @@ private fun RealWorldScrollCard(
                         model = File(customImgPath),
                         contentDescription = item.title,
                         contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } else if (item.bundledImageAssetPath != null) {
+                    AsyncImage(
+                        model = "file:///android_asset/${item.bundledImageAssetPath}",
+                        contentDescription = item.title,
+                        contentScale = ContentScale.Fit,
                         modifier = Modifier.fillMaxSize()
                     )
                 } else if (item.bundledDrawableRes != null) {
@@ -452,14 +464,21 @@ private fun WonderReelsVerticalFeed(
     val coroutineScope = rememberCoroutineScope()
     var subtitlesVisible by remember { mutableStateOf(true) }
 
-    // Auto-speak and trigger sound signature whenever the child settles on a new Reel
-    LaunchedEffect(pagerState.settledPage, items) {
-        val currentItem = items.getOrNull(pagerState.settledPage) ?: return@LaunchedEffect
-        viewModel.audio.playAnimalOrObjectSignature(
-            baseFreqHz = currentItem.soundFreqHz,
-            label = currentItem.title,
-            spokenFact = currentItem.funFacts.firstOrNull() ?: currentItem.subtitle
-        )
+    val lifecycleState by LocalLifecycleOwner.current.lifecycle.currentStateAsState()
+    val foreground = lifecycleState.isAtLeast(Lifecycle.State.RESUMED)
+    val autoplayAudio by viewModel.autoMediaAudio.collectAsStateWithLifecycle()
+    val settled = !pagerState.isScrollInProgress && foreground
+    val activeItem = items[pagerState.settledPage.coerceIn(0, items.lastIndex)]
+    var lastPlayedId by remember { mutableStateOf<String?>(null) }
+    var pausedVideoId by remember { mutableStateOf<String?>(null) }
+    LaunchedEffect(settled, activeItem.id, autoplayAudio) {
+        if (!settled) {
+            viewModel.audio.stopAllAudio()
+        } else if (lastPlayedId != activeItem.id) {
+            lastPlayedId = activeItem.id
+            pausedVideoId = null
+            if (autoplayAudio) viewModel.listenToMedia(activeItem)
+        }
     }
 
     Row(
@@ -485,7 +504,9 @@ private fun WonderReelsVerticalFeed(
                 SingleWonderReelStage(
                     item = item,
                     overrideEntity = override,
-                    isActivePage = pagerState.settledPage == pageIndex,
+                    isActivePage = settled && pagerState.settledPage == pageIndex,
+                    videoPaused = pausedVideoId == item.id,
+                    onVideoStopped = { pausedVideoId = item.id },
                     subtitlesVisible = subtitlesVisible,
                     reducedMotion = reducedMotion
                 )
@@ -493,8 +514,6 @@ private fun WonderReelsVerticalFeed(
         }
 
         // Right-side TikTok/Reels Tactile Control Rail for Preschoolers
-        val activeItem = items.getOrNull(pagerState.settledPage) ?: items.first()
-        var currentFactIdx by remember(activeItem.id) { mutableIntStateOf(0) }
 
         Surface(
             modifier = Modifier
@@ -550,11 +569,7 @@ private fun WonderReelsVerticalFeed(
                 // Hear Sound Button
                 Button(
                     onClick = {
-                        viewModel.audio.playAnimalOrObjectSignature(
-                            baseFreqHz = activeItem.soundFreqHz,
-                            label = activeItem.title,
-                            spokenFact = activeItem.soundDescription
-                        )
+                        viewModel.listenToMedia(activeItem)
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
                     shape = RoundedCornerShape(18.dp),
@@ -565,28 +580,22 @@ private fun WonderReelsVerticalFeed(
                 ) {
                     Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Hear Sound", tint = DeepSlateInk)
                     Spacer(Modifier.width(6.dp))
-                    Text("Hear Sound", color = DeepSlateInk, fontWeight = FontWeight.Bold)
+                    Text("Listen", color = DeepSlateInk, fontWeight = FontWeight.Bold)
                 }
 
-                // Next Fun Fact Button
                 Button(
                     onClick = {
-                        val facts = activeItem.funFacts
-                        if (facts.isNotEmpty()) {
-                            currentFactIdx = (currentFactIdx + 1) % facts.size
-                            viewModel.audio.speakInstruction(facts[currentFactIdx])
-                        }
+                        viewModel.audio.stopAllAudio()
+                        viewModel.audio.speakInstruction(activeItem.title)
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = ActionPlayGreen),
-                    shape = RoundedCornerShape(18.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .testTag("reel_next_fact_button")
-                ) {
-                    Icon(Icons.Default.Replay, contentDescription = "Tell Me More", tint = PlaySurfaceWhite)
-                    Spacer(Modifier.width(6.dp))
-                    Text("Fun Fact", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold)
+                    modifier = Modifier.fillMaxWidth().height(48.dp)
+                ) { Text("Hear Name") }
+
+                if (activeItem.bundledVideoAssetPath != null || overridesMap[activeItem.id]?.localVideoPath != null) {
+                    Button(
+                        onClick = { pausedVideoId = if (pausedVideoId == activeItem.id) null else activeItem.id },
+                        modifier = Modifier.fillMaxWidth().height(48.dp)
+                    ) { Text(if (pausedVideoId == activeItem.id) "Play Video" else "Stop Video") }
                 }
 
                 // Toggle Subtitles Button
@@ -602,19 +611,20 @@ private fun WonderReelsVerticalFeed(
                 ) {
                     Icon(Icons.Default.Subtitles, contentDescription = "Subtitles", tint = PlaySurfaceWhite)
                     Spacer(Modifier.width(6.dp))
-                    Text(if (subtitlesVisible) "Captions ON" else "Captions OFF", color = PlaySurfaceWhite, fontSize = 13.sp)
+                    Text(if (subtitlesVisible) "Facts ON" else "Facts OFF", color = PlaySurfaceWhite, fontSize = 13.sp)
                 }
 
                 // Accessible Swipe Down / Next Reel Button
                 Button(
                     onClick = {
-                        val next = (pagerState.settledPage + 1) % items.size
+                        val next = (pagerState.settledPage + 1).coerceAtMost(items.lastIndex)
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(next)
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = ActionContinueBlue),
                     shape = RoundedCornerShape(18.dp),
+                    enabled = pagerState.settledPage < items.lastIndex,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
@@ -634,6 +644,8 @@ private fun SingleWonderReelStage(
     item: RealWorldMediaItem,
     overrideEntity: CustomMediaOverrideEntity?,
     isActivePage: Boolean,
+    videoPaused: Boolean,
+    onVideoStopped: () -> Unit,
     subtitlesVisible: Boolean,
     reducedMotion: Boolean
 ) {
@@ -672,25 +684,53 @@ private fun SingleWonderReelStage(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
+        val context = LocalContext.current
         val customVideoPath = overrideEntity?.localVideoPath
         val customImagePath = overrideEntity?.localImagePath
-
-        if (customVideoPath != null && File(customVideoPath).exists() && isActivePage) {
-            // 1. Native Offline MP4 Video Playback for user-imported Google Flow clips
+        val videoPath = item.bundledVideoAssetPath
+        val bundledVideo by produceState<File?>(null, videoPath, isActivePage) {
+            value = null
+            if (videoPath != null && isActivePage && customVideoPath?.let { File(it).isFile } != true) {
+                value = withContext(Dispatchers.IO) {
+                    runCatching {
+                        // VideoView needs a seekable file. Temporary names prevent incomplete copies
+                        // from being reused if a swipe cancels this load.
+                        val folder = File(context.cacheDir, "reels").apply { mkdirs() }
+                        val cache = File(folder, videoPath.substringAfterLast('/'))
+                        if (!cache.exists()) {
+                            val temp = File.createTempFile("reel-", ".tmp", folder)
+                            try {
+                                context.assets.open(videoPath).use { input ->
+                                    temp.outputStream().use { input.copyTo(it) }
+                                }
+                                check(temp.renameTo(cache))
+                            } finally {
+                                temp.delete()
+                            }
+                        }
+                        cache
+                    }.getOrNull()
+                }
+            }
+        }
+        val videoFile = customVideoPath?.let(::File)?.takeIf { it.isFile } ?: bundledVideo
+        var videoFailed by remember(videoFile, isActivePage, videoPaused) { mutableStateOf(false) }
+        if (videoFile != null && isActivePage && !videoPaused && !videoFailed) {
             AndroidView(
                 factory = { ctx ->
                     VideoView(ctx).apply {
-                        setVideoURI(Uri.fromFile(File(customVideoPath)))
-                        setOnPreparedListener { mp ->
-                            mp.isLooping = true
+                        setOnPreparedListener { player ->
+                            player.isLooping = false
+                            player.setVolume(0f, 0f)
                             start()
                         }
+                        setOnCompletionListener { onVideoStopped() }
+                        setOnErrorListener { _, _, _ -> videoFailed = true; true }
+                        setVideoURI(Uri.fromFile(videoFile))
                     }
                 },
                 modifier = Modifier.fillMaxSize(),
-                onRelease = { videoView ->
-                    runCatching { videoView.stopPlayback() }
-                }
+                onRelease = { it.stopPlayback() }
             )
         } else {
             // 2. Living Motion Reel Renderer (Bundled AI Artwork or Custom Photo + Dynamic Habitat Motion Canvas)
@@ -707,7 +747,14 @@ private fun SingleWonderReelStage(
                             translationX = if (reducedMotion) 0f else sin(phase) * 14f
                         }
                 )
-            } else if (item.bundledDrawableRes != null) {
+            } else if (item.bundledImageAssetPath != null) {
+                    AsyncImage(
+                        model = "file:///android_asset/${item.bundledImageAssetPath}",
+                        contentDescription = item.title,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } else if (item.bundledDrawableRes != null) {
                 Image(
                     painter = painterResource(id = item.bundledDrawableRes),
                     contentDescription = item.title,
@@ -812,7 +859,7 @@ private fun SingleWonderReelStage(
                             color = PlaySurfaceWhite
                         )
                         Text(
-                            text = "${item.habitatOrGroup} • ${item.soundDescription}",
+                            text = item.habitatOrGroup,
                             fontSize = 12.sp,
                             color = Color(0xFFBAE6FD)
                         )
@@ -825,7 +872,7 @@ private fun SingleWonderReelStage(
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Text(
-                    text = if (overrideEntity?.localVideoPath != null) "Google Flow MP4" else item.manifest.status.label,
+                    text = if (overrideEntity?.localVideoPath != null || item.bundledVideoAssetPath != null) "Offline video" else "Picture",
                     color = Color(0xFFA7F3D0),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
