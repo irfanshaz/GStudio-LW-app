@@ -2,6 +2,15 @@ import java.security.MessageDigest
 import java.util.zip.ZipFile
 import groovy.json.JsonSlurper
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
+import org.gradle.api.file.ConfigurableFileCollection
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.TaskAction
 
 plugins {
   alias(libs.plugins.android.application)
@@ -147,21 +156,27 @@ dependencies {
   // "ksp"(libs.moshi.kotlin.codegen)
 }
 
-// Package only indexed assets from the checked-in media packs.
-val mediaIndex = layout.projectDirectory.file("src/main/assets/real-world-index.json")
-val mediaPacks = rootProject.layout.projectDirectory.dir("public/assets/aistudio")
-val offlineMediaDir = layout.buildDirectory.dir("generated/offlineMedia")
-val stageOfflineMedia by tasks.registering {
-  inputs.file(mediaIndex)
-  inputs.files(fileTree(mediaPacks.asFile) { include("*.zip") })
-  outputs.dir(offlineMediaDir)
-  doLast {
-    val index = JsonSlurper().parse(mediaIndex.asFile) as Map<*, *>
+abstract class StageOfflineMedia : DefaultTask() {
+  @get:InputFile
+  @get:PathSensitive(PathSensitivity.NONE)
+  abstract val mediaIndex: RegularFileProperty
+
+  @get:InputFiles
+  @get:PathSensitive(PathSensitivity.NAME_ONLY)
+  abstract val mediaPacks: ConfigurableFileCollection
+
+  @get:OutputDirectory
+  abstract val outputDirectory: DirectoryProperty
+
+  @TaskAction
+  fun stage() {
+    val index = JsonSlurper().parse(mediaIndex.get().asFile) as Map<*, *>
     val files = index["files"] as Map<*, *>
-    val destination = offlineMediaDir.get().asFile
+    val archives = mediaPacks.files.associateBy { it.name }
+    val destination = outputDirectory.get().asFile
     destination.deleteRecursively()
     files.entries.groupBy { (it.value as Map<*, *>)["archive"] as String }.forEach { (archive, entries) ->
-      ZipFile(mediaPacks.file(archive).asFile).use { zip ->
+      ZipFile(archives.getValue(archive)).use { zip ->
         entries.forEach { (path, record) ->
           val metadata = record as Map<*, *>
           val entry = requireNotNull(zip.getEntry(metadata["entry"] as String))
@@ -178,5 +193,16 @@ val stageOfflineMedia by tasks.registering {
     }
   }
 }
-android.sourceSets.getByName("main").assets.srcDir(offlineMediaDir)
-tasks.matching { it.name == "preBuild" }.configureEach { dependsOn(stageOfflineMedia) }
+
+// Package only indexed assets from the checked-in media packs.
+val offlineMediaIndex = layout.projectDirectory.file("src/main/assets/real-world-index.json")
+val offlineMediaPacks = fileTree(rootProject.layout.projectDirectory.dir("public/assets/aistudio")) {
+  include("*.zip")
+}
+androidComponents.onVariants { variant ->
+  val stageMedia = tasks.register<StageOfflineMedia>("stage${variant.name.replaceFirstChar { it.uppercaseChar() }}OfflineMedia") {
+    mediaIndex.set(offlineMediaIndex)
+    mediaPacks.from(offlineMediaPacks)
+  }
+  variant.sources.assets?.addGeneratedSourceDirectory(stageMedia, StageOfflineMedia::outputDirectory)
+}
