@@ -156,6 +156,32 @@ class WonderRepository(
         }
     }
 
+    suspend fun saveActivityStepCheckpoint(activity: ActivityConfig, stepIndex: Int) {
+        val existing = dao.getProgressForActivity(activity.id)
+        val now = System.currentTimeMillis()
+        if (existing == null) {
+            dao.upsertActivityProgress(
+                ActivityProgressEntity(
+                    activityId = activity.id,
+                    worldId = activity.worldId,
+                    landId = activity.landId.id,
+                    starsEarned = 0,
+                    completions = 0,
+                    attempts = 1,
+                    lastPlayedEpochMs = now,
+                    savedStepIndex = stepIndex.coerceAtLeast(0)
+                )
+            )
+        } else {
+            dao.upsertActivityProgress(
+                existing.copy(
+                    savedStepIndex = stepIndex.coerceAtLeast(0),
+                    lastPlayedEpochMs = now
+                )
+            )
+        }
+    }
+
     suspend fun recordGentleRetry(activity: ActivityConfig) {
         val existing = dao.getProgressForActivity(activity.id) ?: return
         val newRetries = existing.gentleRetryCount + 1

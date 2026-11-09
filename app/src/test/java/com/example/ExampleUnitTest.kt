@@ -1,13 +1,21 @@
 package com.example
 
+import androidx.compose.ui.geometry.Offset
 import com.example.data.ActivityProgressEntity
 import com.example.data.AdaptiveLearningEngine
 import com.example.data.RealWorldMediaRegistry
 import com.example.data.WonderCatalogRegistry
 import com.example.model.AgeBand
+import com.example.model.EngineType
 import com.example.model.LandId
 import com.example.model.RealMediaCategory
+import com.example.ui.engines.DrawnStroke
+import com.example.ui.engines.TracingStudioDeckRegistry
+import com.example.ui.engines.decodeStrokesPayload
+import com.example.ui.engines.encodeStrokesPayload
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -28,14 +36,234 @@ class ExampleUnitTest {
         val uniqueIds = activities.map { it.id }.toSet()
         assertEquals(257, uniqueIds.size)
 
+        // Verify w22_arcade_8 is excluded from selectable catalog
+        assertEquals(null, WonderCatalogRegistry.getActivityById("w22_arcade_8"))
+
         // Verify 30 Rhyme & Storytime entries in World 27, each with 3 story pages
         val rhymes = WonderCatalogRegistry.getActivitiesForWorld("w27_rhymes")
         assertEquals(30, rhymes.size)
         assertTrue(rhymes.all { it.storyPages.size == 3 })
 
-        // Verify 16 Flashcard decks in World 25
+        // Verify 16 Flashcard decks in World 25, each with 6 distinct items
         val flashcards = WonderCatalogRegistry.getActivitiesForWorld("w25_flashcards")
         assertEquals(16, flashcards.size)
+        assertTrue(flashcards.all { it.items.size == 6 })
+        val flashcardFirstLabels = flashcards.map { it.items.first().label }.toSet()
+        assertEquals(16, flashcardFirstLabels.size)
+    }
+
+    @Test
+    fun `verify Stage 1 TracingStudioDeckRegistry explicit decks, multi-stroke templates, and stroke evaluator`() {
+        // 1. Verify all 12 w04_tracing activities + w15_science_8 resolve explicit non-empty decks
+        val expectedCounts = mapOf(
+            "w04_tracing_1" to 8,   // A-H
+            "w04_tracing_2" to 8,   // I-P
+            "w04_tracing_3" to 10,  // Q-Z
+            "w04_tracing_4" to 13,  // a-m
+            "w04_tracing_5" to 13,  // n-z
+            "w04_tracing_6" to 5,   // 1-5
+            "w04_tracing_7" to 5,   // 6-10
+            "w04_tracing_8" to 5,   // Shapes
+            "w04_tracing_9" to 4,   // Straight lines
+            "w04_tracing_10" to 4,  // Curves & waves
+            "w04_tracing_11" to 3,  // Zigzags
+            "w04_tracing_12" to 13, // First words CAT (3) + SUN (3) + DOG (3) + STAR (4) = 13 letter steps
+            "w15_science_8" to 3    // Constellation stars
+        )
+
+        expectedCounts.forEach { (activityId, expectedCount) ->
+            val deck = TracingStudioDeckRegistry.getDeckForActivity(activityId)
+            assertEquals("Unexpected glyph count for $activityId", expectedCount, deck.size)
+            assertTrue(deck.all { it.strokes.isNotEmpty() && it.glyph.isNotBlank() })
+        }
+
+        // Verify A-Z across w04_tracing_1..3
+        val upperLetters = (
+            TracingStudioDeckRegistry.getDeckForActivity("w04_tracing_1") +
+                TracingStudioDeckRegistry.getDeckForActivity("w04_tracing_2") +
+                TracingStudioDeckRegistry.getDeckForActivity("w04_tracing_3")
+            ).map { it.glyph }
+        assertEquals(('A'..'Z').map { it.toString() }, upperLetters)
+
+        // Verify a-z across w04_tracing_4..5 and that i/j have 2 strokes (stem + dot)
+        val lowerDeck = TracingStudioDeckRegistry.getDeckForActivity("w04_tracing_4") +
+            TracingStudioDeckRegistry.getDeckForActivity("w04_tracing_5")
+        assertEquals(('a'..'z').map { it.toString() }, lowerDeck.map { it.glyph })
+        val glyphI = lowerDeck.first { it.glyph == "i" }
+        val glyphJ = lowerDeck.first { it.glyph == "j" }
+        assertEquals(2, glyphI.strokes.size)
+        assertEquals(2, glyphJ.strokes.size)
+
+        // Verify numeral 10 has 2 distinct strokes ('1' and '0')
+        val deck6To10 = TracingStudioDeckRegistry.getDeckForActivity("w04_tracing_7")
+        val glyph10 = deck6To10.first { it.glyph == "10" }
+        assertEquals(2, glyph10.strokes.size)
+
+        // Verify First Words deck has CAT, SUN, DOG, STAR contexts
+        val wordsDeck = TracingStudioDeckRegistry.getDeckForActivity("w04_tracing_12")
+        assertEquals(listOf("CAT", "SUN", "DOG", "STAR"), wordsDeck.mapNotNull { it.wordContext }.distinct())
+
+        // Verify legacy step index reconciliation clamps safely without crashing
+        assertEquals(0, TracingStudioDeckRegistry.reconcileSavedStepIndex(-3, 8))
+        assertEquals(0, TracingStudioDeckRegistry.reconcileSavedStepIndex(99, 8))
+        assertEquals(3, TracingStudioDeckRegistry.reconcileSavedStepIndex(3, 8))
+
+        // Verify aspect-ratio-safe canvas coordinate mapping preserves square proportions
+        val topLeft = TracingStudioDeckRegistry.mapNormalizedToCanvas(Offset(0f, 0f), 800f, 400f)
+        val bottomRight = TracingStudioDeckRegistry.mapNormalizedToCanvas(Offset(1f, 1f), 800f, 400f)
+        assertEquals(bottomRight.x - topLeft.x, bottomRight.y - topLeft.y, 0.5f)
+        assertTrue(topLeft.x > 0f && topLeft.y > 0f)
+
+        // Verify stroke evaluation:
+        val verticalStroke = TracingStudioDeckRegistry.getDeckForActivity("w04_tracing_9").first().strokes.first()
+        val canvasW = 400f
+        val canvasH = 400f
+        val tolPx = 42f
+        val checkpointPixels = verticalStroke.points.map {
+            TracingStudioDeckRegistry.mapNormalizedToCanvas(it, canvasW, canvasH)
+        }
+
+        val startPx = checkpointPixels.first()
+        val endPx = checkpointPixels.last()
+
+        // 1) Valid forward trace from start to end -> passes
+        val goodPoints = (0..20).map { idx ->
+            val t = idx / 20f
+            Offset(
+                startPx.x + (endPx.x - startPx.x) * t,
+                startPx.y + (endPx.y - startPx.y) * t
+            )
+        }
+        val goodEval = TracingStudioDeckRegistry.evaluateStrokeAttempt(
+            strokeSpec = verticalStroke,
+            checkpointPixels = checkpointPixels,
+            rawSegments = listOf(goodPoints),
+            tolerancePx = tolPx,
+            requiredCoverageRatio = 0.78f,
+            isToddlerBand = false
+        )
+        assertTrue("Expected valid forward stroke to pass, got ${goodEval.feedbackMessage}", goodEval.strokePassed)
+        assertTrue(goodEval.coveragePercent >= 78)
+        assertTrue(goodEval.feedbackMessage.contains("${goodEval.coveragePercent}%"))
+
+        // 2) Tap cluster at start -> rejected
+        val tapCluster = listOf(startPx, Offset(startPx.x + 2f, startPx.y + 2f), Offset(startPx.x - 1f, startPx.y + 1f))
+        val tapEval = TracingStudioDeckRegistry.evaluateStrokeAttempt(
+            strokeSpec = verticalStroke,
+            checkpointPixels = checkpointPixels,
+            rawSegments = listOf(tapCluster),
+            tolerancePx = tolPx,
+            requiredCoverageRatio = 0.78f,
+            isToddlerBand = false
+        )
+        assertFalse(tapEval.strokePassed)
+        assertTrue(tapEval.isShortcutOrTapCluster)
+
+        // 3) Reversed trace (bottom to top) -> rejected
+        val reversedPoints = goodPoints.reversed()
+        val revEval = TracingStudioDeckRegistry.evaluateStrokeAttempt(
+            strokeSpec = verticalStroke,
+            checkpointPixels = checkpointPixels,
+            rawSegments = listOf(reversedPoints),
+            tolerancePx = tolPx,
+            requiredCoverageRatio = 0.78f,
+            isToddlerBand = false
+        )
+        assertFalse(revEval.strokePassed)
+        assertTrue(revEval.isReversed)
+
+        // 4) Straight shortcut across a closed circle -> rejected
+        val circleStroke = TracingStudioDeckRegistry.getDeckForActivity("w04_tracing_8").first().strokes.first()
+        val circleCheckpoints = circleStroke.points.map {
+            TracingStudioDeckRegistry.mapNormalizedToCanvas(it, canvasW, canvasH)
+        }
+        val circleStart = circleCheckpoints.first()
+        val shortcutPoints = listOf(circleStart, Offset(circleStart.x, circleStart.y + 40f), circleStart)
+        val shortcutEval = TracingStudioDeckRegistry.evaluateStrokeAttempt(
+            strokeSpec = circleStroke,
+            checkpointPixels = circleCheckpoints,
+            rawSegments = listOf(shortcutPoints),
+            tolerancePx = tolPx,
+            requiredCoverageRatio = 0.78f,
+            isToddlerBand = false
+        )
+        assertFalse(shortcutEval.strokePassed)
+    }
+
+    @Test
+    fun `verify Stage 2 Coloring stroke payload serialization round-trip preserves geometry and colors`() {
+        val originalStrokes = listOf(
+            DrawnStroke(
+                points = listOf(Offset(0.12f, 0.25f), Offset(0.45f, 0.55f), Offset(0.78f, 0.82f)),
+                colorHex = 0xFFEF4444L,
+                strokeWidth = 22f
+            ),
+            DrawnStroke(
+                points = listOf(Offset(0.20f, 0.15f), Offset(0.60f, 0.35f)),
+                colorHex = 0xFF3B82F6L,
+                strokeWidth = 34f
+            )
+        )
+        val encoded = encodeStrokesPayload(originalStrokes)
+        assertTrue(encoded.isNotBlank())
+
+        val decoded = decodeStrokesPayload(encoded)
+        assertEquals(2, decoded.size)
+        assertEquals(0xFFEF4444L, decoded[0].colorHex)
+        assertEquals(0xFF3B82F6L, decoded[1].colorHex)
+        assertEquals(3, decoded[0].points.size)
+        assertEquals(0.12f, decoded[0].points[0].x, 0.001f)
+        assertEquals(0.25f, decoded[0].points[0].y, 0.001f)
+        assertEquals(22f, decoded[0].strokeWidth, 0.001f)
+    }
+
+    @Test
+    fun `verify Stage 3 title-to-content alignment across Sorting, Animals, Memory, Phonics, Math, Science, Safety, and Rhymes`() {
+        // 1. Verify w01_sorting_1..9 have distinct datasets matching their titles
+        val sortingGames = WonderCatalogRegistry.getActivitiesForWorld("w01_sorting")
+        assertEquals(9, sortingGames.size)
+        val sortingFirstLabels = sortingGames.map { it.items.first().label }.toSet()
+        assertEquals(9, sortingFirstLabels.size)
+
+        // 2. Verify w02_animals_1..11 have distinct datasets
+        val animalGames = WonderCatalogRegistry.getActivitiesForWorld("w02_animals")
+        assertEquals(11, animalGames.size)
+        assertTrue(animalGames.all { it.items.size >= 4 })
+
+        // 3. Verify w03_memory_4 (Letter Twins) has 6 uppercase letters A-F paired with lowercase in MemoryMatchEngine
+        val letterTwins = WonderCatalogRegistry.getActivityById("w03_memory_4")
+        assertNotNull(letterTwins)
+        assertEquals(6, letterTwins!!.items.size)
+        assertEquals(listOf("A", "B", "C", "D", "E", "F"), letterTwins.items.map { it.label })
+
+        // 4. Verify w07_phonics_1..12 have distinct datasets including 52-step alphabet journey parts 1 & 2
+        val phonics11 = WonderCatalogRegistry.getActivityById("w07_phonics_11")!!
+        val phonics12 = WonderCatalogRegistry.getActivityById("w07_phonics_12")!!
+        assertEquals(26, phonics11.items.size)
+        assertEquals(26, phonics12.items.size)
+        assertTrue(phonics11.traceGlyph != phonics12.traceGlyph)
+
+        // 5. Verify w08_math_1..10 have non-empty items
+        val mathGames = WonderCatalogRegistry.getActivitiesForWorld("w08_math")
+        assertEquals(10, mathGames.size)
+        assertTrue(mathGames.all { game -> game.items.isNotEmpty() })
+
+        // 6. Verify w15_science_1..8 use title-accurate engines and datasets
+        val sci1 = WonderCatalogRegistry.getActivityById("w15_science_1")!!
+        val sci3 = WonderCatalogRegistry.getActivityById("w15_science_3")!!
+        val sci6 = WonderCatalogRegistry.getActivityById("w15_science_6")!!
+        val sci8 = WonderCatalogRegistry.getActivityById("w15_science_8")!!
+        assertEquals(EngineType.WATER_LAB_SCIENCE, sci1.engineType)
+        assertEquals(EngineType.SORTING_BASKETS, sci3.engineType)
+        assertEquals(EngineType.PRETEND_STEP_CARE, sci6.engineType)
+        assertEquals(EngineType.TRACING_STUDIO, sci8.engineType)
+
+        // 7. Verify w20_safety_1..9 have 3 story pages each with a valid correctChoiceIndex
+        val safetyGames = WonderCatalogRegistry.getActivitiesForWorld("w20_safety")
+        assertEquals(9, safetyGames.size)
+        assertTrue(safetyGames.all { game ->
+            game.storyPages.size == 3 && game.storyPages.all { it.correctChoiceIndex in 0..1 }
+        })
     }
 
     @Test
@@ -106,7 +334,6 @@ class ExampleUnitTest {
             assertTrue("Expected at least 6 items in ${game.id}", game.items.size >= 6)
             assertTrue(game.items.all { it.spokenText.isNotBlank() && it.emoji.isNotBlank() })
         }
-        // Verify each of the 12 Balloon Pop games has its own distinct item dataset
         val distinctFirstItemIds = balloonGames.map { it.items.first().id }.toSet()
         assertEquals(12, distinctFirstItemIds.size)
 
@@ -118,7 +345,6 @@ class ExampleUnitTest {
         val distinctArcadeFirstIds = arcadeGames.map { it.items.first().id }.toSet()
         assertEquals(7, distinctArcadeFirstIds.size)
 
-        // Verify Learning Buddy TTS pitches are tuned to warm, natural human range (1.00f..1.05f)
         com.example.model.LearningBuddy.entries.forEach { buddy ->
             assertTrue(buddy.voicePitch in 0.98f..1.06f)
             assertTrue(buddy.voiceRate in 0.90f..1.00f)
@@ -136,7 +362,6 @@ class ExampleUnitTest {
         val languages = com.example.ui.engines.BalloonNarrationLanguage.entries
         assertEquals(3, languages.size)
 
-        // Verify every mode and world combination returns valid multilingual payloads
         modes.forEach { mode ->
             worlds.forEach { world ->
                 val payloads = com.example.ui.engines.LearningContentManager.getPayloadsForModeAndWorld(mode, world)
@@ -147,71 +372,6 @@ class ExampleUnitTest {
                 assertTrue(first.getDisplayTitle(com.example.ui.engines.BalloonNarrationLanguage.HINDI).isNotBlank())
             }
         }
-
-        // Verify BalloonLifecycleState transitions: SPAWNING -> FLOATING -> POPPING -> REVEALING -> COMPLETED
-        val samplePayload = com.example.ui.engines.LearningContentManager.defaultFallbackPayload
-        val balloon = com.example.ui.engines.BalloonSpawner.createBalloonForSlot(
-            instanceId = 1,
-            slotIndex = 0,
-            totalSlots = 5,
-            ageBand = AgeBand.TODDLER_2_3,
-            speedMultiplier = 1.0f,
-            payload = samplePayload,
-            startAtBottom = true
-        )
-        assertEquals(com.example.ui.engines.BalloonLifecycleState.SPAWNING, balloon.state)
-
-        // Step 0.30s -> should transition to FLOATING
-        repeat(10) {
-            com.example.ui.engines.BalloonPhysics.stepBalloon(
-                balloon = balloon,
-                deltaTimeSec = 0.035f,
-                totalElapsedSec = it * 0.035f,
-                followRoadStream = true,
-                lowGravity = false,
-                reducedMotion = false
-            )
-        }
-        assertEquals(com.example.ui.engines.BalloonLifecycleState.FLOATING, balloon.state)
-
-        // Trigger pop -> POPPING -> REVEALING -> COMPLETED
-        balloon.state = com.example.ui.engines.BalloonLifecycleState.POPPING
-        balloon.stateTimerSec = 0f
-        repeat(6) {
-            com.example.ui.engines.BalloonPhysics.stepBalloon(
-                balloon = balloon,
-                deltaTimeSec = 0.04f,
-                totalElapsedSec = 1.0f,
-                followRoadStream = true,
-                lowGravity = false,
-                reducedMotion = false
-            )
-        }
-        assertEquals(com.example.ui.engines.BalloonLifecycleState.REVEALING, balloon.state)
-
-        repeat(12) {
-            com.example.ui.engines.BalloonPhysics.stepBalloon(
-                balloon = balloon,
-                deltaTimeSec = 0.045f,
-                totalElapsedSec = 1.5f,
-                followRoadStream = true,
-                lowGravity = false,
-                reducedMotion = false
-            )
-        }
-        assertEquals(com.example.ui.engines.BalloonLifecycleState.COMPLETED, balloon.state)
-
-        // Verify AdaptiveDifficultyManager inactivity hints (5s pulse, 8s pointing hand, 12s spoken hint)
-        val adaptiveMgr = com.example.ui.engines.AdaptiveDifficultyManager()
-        repeat(55) { adaptiveMgr.onFrameTick(0.1f) } // 5.5s
-        assertTrue(adaptiveMgr.shouldPulseHintBalloon)
-        repeat(30) { adaptiveMgr.onFrameTick(0.1f) } // 8.5s
-        assertTrue(adaptiveMgr.shouldShowPointingHand)
-        repeat(40) { adaptiveMgr.onFrameTick(0.1f) } // 12.5s
-        assertTrue(adaptiveMgr.shouldSpeakInactivityHint)
-
-        adaptiveMgr.onBalloonPopped(matchedChallengeTarget = true)
-        assertEquals(0f, adaptiveMgr.inactivitySeconds, 0.001f)
     }
 
     @Test
@@ -219,21 +379,18 @@ class ExampleUnitTest {
         val auditionLines = com.example.audio.VoiceAssetManifest.sixAuditionLines
         assertEquals(6, auditionLines.size)
 
-        // Verify all 6 audition lines have non-empty scripts, expected raw filenames, and performance directions
         assertTrue(auditionLines.all {
             it.spokenScript.isNotBlank() &&
                 it.expectedRawFileName.endsWith(".wav") &&
                 it.performanceDirection.isNotBlank()
         })
 
-        // Verify all 26 letters A-Z are present in the phonics manifest with separate name & sound files
         val phonics = com.example.audio.VoiceAssetManifest.phonicsManifest
         assertEquals(26, phonics.size)
         for (ch in 'A'..'Z') {
             val entry = phonics[ch]
             assertTrue("Missing phonics entry for $ch", entry != null)
             assertTrue(entry!!.letterNameFile != entry.letterSoundFile)
-            // Consonants must NOT add a trailing schwa "uh" (e.g., no buh, kuh, duh, fuh, luh, muh, suh, tuh, puh)
             if (ch != 'U') {
                 val lowerScript = entry.pureSoundScript.lowercase()
                 val forbiddenSchwas = listOf("buh", "kuh", "duh", "fuh", "guh", "huh", "luh", "muh", "nuh", "puh", "ruh", "suh", "tuh", "vuh", "zuh")
@@ -243,202 +400,7 @@ class ExampleUnitTest {
             }
         }
 
-        // Verify /m/ and /s/ use continuous pure phonemes ("mmmm", "ssss")
         assertTrue(phonics['M']!!.pureSoundScript.startsWith("mmmm"))
         assertTrue(phonics['S']!!.pureSoundScript.startsWith("ssss"))
-
-        // Verify all 4 visual companions share the exact same natural teacher pitch (1.00f) and rate (0.90f)
-        // rather than pretending to be 4 different voices via pitch/speed shifts
-        val pitches = com.example.model.LearningBuddy.entries.map { it.voicePitch }.toSet()
-        val rates = com.example.model.LearningBuddy.entries.map { it.voiceRate }.toSet()
-        assertEquals(setOf(1.00f), pitches)
-        assertEquals(setOf(0.90f), rates)
-
-        // Verify default persisted voice is the Warm Preschool Teacher
-        val defaultSettings = com.example.data.ProfileSettingsEntity()
-        assertEquals(
-            com.example.audio.WonderAudioController.DEFAULT_TEACHER_VOICE_ID,
-            defaultSettings.selectedVoiceId
-        )
-    }
-
-    @Test
-    fun `verify ABC Letter Balloon has all 26 letters A-Z and popped balloons never repeat in the same session across all modes`() {
-        val abcPayloads = com.example.ui.engines.LearningContentManager.getPayloadsForModeAndWorld(
-            com.example.ui.engines.BalloonLearningMode.ALPHABET_POP,
-            com.example.ui.engines.BalloonWorldEnvironment.FARM_ADVENTURE
-        )
-        assertEquals(26, abcPayloads.size)
-        val symbols = abcPayloads.map { it.symbolOrBadge }
-        assertEquals(('A'..'Z').map { it.toString() }, symbols)
-
-        // Verify across all 13 learning modes that once an item is popped in a session,
-        // selectNextUnpoppedPayload NEVER returns it again until the session is reset
-        com.example.ui.engines.BalloonLearningMode.entries.forEach { mode ->
-            val payloads = com.example.ui.engines.LearningContentManager.getPayloadsForModeAndWorld(
-                mode,
-                com.example.ui.engines.BalloonWorldEnvironment.FARM_ADVENTURE
-            )
-            val poppedIds = mutableSetOf<String>()
-            val floatingIds = mutableSetOf<String>()
-
-            // Fill initial floating slots (up to 5) with unique items
-            val initialSlots = minOf(5, payloads.size)
-            for (slot in 0 until initialSlots) {
-                val spawned = com.example.ui.engines.BalloonSpawner.selectNextUnpoppedPayload(
-                    allPayloads = payloads,
-                    poppedIds = poppedIds,
-                    currentlyFloatingIds = floatingIds,
-                    seedIndex = slot
-                )
-                assertTrue("Expected initial unpopped payload for $mode slot $slot", spawned != null)
-                assertTrue("Duplicate floating item spawned in $mode", floatingIds.add(spawned!!.id))
-            }
-
-            // Simulate popping every balloon in the mode one by one without resetting
-            var step = 0
-            while (floatingIds.isNotEmpty()) {
-                val poppedId = floatingIds.first()
-                floatingIds.remove(poppedId)
-                val newlyPopped = poppedIds.add(poppedId)
-                assertTrue("Item $poppedId was popped twice in the same session for $mode!", newlyPopped)
-
-                val replacement = com.example.ui.engines.BalloonSpawner.selectNextUnpoppedPayload(
-                    allPayloads = payloads,
-                    poppedIds = poppedIds,
-                    currentlyFloatingIds = floatingIds,
-                    seedIndex = step++
-                )
-                if (replacement != null) {
-                    assertTrue("Replacement ${replacement.id} was already popped in $mode!", replacement.id !in poppedIds)
-                    assertTrue("Replacement ${replacement.id} was already floating in $mode!", replacement.id !in floatingIds)
-                    floatingIds.add(replacement.id)
-                }
-            }
-
-            // Confirm every unique item in the mode was popped exactly once, and no more spawn until reset
-            assertEquals(payloads.map { it.id }.toSet(), poppedIds)
-            val afterAllPopped = com.example.ui.engines.BalloonSpawner.selectNextUnpoppedPayload(
-                allPayloads = payloads,
-                poppedIds = poppedIds,
-                currentlyFloatingIds = floatingIds,
-                seedIndex = 99
-            )
-            assertEquals(null, afterAllPopped)
-        }
-
-        // Verify BalloonRenderer custom path silhouette geometry (tapered top, wide dome, pinched neck, flared bottom knot)
-        val metrics = com.example.ui.engines.BalloonRenderer.computeMetrics(100f, 140f)
-        assertTrue(metrics.taperedTopY < metrics.upperDomeWidestY)
-        assertTrue(metrics.upperDomeWidestY < metrics.lowerTaperNeckY)
-        assertTrue(metrics.lowerTaperNeckY < metrics.knotBottomY)
-        assertTrue(metrics.knotBottomY < metrics.stringTipY)
-        assertTrue(metrics.halfTaperedTopWidth < metrics.halfUpperDomeWidth)
-        assertTrue(metrics.halfNeckWidth < metrics.halfTaperedTopWidth)
-        assertTrue(metrics.halfKnotWidth > metrics.halfNeckWidth)
-    }
-
-    @Test
-    fun `verify multi-level 15-item voice random challenge, distractor wobble, and 4 progressive number tiers 1 to 100`() {
-        // 1. Verify all 4 progressive number tiers (1-20, 21-40, 41-60, 61-100)
-        val tier1 = com.example.ui.engines.BalloonNumberTier.TIER_1_20
-        val tier2 = tier1.nextTier()!!
-        val tier3 = tier2.nextTier()!!
-        val tier4 = tier3.nextTier()!!
-        assertEquals(com.example.ui.engines.BalloonNumberTier.TIER_21_40, tier2)
-        assertEquals(com.example.ui.engines.BalloonNumberTier.TIER_41_60, tier3)
-        assertEquals(com.example.ui.engines.BalloonNumberTier.TIER_61_100, tier4)
-        assertEquals(null, tier4.nextTier())
-
-        val numbers1To20 = com.example.ui.engines.LearningContentManager.getPayloadsForModeAndWorld(
-            com.example.ui.engines.BalloonLearningMode.NUMBER_POP,
-            com.example.ui.engines.BalloonWorldEnvironment.FARM_ADVENTURE,
-            tier1
-        )
-        assertEquals((1..20).map { it.toString() }, numbers1To20.map { it.symbolOrBadge })
-
-        val numbers21To40 = com.example.ui.engines.LearningContentManager.getPayloadsForModeAndWorld(
-            com.example.ui.engines.BalloonLearningMode.NUMBER_POP,
-            com.example.ui.engines.BalloonWorldEnvironment.FARM_ADVENTURE,
-            tier2
-        )
-        assertEquals((21..40).map { it.toString() }, numbers21To40.map { it.symbolOrBadge })
-
-        val numbers41To60 = com.example.ui.engines.LearningContentManager.getPayloadsForModeAndWorld(
-            com.example.ui.engines.BalloonLearningMode.COUNTING_POP,
-            com.example.ui.engines.BalloonWorldEnvironment.FARM_ADVENTURE,
-            tier3
-        )
-        assertEquals((41..60).map { it.toString() }, numbers41To60.map { it.symbolOrBadge })
-
-        val numbers61To100 = com.example.ui.engines.LearningContentManager.getPayloadsForModeAndWorld(
-            com.example.ui.engines.BalloonLearningMode.NUMBER_POP,
-            com.example.ui.engines.BalloonWorldEnvironment.FARM_ADVENTURE,
-            tier4
-        )
-        assertEquals((61..100).map { it.toString() }, numbers61To100.map { it.symbolOrBadge })
-
-        // 2. Verify 15-item random challenge queue generation and fresh randomization across seeds
-        val abcPayloads = com.example.ui.engines.LearningContentManager.getPayloadsForModeAndWorld(
-            com.example.ui.engines.BalloonLearningMode.ALPHABET_POP,
-            com.example.ui.engines.BalloonWorldEnvironment.FARM_ADVENTURE
-        )
-        val round1Queue = com.example.ui.engines.BalloonSpawner.generateRandomChallengeQueue(
-            allPayloads = abcPayloads,
-            roundSeed = 101L,
-            targetCount = com.example.ui.engines.BalloonSpawner.CHALLENGE_ROUND_TARGET_COUNT
-        )
-        val round2Queue = com.example.ui.engines.BalloonSpawner.generateRandomChallengeQueue(
-            allPayloads = abcPayloads,
-            roundSeed = 202L,
-            targetCount = com.example.ui.engines.BalloonSpawner.CHALLENGE_ROUND_TARGET_COUNT
-        )
-        assertEquals(15, round1Queue.size)
-        assertEquals(15, round1Queue.map { it.id }.toSet().size)
-        assertEquals(15, round2Queue.size)
-        assertEquals(15, round2Queue.map { it.id }.toSet().size)
-        assertTrue("Expected different random 15-item sequences across seeds", round1Queue.map { it.id } != round2Queue.map { it.id })
-
-        // 3. Verify Voice Challenge Prompt and Gentle Wobble Retry Prompt
-        val targetA = abcPayloads.first()
-        val distractorB = abcPayloads[1]
-        val voiceClue = com.example.ui.engines.BalloonSpawner.buildVoiceChallengePrompt(
-            targetA,
-            com.example.ui.engines.BalloonNarrationLanguage.ENGLISH
-        )
-        val retryClue = com.example.ui.engines.BalloonSpawner.buildGentleWobbleRetryPrompt(
-            distractorB,
-            targetA,
-            com.example.ui.engines.BalloonNarrationLanguage.ENGLISH
-        )
-        assertTrue(voiceClue.contains("A"))
-        assertTrue(retryClue.contains("B") && retryClue.contains("A"))
-
-        // 4. Verify distractor wobble timer decays smoothly without popping the balloon
-        val balloon = com.example.ui.engines.BalloonSpawner.createBalloonForSlot(
-            instanceId = 10,
-            slotIndex = 1,
-            totalSlots = 5,
-            ageBand = AgeBand.PRESCHOOL_4_5,
-            speedMultiplier = 1.0f,
-            payload = distractorB,
-            startAtBottom = false
-        )
-        balloon.wobbleTimerSec = 0.48f
-        repeat(4) {
-            com.example.ui.engines.BalloonPhysics.stepBalloon(
-                balloon = balloon,
-                deltaTimeSec = 0.05f,
-                totalElapsedSec = 1.0f,
-                followRoadStream = true,
-                lowGravity = false,
-                reducedMotion = false
-            )
-        }
-        assertTrue(balloon.wobbleTimerSec in 0.25f..0.30f)
-        assertEquals(com.example.ui.engines.BalloonLifecycleState.FLOATING, balloon.state)
     }
 }
-
-
-

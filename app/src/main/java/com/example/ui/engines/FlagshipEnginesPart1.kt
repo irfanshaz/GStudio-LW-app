@@ -26,12 +26,16 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -55,16 +59,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -74,6 +77,8 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -86,6 +91,7 @@ import com.example.data.ActivityProgressEntity
 import com.example.data.AdaptiveChallengeParameters
 import com.example.data.FamilyMemberEntity
 import com.example.model.ActivityConfig
+import com.example.model.AgeBand
 import com.example.model.EngineType
 import com.example.model.GameItemOption
 import com.example.ui.theme.ActionContinueBlue
@@ -99,15 +105,12 @@ import com.example.ui.theme.MutedSlateText
 import com.example.ui.theme.PlaySurfaceWhite
 import com.example.ui.theme.SoftCreamCard
 import com.example.viewmodel.WonderViewModel
-import kotlinx.coroutines.delay
-import kotlin.math.PI
 import kotlin.math.hypot
 import kotlin.math.roundToInt
-import kotlin.math.sin
 
 /**
  * Shared Activity Play Shell:
- * - Compact Top Instruction Strip (Home, Back, Buddy Speaker, Adaptive Comfort Badge, Show Me Demo, Favorite Heart, Replay, Next)
+ * - Compact Top Instruction Strip (Home, Back, Buddy Speaker, 5-Star Milestone, Show Me Demo, Favorite Heart, Replay, Next Game)
  * - Optional Show Me Demonstration Overlay Banner (closed first on Android Back)
  * - Large White Play Surface hosting the active Engine
  */
@@ -128,6 +131,7 @@ fun ActivityPlayScreen(
     var replayKey by remember(activity.id) { mutableIntStateOf(0) }
 
     val settings by viewModel.settingsState.collectAsState()
+    val savedArtworks by viewModel.savedArtworksState.collectAsState()
     val ttsAvailable by viewModel.audio.ttsAvailable.collectAsState()
     val lastSpokenCaption by viewModel.audio.lastSpokenCaption.collectAsState()
 
@@ -141,7 +145,7 @@ fun ActivityPlayScreen(
     // Real-time adaptive parameters combining AgeBand + local performance indicators
     val sessionRetries by viewModel.sessionRetries.collectAsState()
     val sessionSmoothWins by viewModel.sessionSmoothWins.collectAsState()
-    val adaptiveParams = remember(activity.id, progress, sessionRetries, sessionSmoothWins) {
+    val adaptiveParams = remember(activity.id, progress, sessionRetries, sessionSmoothWins, settings.ageBandId, settings.autoAdaptiveDifficulty) {
         viewModel.getAdaptiveParametersFor(activity)
     }
 
@@ -149,7 +153,7 @@ fun ActivityPlayScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(CalmCoolBlueBg)
-            .padding(horizontal = 14.dp, vertical = 8.dp)
+            .padding(horizontal = 10.dp, vertical = 6.dp)
             .testTag("activity_play_screen_${activity.id}")
     ) {
         // 1. Compact Top Instruction Strip (maximizes large play surface below)
@@ -162,7 +166,7 @@ fun ActivityPlayScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -174,7 +178,7 @@ fun ActivityPlayScreen(
                     IconButton(
                         onClick = { viewModel.navigateBack() },
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(48.dp)
                             .clip(CircleShape)
                             .background(SoftCreamCard)
                             .testTag("activity_back_button")
@@ -185,20 +189,20 @@ fun ActivityPlayScreen(
                     IconButton(
                         onClick = { viewModel.navigateHome() },
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(48.dp)
                             .clip(CircleShape)
                             .background(SoftCreamCard)
                             .testTag("activity_home_button")
                     ) {
                         Icon(Icons.Default.Home, contentDescription = "Home", tint = DeepSlateInk)
                     }
-                    Spacer(Modifier.width(10.dp))
+                    Spacer(Modifier.width(8.dp))
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
                         Text(
                             text = "${activity.emoji} ${activity.title}",
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.ExtraBold,
                             color = DeepSlateInk,
                             maxLines = 1,
@@ -207,7 +211,7 @@ fun ActivityPlayScreen(
                         if ((!settings.narrationEnabled || !ttsAvailable) && lastSpokenCaption.isNotBlank()) {
                             Text(
                                 text = "💬 $lastSpokenCaption",
-                                fontSize = 12.sp,
+                                fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = ActionContinueBlue,
                                 maxLines = 1,
@@ -218,10 +222,10 @@ fun ActivityPlayScreen(
                     }
                 }
 
-                // Right: 5-Star Milestone Indicator + Listen + Show Me + Favorite + Replay + Next
+                // Right: 5-Star Milestone Indicator + Listen + Show Me + Favorite + Replay + Next Game
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
                 ) {
                     // 5-Star Gentle Milestone Strip
                     Surface(
@@ -230,7 +234,7 @@ fun ActivityPlayScreen(
                         border = BorderStroke(1.dp, ActionListenAmber)
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             for (s in 1..5) {
@@ -238,7 +242,7 @@ fun ActivityPlayScreen(
                                     Icons.Default.Star,
                                     contentDescription = null,
                                     tint = if (s <= starsEarned) ActionListenAmber else Color(0xFFCBD5E1),
-                                    modifier = Modifier.size(16.dp)
+                                    modifier = Modifier.size(14.dp)
                                 )
                             }
                         }
@@ -248,7 +252,7 @@ fun ActivityPlayScreen(
                     IconButton(
                         onClick = { viewModel.audio.speakInstruction(activity.instructionText) },
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(48.dp)
                             .clip(CircleShape)
                             .background(ActionListenAmber)
                             .testTag("activity_listen_button")
@@ -260,7 +264,7 @@ fun ActivityPlayScreen(
                     IconButton(
                         onClick = { viewModel.triggerShowMeDemo(activity) },
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(48.dp)
                             .clip(CircleShape)
                             .background(if (showDemoBanner) ActionPlayGreen else SoftCreamCard)
                             .testTag("activity_show_me_button")
@@ -276,7 +280,7 @@ fun ActivityPlayScreen(
                     IconButton(
                         onClick = { viewModel.toggleFavorite(activity) },
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(48.dp)
                             .clip(CircleShape)
                             .background(SoftCreamCard)
                             .testTag("activity_favorite_button")
@@ -295,7 +299,7 @@ fun ActivityPlayScreen(
                             viewModel.audio.speakInstruction("Let's play ${activity.title} again!")
                         },
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(48.dp)
                             .clip(CircleShape)
                             .background(SoftCreamCard)
                             .testTag("activity_replay_button")
@@ -303,19 +307,19 @@ fun ActivityPlayScreen(
                         Icon(Icons.Default.Refresh, contentDescription = "Replay", tint = DeepSlateInk)
                     }
 
-                    // Next Activity Button
+                    // Top-Level Next Activity Button (distinct from in-deck Next step)
                     Button(
                         onClick = { viewModel.launchNextActivityInWorld(activity) },
                         colors = ButtonDefaults.buttonColors(containerColor = ActionContinueBlue),
                         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
                         shape = RoundedCornerShape(14.dp),
                         modifier = Modifier
-                            .height(44.dp)
+                            .height(48.dp)
                             .testTag("activity_next_button")
                     ) {
-                        Text("Next", color = PlaySurfaceWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Text("Next Game", color = PlaySurfaceWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold, maxLines = 1)
                         Spacer(Modifier.width(4.dp))
-                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next", tint = PlaySurfaceWhite, modifier = Modifier.size(16.dp))
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Game", tint = PlaySurfaceWhite, modifier = Modifier.size(16.dp))
                     }
                 }
             }
@@ -326,33 +330,36 @@ fun ActivityPlayScreen(
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 6.dp)
+                    .padding(top = 4.dp)
                     .testTag("show_me_demo_banner"),
                 color = ActionPlayGreen.copy(alpha = 0.16f),
                 border = BorderStroke(2.dp, ActionPlayGreen),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(14.dp)
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                        .padding(horizontal = 12.dp, vertical = 6.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                        Text("👆✨", fontSize = 22.sp)
+                        Text("👆✨", fontSize = 18.sp)
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            text = "Show Me Demo: ${activity.showMeDemoHint}",
+                            text = "Show Me: ${activity.showMeDemoHint}",
                             style = MaterialTheme.typography.titleMedium,
-                            fontSize = 14.sp,
-                            color = DeepSlateInk
+                            fontSize = 13.sp,
+                            color = DeepSlateInk,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                     Button(
                         onClick = { viewModel.dismissShowMeDemo() },
                         colors = ButtonDefaults.buttonColors(containerColor = ActionPlayGreen),
                         shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 2.dp),
                         modifier = Modifier.height(36.dp)
                     ) {
                         Text("Got It!", color = PlaySurfaceWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
@@ -361,7 +368,7 @@ fun ActivityPlayScreen(
             }
         }
 
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(6.dp))
 
         // 2. Large White Play Surface hosting the 14 Reusable Game Engines
         Surface(
@@ -369,13 +376,13 @@ fun ActivityPlayScreen(
                 .fillMaxSize()
                 .testTag("activity_play_surface"),
             color = PlaySurfaceWhite,
-            shape = RoundedCornerShape(24.dp),
+            shape = RoundedCornerShape(22.dp),
             shadowElevation = 4.dp
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(12.dp)
+                    .padding(10.dp)
             ) {
                 when (activity.engineType) {
                     EngineType.SORTING_BASKETS -> SortingBasketsEngine(
@@ -390,6 +397,7 @@ fun ActivityPlayScreen(
                         adaptive = adaptiveParams,
                         savedStepIndex = progress?.savedStepIndex ?: 0,
                         showDemo = showDemoBanner,
+                        reducedMotion = reducedMotion,
                         replayKey = replayKey,
                         viewModel = viewModel
                     )
@@ -414,6 +422,7 @@ fun ActivityPlayScreen(
                     )
                     EngineType.COLORING_CANVAS -> ColoringCanvasEngine(
                         activity = activity,
+                        savedArtworks = savedArtworks,
                         replayKey = replayKey,
                         viewModel = viewModel
                     )
@@ -475,7 +484,7 @@ fun ActivityPlayScreen(
  * ENGINE 1: Flagship Sorting & Peg Puzzles Engine
  * - Visually distinct baskets & clearly sized objects (sizeScale)
  * - Supports both Drag-and-Drop AND 1-Tap Select + 1-Tap Basket placement
- * - Gentle recovery when dropped outside target
+ * - Adaptive layout guarantees every retained item and basket has generous visible width & height on phone and tablet
  */
 @Composable
 fun SortingBasketsEngine(
@@ -495,7 +504,7 @@ fun SortingBasketsEngine(
         }
     }
     val baskets = remember(allItems, adaptive.effectiveChoiceCount) {
-        allItems.map { it.categoryOrTarget }.distinct().take(adaptive.effectiveChoiceCount.coerceIn(2, 3))
+        allItems.map { it.categoryOrTarget }.distinct().take(adaptive.effectiveChoiceCount.coerceIn(2, 4))
     }
     val activeItems = remember(allItems, baskets, replayKey) {
         allItems.filter { it.categoryOrTarget in baskets }
@@ -504,7 +513,7 @@ fun SortingBasketsEngine(
     val sortedIds = remember(activity.id, replayKey) { mutableStateListOf<String>() }
     var selectedItem by remember(activity.id, replayKey) { mutableStateOf<GameItemOption?>(null) }
     var feedbackMessage by remember(activity.id, replayKey) {
-        mutableStateOf("Tap an object (or drag it), then tap its matching basket!")
+        mutableStateOf("Tap an item (or drag it), then tap its matching target below!")
     }
     var hadRetries by remember(activity.id, replayKey) { mutableStateOf(false) }
 
@@ -520,18 +529,18 @@ fun SortingBasketsEngine(
     fun attemptSort(item: GameItemOption, targetBasket: String) {
         if (item.categoryOrTarget == targetBasket) {
             sortedIds.add(item.id)
-            selectedItem = null
+            selectedItem = remainingItems.firstOrNull { it.id != item.id }
             feedbackMessage = "✨ Great sorting! ${item.spokenText}"
             viewModel.audio.playNoteHz(587.33f, 220, isXylophone = true)
             viewModel.audio.speakInstruction(item.spokenText)
             if (sortedIds.size >= activeItems.size) {
                 viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = hadRetries)
-                feedbackMessage = "🌟 All sorted! Tap Replay or keep sorting a fresh batch!"
+                feedbackMessage = "🌟 All sorted! Tap Replay or Sort Another Batch!"
             }
         } else {
             hadRetries = true
-            feedbackMessage = "Gentle try! ${item.label} belongs in the ${item.categoryOrTarget}."
-            viewModel.onGentleRetryNeeded(activity, "Try putting ${item.label} in the ${item.categoryOrTarget}!")
+            feedbackMessage = "Gentle try! ${item.label} belongs in ${item.categoryOrTarget}."
+            viewModel.onGentleRetryNeeded(activity, "Try putting ${item.label} in ${item.categoryOrTarget}!")
         }
     }
 
@@ -550,113 +559,132 @@ fun SortingBasketsEngine(
             Text(
                 text = feedbackMessage,
                 style = MaterialTheme.typography.titleMedium,
-                color = DeepSlateInk
+                fontSize = 14.sp,
+                color = DeepSlateInk,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
             )
             if (remainingItems.isEmpty()) {
                 Button(
                     onClick = {
                         sortedIds.clear()
                         hadRetries = false
-                        feedbackMessage = "Fresh basket items ready to sort!"
+                        feedbackMessage = "Fresh items ready to sort!"
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = ActionPlayGreen),
                     shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier.testTag("sorting_replenish_button")
+                    modifier = Modifier
+                        .height(48.dp)
+                        .testTag("sorting_replenish_button")
                 ) {
                     Text("Sort Another Batch! ⭐", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold)
                 }
             }
         }
 
-        // Top Row: Large Draggable & Tappable Objects with Distinct Size Scales
-        Row(
+        // Top Area: Responsive Draggable & Tappable Objects (Guaranteed visible width for up to 8 items)
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.5f),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+                .weight(0.52f)
+                .padding(vertical = 4.dp)
         ) {
-            remainingItems.forEach { item ->
-                val isSelected = selectedItem?.id == item.id
-                var dragOffset by remember(item.id) { mutableStateOf(Offset.Zero) }
-                val cardSizeDp = (108f * item.sizeScale.coerceIn(0.75f, 1.32f)).dp
+            val count = remainingItems.size.coerceAtLeast(1)
+            val spacingDp = 8.dp
+            val availablePerItem = ((maxWidth - spacingDp * (count - 1)) / count).coerceIn(68.dp, 118.dp)
+            val maxCardHeight = (maxHeight - 4.dp).coerceIn(68.dp, 118.dp)
 
-                Surface(
-                    modifier = Modifier
-                        .size(cardSizeDp)
-                        .offset { IntOffset(dragOffset.x.roundToInt(), dragOffset.y.roundToInt()) }
-                        .clip(RoundedCornerShape(22.dp))
-                        .clickable {
-                            selectedItem = item
-                            feedbackMessage = "Selected ${item.label} — now tap the ${item.categoryOrTarget} below!"
-                            viewModel.audio.speakInstruction(item.label)
-                        }
-                        .pointerInput(item.id, baskets) {
-                            detectDragGestures(
-                                onDragStart = { selectedItem = item },
-                                onDragEnd = {
-                                    if (dragOffset.y > 70f) {
-                                        // Determine basket by horizontal drag direction
-                                        val basketIndex = when {
-                                            baskets.size == 2 -> if (dragOffset.x < 0f) 0 else 1
-                                            else -> when {
-                                                dragOffset.x < -80f -> 0
-                                                dragOffset.x > 80f -> (baskets.size - 1)
-                                                else -> (baskets.size / 2)
-                                            }
-                                        }
-                                        val targetBasket = baskets.getOrElse(basketIndex) { item.categoryOrTarget }
-                                        attemptSort(item, targetBasket)
-                                    }
-                                    dragOffset = Offset.Zero
-                                },
-                                onDragCancel = { dragOffset = Offset.Zero },
-                                onDrag = { change, dragAmount ->
-                                    change.consume()
-                                    dragOffset += dragAmount
-                                }
-                            )
-                        }
-                        .testTag("sort_item_${item.id}"),
-                    color = if (isSelected) Color(item.primaryColorHex).copy(alpha = 0.24f) else SoftCreamCard,
-                    border = BorderStroke(
-                        width = if (isSelected) 4.dp else 2.dp,
-                        color = Color(item.primaryColorHex)
-                    ),
-                    shape = RoundedCornerShape(22.dp),
-                    shadowElevation = if (isSelected) 8.dp else 3.dp
-                ) {
-                    Column(
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.spacedBy(spacingDp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                remainingItems.forEach { item ->
+                    val isSelected = selectedItem?.id == item.id
+                    var dragOffset by remember(item.id) { mutableStateOf(Offset.Zero) }
+                    val scaleFactor = item.sizeScale.coerceIn(0.82f, 1.15f)
+                    val itemWidth = (availablePerItem * scaleFactor).coerceIn(64.dp, availablePerItem)
+                    val itemHeight = (maxCardHeight * scaleFactor).coerceIn(64.dp, maxCardHeight)
+
+                    Surface(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                            .size(width = itemWidth, height = itemHeight)
+                            .offset { IntOffset(dragOffset.x.roundToInt(), dragOffset.y.roundToInt()) }
+                            .clip(RoundedCornerShape(18.dp))
+                            .clickable {
+                                selectedItem = item
+                                feedbackMessage = "Selected ${item.label} — now tap ${item.categoryOrTarget} below!"
+                                viewModel.audio.speakInstruction(item.label)
+                            }
+                            .pointerInput(item.id, baskets) {
+                                detectDragGestures(
+                                    onDragStart = { selectedItem = item },
+                                    onDragEnd = {
+                                        if (dragOffset.y > 48f) {
+                                            val basketIndex = when {
+                                                baskets.size == 2 -> if (dragOffset.x < 0f) 0 else 1
+                                                else -> when {
+                                                    dragOffset.x < -60f -> 0
+                                                    dragOffset.x > 60f -> (baskets.size - 1)
+                                                    else -> (baskets.size / 2)
+                                                }
+                                            }
+                                            val targetBasket = baskets.getOrElse(basketIndex) { item.categoryOrTarget }
+                                            attemptSort(item, targetBasket)
+                                        }
+                                        dragOffset = Offset.Zero
+                                    },
+                                    onDragCancel = { dragOffset = Offset.Zero },
+                                    onDrag = { change, dragAmount ->
+                                        change.consume()
+                                        dragOffset += dragAmount
+                                    }
+                                )
+                            }
+                            .testTag("sort_item_${item.id}"),
+                        color = if (isSelected) Color(item.primaryColorHex).copy(alpha = 0.24f) else SoftCreamCard,
+                        border = BorderStroke(
+                            width = if (isSelected) 3.5.dp else 2.dp,
+                            color = Color(item.primaryColorHex)
+                        ),
+                        shape = RoundedCornerShape(18.dp),
+                        shadowElevation = if (isSelected) 6.dp else 2.dp
                     ) {
-                        if (item.drawableRes != null) {
-                            Image(
-                                painter = painterResource(id = item.drawableRes),
-                                contentDescription = item.label,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .size(46.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                            )
-                        } else {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 4.dp, vertical = 4.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            if (item.drawableRes != null) {
+                                Image(
+                                    painter = painterResource(id = item.drawableRes),
+                                    contentDescription = item.label,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .size(36.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                )
+                            } else {
+                                Text(
+                                    text = item.emoji,
+                                    fontSize = 26.sp
+                                )
+                            }
+                            Spacer(Modifier.height(2.dp))
                             Text(
-                                text = item.emoji,
-                                fontSize = (32f * item.sizeScale.coerceIn(0.8f, 1.25f)).sp
+                                text = item.label,
+                                style = MaterialTheme.typography.titleSmall,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = DeepSlateInk,
+                                textAlign = TextAlign.Center,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = item.label,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontSize = 13.sp,
-                            color = DeepSlateInk,
-                            textAlign = TextAlign.Center,
-                            maxLines = 1
-                        )
                     }
                 }
             }
@@ -666,8 +694,8 @@ fun SortingBasketsEngine(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.45f),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
+                .weight(0.42f),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             baskets.forEachIndexed { index, basketName ->
@@ -679,7 +707,7 @@ fun SortingBasketsEngine(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()
-                        .clip(RoundedCornerShape(26.dp))
+                        .clip(RoundedCornerShape(22.dp))
                         .clickable {
                             val current = selectedItem ?: remainingItems.firstOrNull()
                             if (current != null) {
@@ -689,29 +717,33 @@ fun SortingBasketsEngine(
                         .testTag("sort_basket_$index"),
                     color = if (highlightScaffold) Color(matchingColor).copy(alpha = 0.28f) else Color(matchingColor).copy(alpha = 0.12f),
                     border = BorderStroke(
-                        width = if (highlightScaffold) 4.dp else 3.dp,
+                        width = if (highlightScaffold) 4.dp else 2.5.dp,
                         color = Color(matchingColor)
                     ),
-                    shape = RoundedCornerShape(26.dp)
+                    shape = RoundedCornerShape(22.dp)
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(12.dp),
+                            .padding(8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
                             text = "🧺 $basketName",
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = DeepSlateInk
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = DeepSlateInk,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
-                        Spacer(Modifier.height(4.dp))
+                        Spacer(Modifier.height(2.dp))
                         Text(
-                            text = if (highlightScaffold) "✨ Tap Here to Place!" else "Sorted: $countInBasket items",
-                            fontSize = 13.sp,
+                            text = if (highlightScaffold) "✨ Tap Here to Place!" else "Sorted: $countInBasket",
+                            fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (highlightScaffold) ActionPlayGreen else MutedSlateText
+                            color = if (highlightScaffold) ActionPlayGreen else MutedSlateText,
+                            maxLines = 1
                         )
                     }
                 }
@@ -721,12 +753,13 @@ fun SortingBasketsEngine(
 }
 
 /**
- * ENGINE 2: Flagship Alphabet, Number & Shape Tracing Studio
- * - Offers Show Me animated finger path, start star marker, guide path, and effort progress indicator
- * - Age-adjusted tolerance (adaptive.tracingToleranceDp) and coverage check
- * - Anti-scribble check: random full-screen scribbling does NOT count as success
- * - Saves position in alphabet/number journeys locally
- * - Provides Next, Retry, and Skip controls
+ * ENGINE 2: Flagship Alphabet, Number, Shape, Pre-Writing & Word Tracing Studio (Stage 1 Repair)
+ * - Uses explicit deck definitions keyed to stable activity IDs (w04_tracing_1..12)
+ * - Multi-stroke glyphs with explicit pen lifts, direction cues, and aspect-ratio-safe canvas scaling
+ * - Unified evaluation so Effort & Path Coverage meter and status feedback always agree
+ * - Distinct Assisted Tap-Along mode without invented accuracy scores
+ * - Guaranteed >= 48.dp visible height for Retry, Skip, and Next controls on phone and tablet
+ * - Explicit deck completion state with Replay Deck or Return to World
  */
 @Composable
 fun TracingStudioEngine(
@@ -734,45 +767,166 @@ fun TracingStudioEngine(
     adaptive: AdaptiveChallengeParameters,
     savedStepIndex: Int,
     showDemo: Boolean,
+    reducedMotion: Boolean = false,
     replayKey: Int,
     viewModel: WonderViewModel
 ) {
-    val glyphsSequence = remember(activity.id) {
-        when {
-            activity.id.contains("w04_tracing_4") || activity.id.contains("w04_tracing_5") ->
-                ('a'..'z').map { it.toString() to "Lowercase $it" }
-            activity.id.contains("w04_tracing_6") || activity.id.contains("w04_tracing_7") ->
-                (1..10).map { it.toString() to "Number $it" }
-            activity.id.contains("w04_tracing_8") ->
-                listOf("◯" to "Circle", "△" to "Triangle", "□" to "Square", "☆" to "Star", "♡" to "Heart")
-            else ->
-                listOf(
-                    "A" to "Apple", "B" to "Bear", "C" to "Cat", "D" to "Dolphin",
-                    "E" to "Elephant", "F" to "Fire Truck", "G" to "Giraffe", "H" to "Hat",
-                    "I" to "Igloo", "J" to "Jellyfish", "K" to "Kite", "L" to "Lion",
-                    "M" to "Moon", "N" to "Nest", "O" to "Owl", "P" to "Puppy",
-                    "Q" to "Queen", "R" to "Rainbow", "S" to "Sun", "T" to "Train",
-                    "U" to "Umbrella", "V" to "Violin", "W" to "Whale", "X" to "Xylophone",
-                    "Y" to "Yak", "Z" to "Zebra"
-                )
+    val deck = remember(activity.id) {
+        TracingStudioDeckRegistry.getDeckForActivity(activity.id)
+    }
+    val initialStep = remember(activity.id, savedStepIndex, deck.size) {
+        TracingStudioDeckRegistry.reconcileSavedStepIndex(savedStepIndex, deck.size)
+    }
+
+    // If legacy savedStepIndex was out of range for the repaired deck, persist the reconciled valid index
+    LaunchedEffect(activity.id, savedStepIndex, initialStep) {
+        if (savedStepIndex != initialStep) {
+            viewModel.saveActivityCheckpoint(activity, initialStep)
         }
     }
 
-    var currentStep by remember(activity.id) {
-        mutableIntStateOf(savedStepIndex.coerceIn(0, glyphsSequence.lastIndex))
+    var currentStep by remember(activity.id, replayKey) {
+        mutableIntStateOf(initialStep)
     }
-    val (activeGlyph, activeWord) = glyphsSequence[currentStep % glyphsSequence.size]
-
-    val userPoints = remember(currentStep, replayKey) { mutableStateListOf<Offset>() }
-    var statusMessage by remember(currentStep, replayKey) {
-        mutableStateOf("Start at the green star ⭐ and trace $activeGlyph for $activeWord!")
+    var isDeckComplete by remember(activity.id, replayKey) {
+        mutableStateOf(false)
     }
-    var hadRetries by remember(currentStep, replayKey) { mutableStateOf(false) }
-    var isCompleted by remember(currentStep, replayKey) { mutableStateOf(false) }
 
-    // Normalized guide checkpoints (0.2..0.8 in canvas coordinates) for the active glyph
-    val normalizedCheckpoints = remember(activeGlyph) {
-        buildGuideCheckpointsForGlyph(activeGlyph)
+    val safeStep = currentStep.coerceIn(0, deck.lastIndex)
+    val activeGlyphSpec = deck[safeStep]
+    val activeGlyph = activeGlyphSpec.glyph
+    val activeWord = activeGlyphSpec.wordHint
+    val strokes = activeGlyphSpec.strokes
+
+    var currentStrokeIdx by remember(safeStep, replayKey) { mutableIntStateOf(0) }
+    val safeStrokeIdx = currentStrokeIdx.coerceIn(0, strokes.lastIndex)
+    val activeStrokeSpec = strokes[safeStrokeIdx]
+
+    // Track completed strokes in the current glyph and user segments (preserving pen lifts!)
+    val completedStrokeIndices = remember(safeStep, replayKey) { mutableStateListOf<Int>() }
+    val userSegmentsForCurrentStroke = remember(safeStep, safeStrokeIdx, replayKey) {
+        mutableStateListOf<List<Offset>>()
+    }
+    val liveDragPoints = remember(safeStep, safeStrokeIdx, replayKey) {
+        mutableStateListOf<Offset>()
+    }
+
+    // Track which glyph indices in this session already awarded a star so Retry practices without duplicate credit
+    val awardedStepsInSession = remember(activity.id, replayKey) { mutableStateListOf<Int>() }
+    var hadRetries by remember(safeStep, replayKey) { mutableStateOf(false) }
+    var isGlyphCompleted by remember(safeStep, replayKey) { mutableStateOf(false) }
+    var isAssistedTapMode by remember(safeStep, replayKey) { mutableStateOf(false) }
+    var assistedTapCheckpointIdx by remember(safeStep, safeStrokeIdx, replayKey) { mutableIntStateOf(0) }
+
+    // Single source of truth for BOTH the coverage meter and feedback message
+    var currentEval by remember(safeStep, safeStrokeIdx, replayKey) {
+        mutableStateOf(
+            TracingEvaluationResult(
+                coverageRatio = 0f,
+                orderedRatio = 0f,
+                offPathRatio = 0f,
+                startedNearStart = false,
+                reachedNearFinish = false,
+                isShortcutOrTapCluster = false,
+                isReversed = false,
+                strokePassed = false,
+                accuracyPercent = 0,
+                feedbackMessage = "Start here ⭐ — ${activeStrokeSpec.directionCue} (0%)"
+            )
+        )
+    }
+
+    val density = LocalDensity.current
+    val tolerancePx = with(density) { adaptive.tracingToleranceDp.dp.toPx() }
+    val isToddlerBand = adaptive.baseAgeBand == AgeBand.TODDLER_2_3
+
+    var canvasSize by remember { mutableStateOf(Offset(600f, 340f)) }
+
+    val allStrokesPixels = remember(strokes, canvasSize) {
+        strokes.map { stroke ->
+            stroke.points.map { pt ->
+                TracingStudioDeckRegistry.mapNormalizedToCanvas(pt, canvasSize.x, canvasSize.y)
+            }
+        }
+    }
+    val activeCheckpointPixels = allStrokesPixels.getOrElse(safeStrokeIdx) { emptyList() }
+
+    // Keep latest references for gesture callbacks so they NEVER read stale composition state
+    val latestStrokeSpec by rememberUpdatedState(activeStrokeSpec)
+    val latestCheckpoints by rememberUpdatedState(activeCheckpointPixels)
+    val latestTolerancePx by rememberUpdatedState(tolerancePx)
+    val latestRequiredCoverage by rememberUpdatedState(adaptive.tracingCoverageRequired)
+    val latestIsToddler by rememberUpdatedState(isToddlerBand)
+    val latestSafeStep by rememberUpdatedState(safeStep)
+    val latestSafeStrokeIdx by rememberUpdatedState(safeStrokeIdx)
+    val latestTotalStrokes by rememberUpdatedState(strokes.size)
+    val latestDeckSize by rememberUpdatedState(deck.size)
+    val latestActiveGlyph by rememberUpdatedState(activeGlyph)
+    val latestActiveWord by rememberUpdatedState(activeWord)
+
+    fun recomputeEvaluation(segments: List<List<Offset>>): TracingEvaluationResult {
+        val singleStrokeEval = TracingStudioDeckRegistry.evaluateStrokeAttempt(
+            strokeSpec = latestStrokeSpec,
+            checkpointPixels = latestCheckpoints,
+            rawSegments = segments,
+            tolerancePx = latestTolerancePx,
+            requiredCoverageRatio = latestRequiredCoverage,
+            isToddlerBand = latestIsToddler
+        )
+        // Combine completed strokes with active stroke coverage so multi-stroke progress is smooth and accurate
+        val completedFraction = completedStrokeIndices.size.toFloat() / latestTotalStrokes.coerceAtLeast(1).toFloat()
+        val currentContribution = singleStrokeEval.coverageRatio / latestTotalStrokes.coerceAtLeast(1).toFloat()
+        val combinedCoverage = if (isGlyphCompleted) 1.0f else (completedFraction + currentContribution).coerceIn(0f, 1f)
+        val combinedPct = (combinedCoverage * 100f).roundToInt()
+
+        val baseMsg = singleStrokeEval.feedbackMessage.substringBeforeLast("(").trim()
+        return singleStrokeEval.copy(
+            coverageRatio = combinedCoverage,
+            feedbackMessage = "$baseMsg ($combinedPct%)"
+        )
+    }
+
+    fun handleStrokeSuccess(eval: TracingEvaluationResult, fromAssistedTap: Boolean) {
+        if (!completedStrokeIndices.contains(latestSafeStrokeIdx)) {
+            completedStrokeIndices.add(latestSafeStrokeIdx)
+        }
+        if (latestSafeStrokeIdx < latestTotalStrokes - 1) {
+            val nextStroke = latestSafeStrokeIdx + 1
+            currentStrokeIdx = nextStroke
+            val nextPct = ((completedStrokeIndices.size.toFloat() / latestTotalStrokes.toFloat()) * 100f).roundToInt()
+            currentEval = eval.copy(
+                coverageRatio = completedStrokeIndices.size.toFloat() / latestTotalStrokes.toFloat(),
+                feedbackMessage = "✋ Pen lift! Now start Stroke ${nextStroke + 1} of $latestTotalStrokes at ⭐ ($nextPct%)"
+            )
+            viewModel.audio.playNoteHz(523.25f, 160, isXylophone = true)
+            viewModel.audio.speakInstruction("Nice! Lift your finger and start the next stroke at the green star.")
+        } else if (!isGlyphCompleted) {
+            isGlyphCompleted = true
+            val finalEval = eval.copy(
+                coverageRatio = 1.0f,
+                strokePassed = true,
+                feedbackMessage = if (fromAssistedTap) {
+                    "🌟 Assisted Tap-Along complete for $latestActiveGlyph ($latestActiveWord)! (100%)"
+                } else {
+                    "🌟 Wonderful tracing of $latestActiveGlyph ($latestActiveWord)! (100%)"
+                }
+            )
+            currentEval = finalEval
+            val nextSavedIdx = if (latestSafeStep + 1 < latestDeckSize) latestSafeStep + 1 else 0
+            if (!awardedStepsInSession.contains(latestSafeStep)) {
+                awardedStepsInSession.add(latestSafeStep)
+                viewModel.onActivityMilestoneCompleted(
+                    activity = activity,
+                    hadRetriesInRound = hadRetries,
+                    nextStepIndex = nextSavedIdx,
+                    tracingAccuracyPercent = if (fromAssistedTap) null else finalEval.accuracyPercent
+                )
+            } else {
+                viewModel.audio.playSuccessChime()
+                viewModel.audio.speakInstruction("Great practice tracing $latestActiveGlyph again!")
+                viewModel.saveActivityCheckpoint(activity, nextSavedIdx)
+            }
+        }
     }
 
     val demoTransition = rememberInfiniteTransition(label = "trace_demo")
@@ -780,7 +934,7 @@ fun TracingStudioEngine(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 2600, easing = LinearEasing),
+            animation = tween(durationMillis = if (reducedMotion) 6000 else 3000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "demo_cursor"
@@ -790,87 +944,104 @@ fun TracingStudioEngine(
         modifier = Modifier
             .fillMaxSize()
             .testTag("engine_tracing_studio"),
-        horizontalArrangement = Arrangement.spacedBy(14.dp)
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        // Left: Large Interactive Tracing Canvas
-        var canvasSize by remember { mutableStateOf(Offset(600f, 360f)) }
-        val checkpointPixels = remember(normalizedCheckpoints, canvasSize) {
-            normalizedCheckpoints.map { Offset(it.x * canvasSize.x, it.y * canvasSize.y) }
-        }
-
-        val tolerancePx = adaptive.tracingToleranceDp * 2.2f
-        val coveredCount = remember(userPoints.size, checkpointPixels, tolerancePx) {
-            if (userPoints.isEmpty()) 0
-            else checkpointPixels.count { cp ->
-                userPoints.any { up -> hypot(up.x - cp.x, up.y - cp.y) <= tolerancePx }
-            }
-        }
-        val offPathPointsCount = remember(userPoints.size, checkpointPixels, tolerancePx) {
-            userPoints.count { up ->
-                checkpointPixels.none { cp -> hypot(up.x - cp.x, up.y - cp.y) <= tolerancePx * 1.45f }
-            }
-        }
-        val coverageRatio = if (checkpointPixels.isNotEmpty()) {
-            coveredCount.toFloat() / checkpointPixels.size.toFloat()
-        } else 0f
-        val scribbleRatio = if (userPoints.isNotEmpty()) {
-            offPathPointsCount.toFloat() / userPoints.size.toFloat()
-        } else 0f
-
+        // Left: Large Dominant Interactive Tracing Canvas
         Box(
             modifier = Modifier
-                .weight(0.68f)
+                .weight(0.66f)
                 .fillMaxHeight()
-                .clip(RoundedCornerShape(22.dp))
+                .clip(RoundedCornerShape(20.dp))
                 .background(SoftCreamCard)
-                .pointerInput(currentStep, replayKey) {
+                .onSizeChanged { intSize ->
+                    if (intSize.width > 0 && intSize.height > 0) {
+                        canvasSize = Offset(intSize.width.toFloat(), intSize.height.toFloat())
+                    }
+                }
+                .pointerInput(safeStep, safeStrokeIdx, replayKey, isDeckComplete) {
+                    if (isDeckComplete) return@pointerInput
                     detectDragGestures(
                         onDragStart = { startOffset ->
-                            userPoints.add(startOffset)
+                            isAssistedTapMode = false
+                            liveDragPoints.clear()
+                            liveDragPoints.add(startOffset)
+                            val candidateSegments = userSegmentsForCurrentStroke.toList() + listOf(liveDragPoints.toList())
+                            currentEval = recomputeEvaluation(candidateSegments)
                         },
                         onDrag = { change, _ ->
                             change.consume()
-                            userPoints.add(change.position)
+                            liveDragPoints.add(change.position)
+                            val candidateSegments = userSegmentsForCurrentStroke.toList() + listOf(liveDragPoints.toList())
+                            currentEval = recomputeEvaluation(candidateSegments)
                         },
                         onDragEnd = {
-                            if (scribbleRatio > 0.55f && userPoints.size > 25) {
-                                // Reject random scribbling gently
-                                hadRetries = true
-                                statusMessage = "Oops, that went outside the lines! Try following the dotted path from the green star."
-                                viewModel.onGentleRetryNeeded(activity, "Stay right on the glowing guide path!")
-                            } else if (coverageRatio >= adaptive.tracingCoverageRequired && !isCompleted) {
-                                isCompleted = true
-                                val accuracyPct = ((1f - scribbleRatio.coerceIn(0f, 0.5f)) * 100f).roundToInt()
-                                statusMessage = "🌟 Wonderful tracing of $activeGlyph ($activeWord)!"
-                                viewModel.onActivityMilestoneCompleted(
-                                    activity = activity,
-                                    hadRetriesInRound = hadRetries,
-                                    nextStepIndex = (currentStep + 1) % glyphsSequence.size,
-                                    tracingAccuracyPercent = accuracyPct
-                                )
-                            } else if (!isCompleted) {
-                                statusMessage = "Keep going! Trace all the way to the finish dot (${(coverageRatio * 100).roundToInt()}%)."
+                            if (liveDragPoints.isNotEmpty()) {
+                                userSegmentsForCurrentStroke.add(liveDragPoints.toList())
+                                liveDragPoints.clear()
                             }
+                            val freshEval = recomputeEvaluation(userSegmentsForCurrentStroke.toList())
+                            currentEval = freshEval
+
+                            if (freshEval.strokePassed) {
+                                handleStrokeSuccess(freshEval, fromAssistedTap = false)
+                            } else if (freshEval.offPathRatio > 0.45f || freshEval.isReversed || freshEval.isShortcutOrTapCluster) {
+                                hadRetries = true
+                                viewModel.onGentleRetryNeeded(activity, freshEval.feedbackMessage.substringBeforeLast("(").trim())
+                            }
+                        },
+                        onDragCancel = {
+                            liveDragPoints.clear()
+                            currentEval = recomputeEvaluation(userSegmentsForCurrentStroke.toList())
                         }
                     )
                 }
-                .pointerInput(currentStep, replayKey) {
-                    // Accessible tap-along-checkpoints alternative for children who prefer tapping stars
+                .pointerInput(safeStep, safeStrokeIdx, replayKey, isDeckComplete) {
+                    if (isDeckComplete) return@pointerInput
+                    // Separately identified Assisted Tap-Along interaction (no invented accuracy score)
                     detectTapGestures { tapOffset ->
-                        userPoints.add(tapOffset)
-                        val nearest = checkpointPixels.minByOrNull { hypot(it.x - tapOffset.x, it.y - tapOffset.y) }
-                        if (nearest != null && hypot(nearest.x - tapOffset.x, nearest.y - tapOffset.y) <= tolerancePx * 1.4f) {
-                            userPoints.add(nearest)
-                            viewModel.audio.playNoteHz(440f + coveredCount * 28f, 120, isXylophone = true)
-                        }
-                        if (coverageRatio >= adaptive.tracingCoverageRequired && !isCompleted) {
-                            isCompleted = true
-                            statusMessage = "🌟 Wonderful tracing of $activeGlyph ($activeWord)!"
-                            viewModel.onActivityMilestoneCompleted(
-                                activity = activity,
-                                hadRetriesInRound = hadRetries,
-                                nextStepIndex = (currentStep + 1) % glyphsSequence.size,
-                                tracingAccuracyPercent = 92
+                        val cps = latestCheckpoints
+                        if (cps.isEmpty()) return@detectTapGestures
+                        val targetIdx = assistedTapCheckpointIdx.coerceIn(0, cps.lastIndex)
+                        val targetPt = cps[targetIdx]
+                        val distToNext = hypot(targetPt.x - tapOffset.x, targetPt.y - tapOffset.y)
+
+                        if (distToNext <= latestTolerancePx * 1.6f) {
+                            isAssistedTapMode = true
+                            val prevPt = if (targetIdx > 0) cps[targetIdx - 1] else targetPt
+                            userSegmentsForCurrentStroke.add(listOf(prevPt, targetPt))
+                            assistedTapCheckpointIdx = targetIdx + 1
+                            viewModel.audio.playNoteHz(440f + targetIdx * 28f, 120, isXylophone = true)
+
+                            val progressRatio = assistedTapCheckpointIdx.toFloat() / cps.size.toFloat()
+                            val combined = ((completedStrokeIndices.size.toFloat() + progressRatio) / latestTotalStrokes.toFloat()).coerceIn(0f, 1f)
+                            val pct = (combined * 100f).roundToInt()
+
+                            if (assistedTapCheckpointIdx >= cps.size) {
+                                val tapEval = TracingEvaluationResult(
+                                    coverageRatio = combined,
+                                    orderedRatio = 1f,
+                                    offPathRatio = 0f,
+                                    startedNearStart = true,
+                                    reachedNearFinish = true,
+                                    isShortcutOrTapCluster = false,
+                                    isReversed = false,
+                                    strokePassed = true,
+                                    accuracyPercent = 100,
+                                    feedbackMessage = "Assisted Tap-Along complete! ($pct%)"
+                                )
+                                currentEval = tapEval
+                                handleStrokeSuccess(tapEval, fromAssistedTap = true)
+                            } else {
+                                currentEval = currentEval.copy(
+                                    coverageRatio = combined,
+                                    feedbackMessage = "Assisted Tap-Along: dot $assistedTapCheckpointIdx of ${cps.size} ($pct%)"
+                                )
+                            }
+                        } else {
+                            // Tapping far from the current checkpoint does not award fake accuracy
+                            val currentPct = currentEval.coveragePercent
+                            currentEval = currentEval.copy(
+                                feedbackMessage = "Start at the green star ⭐ and slide along the dots! ($currentPct%)"
                             )
                         }
                     }
@@ -878,127 +1049,326 @@ fun TracingStudioEngine(
                 .testTag("tracing_canvas")
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
-                canvasSize = Offset(size.width, size.height)
-                val pts = normalizedCheckpoints.map { Offset(it.x * size.width, it.y * size.height) }
-
-                // 1. Guide Track & Dotted Centerline
-                if (pts.size >= 2) {
-                    val guidePath = Path().apply {
-                        moveTo(pts.first().x, pts.first().y)
-                        for (i in 1 until pts.size) {
-                            lineTo(pts[i].x, pts[i].y)
+                // 1. Draw all strokes of the glyph (completed in green, upcoming in subtle slate, active in bold guide)
+                allStrokesPixels.forEachIndexed { sIdx, pts ->
+                    if (pts.size >= 2) {
+                        val strokePath = Path().apply {
+                            moveTo(pts.first().x, pts.first().y)
+                            for (i in 1 until pts.size) {
+                                lineTo(pts[i].x, pts[i].y)
+                            }
                         }
-                    }
-                    drawPath(
-                        path = guidePath,
-                        color = Color(0xFFCBD5E1),
-                        style = Stroke(width = tolerancePx * 1.15f, cap = StrokeCap.Round, join = StrokeJoin.Round)
-                    )
-                    drawPath(
-                        path = guidePath,
-                        color = Color(0xFF64748B),
-                        style = Stroke(
-                            width = 6f,
-                            cap = StrokeCap.Round,
-                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(18f, 18f), 0f)
+                        val isDoneStroke = sIdx in completedStrokeIndices || isGlyphCompleted
+                        val isActiveStroke = sIdx == safeStrokeIdx && !isGlyphCompleted
+
+                        drawPath(
+                            path = strokePath,
+                            color = when {
+                                isDoneStroke -> ActionPlayGreen.copy(alpha = 0.45f)
+                                isActiveStroke -> Color(0xFFCBD5E1)
+                                else -> Color(0xFFE2E8F0)
+                            },
+                            style = Stroke(
+                                width = if (isActiveStroke) tolerancePx * 0.95f else tolerancePx * 0.65f,
+                                cap = StrokeCap.Round,
+                                join = StrokeJoin.Round
+                            )
                         )
-                    )
+                        drawPath(
+                            path = strokePath,
+                            color = when {
+                                isDoneStroke -> ActionPlayGreen
+                                isActiveStroke -> Color(0xFF475569)
+                                else -> Color(0xFF94A3B8)
+                            },
+                            style = Stroke(
+                                width = if (isActiveStroke) 6f else 4f,
+                                cap = StrokeCap.Round,
+                                pathEffect = PathEffect.dashPathEffect(floatArrayOf(16f, 14f), 0f)
+                            )
+                        )
+                    } else if (pts.size == 1) {
+                        drawCircle(
+                            color = if (sIdx in completedStrokeIndices || isGlyphCompleted) ActionPlayGreen else Color(0xFF475569),
+                            radius = 18f,
+                            center = pts.first()
+                        )
+                    }
                 }
 
-                // 2. Checkpoints & Start/Finish Markers
-                pts.forEachIndexed { idx, pt ->
-                    val isCovered = userPoints.any { up -> hypot(up.x - pt.x, up.y - pt.y) <= tolerancePx }
+                // 2. Active Stroke Checkpoints, Start Star (Green) & Finish Dot (Amber)
+                val resampledUser = TracingStudioDeckRegistry.resampleStrokeSegments(
+                    userSegmentsForCurrentStroke.toList() + if (liveDragPoints.isNotEmpty()) listOf(liveDragPoints.toList()) else emptyList()
+                )
+                activeCheckpointPixels.forEachIndexed { idx, pt ->
+                    val isCovered = resampledUser.any { up -> hypot(up.x - pt.x, up.y - pt.y) <= tolerancePx }
                     drawCircle(
                         color = when {
                             idx == 0 -> ActionPlayGreen
-                            idx == pts.lastIndex -> ActionListenAmber
+                            idx == activeCheckpointPixels.lastIndex -> ActionListenAmber
                             isCovered -> ActionContinueBlue
                             else -> Color.White
                         },
-                        radius = if (idx == 0 || idx == pts.lastIndex) 22f else 12f,
+                        radius = if (idx == 0 || idx == activeCheckpointPixels.lastIndex) 20f else 10f,
                         center = pt
                     )
                 }
 
-                // 3. Child's Drawn Stroke
-                if (userPoints.size >= 2) {
-                    val childPath = Path().apply {
-                        moveTo(userPoints.first().x, userPoints.first().y)
-                        for (i in 1 until userPoints.size) {
-                            lineTo(userPoints[i].x, userPoints[i].y)
+                // 3. Child's Drawn Stroke Segments (each segment drawn separately to respect pen lifts!)
+                val allUserSegments = userSegmentsForCurrentStroke.toList() +
+                    if (liveDragPoints.isNotEmpty()) listOf(liveDragPoints.toList()) else emptyList()
+                allUserSegments.forEach { seg ->
+                    if (seg.size >= 2) {
+                        val segPath = Path().apply {
+                            moveTo(seg.first().x, seg.first().y)
+                            for (i in 1 until seg.size) {
+                                lineTo(seg[i].x, seg[i].y)
+                            }
                         }
+                        drawPath(
+                            path = segPath,
+                            color = if (isGlyphCompleted) ActionPlayGreen else ActionContinueBlue,
+                            style = Stroke(width = 24f, cap = StrokeCap.Round, join = StrokeJoin.Round)
+                        )
+                    } else if (seg.size == 1) {
+                        drawCircle(
+                            color = if (isGlyphCompleted) ActionPlayGreen else ActionContinueBlue,
+                            radius = 12f,
+                            center = seg.first()
+                        )
                     }
-                    drawPath(
-                        path = childPath,
-                        color = if (isCompleted) ActionPlayGreen else ActionContinueBlue,
-                        style = Stroke(width = 28f, cap = StrokeCap.Round, join = StrokeJoin.Round)
-                    )
                 }
 
-                // 4. Optional "Show Me" Animated Guide Cursor
-                if (showDemo && pts.isNotEmpty()) {
-                    val demoIdx = ((pts.size - 1) * demoProgress).toInt().coerceIn(0, pts.lastIndex)
-                    val demoPt = pts[demoIdx]
-                    drawCircle(
-                        color = ActionListenAmber,
-                        radius = 28f,
-                        center = demoPt
-                    )
+                // 4. "Show Me" Animated Multi-Stroke Demo with Visible Pen Lift (or Static Sequence when reducedMotion)
+                if (showDemo && allStrokesPixels.isNotEmpty()) {
+                    if (reducedMotion) {
+                        // Static numbered sequence markers at start and finish of each stroke
+                        allStrokesPixels.forEachIndexed { sIdx, pts ->
+                            if (pts.isNotEmpty()) {
+                                drawCircle(
+                                    color = ActionListenAmber,
+                                    radius = 24f,
+                                    center = pts.first()
+                                )
+                            }
+                        }
+                    } else {
+                        // Divide demoProgress across strokes with a 15% pen-lift pause between strokes
+                        val strokeCount = allStrokesPixels.size
+                        val slotSize = 1f / strokeCount.toFloat()
+                        val activeDemoStroke = (demoProgress / slotSize).toInt().coerceIn(0, strokeCount - 1)
+                        val localT = ((demoProgress - activeDemoStroke * slotSize) / slotSize).coerceIn(0f, 1f)
+                        val pts = allStrokesPixels[activeDemoStroke]
+                        if (pts.isNotEmpty()) {
+                            val isLiftingPen = strokeCount > 1 && localT > 0.84f
+                            val moveT = (localT / 0.84f).coerceIn(0f, 1f)
+                            val ptIdx = ((pts.size - 1) * moveT).toInt().coerceIn(0, pts.lastIndex)
+                            val demoPt = pts[ptIdx]
+                            drawCircle(
+                                color = if (isLiftingPen) ActionPlayGreen.copy(alpha = 0.55f) else ActionListenAmber,
+                                radius = if (isLiftingPen) 34f else 26f,
+                                center = demoPt
+                            )
+                        }
+                    }
                 }
             }
 
-            // Large Watermark Letter Label in Corner
-            Text(
-                text = "$activeGlyph • $activeWord",
-                style = MaterialTheme.typography.headlineLarge,
-                color = DeepSlateInk.copy(alpha = 0.75f),
+            // Top-Left Header Overlay: Current Glyph, Word Context (for First Words CAT/SUN/DOG/STAR), and Stroke Counter
+            Column(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(14.dp)
-            )
+                    .padding(10.dp)
+            ) {
+                Surface(
+                    color = PlaySurfaceWhite.copy(alpha = 0.90f),
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.5.dp, ActionContinueBlue.copy(alpha = 0.4f))
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "$activeGlyph • $activeWord",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = DeepSlateInk,
+                            modifier = Modifier.testTag("tracing_active_glyph_label")
+                        )
+                        if (strokes.size > 1) {
+                            Text(
+                                text = "Stroke ${safeStrokeIdx + 1}/${strokes.size}",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = ActionContinueBlue
+                            )
+                        }
+                    }
+                }
+
+                if (activeGlyphSpec.wordContext != null) {
+                    Spacer(Modifier.height(4.dp))
+                    Surface(
+                        color = ActionListenAmber.copy(alpha = 0.24f),
+                        shape = RoundedCornerShape(12.dp),
+                        border = BorderStroke(1.5.dp, ActionListenAmber),
+                        modifier = Modifier.testTag("tracing_word_banner_${activeGlyphSpec.wordContext}")
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Word:",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = DeepSlateInk
+                            )
+                            activeGlyphSpec.wordContext.forEachIndexed { idx, ch ->
+                                val isCurrentLetter = idx == activeGlyphSpec.letterIndexInWord
+                                val isPastLetter = idx < activeGlyphSpec.letterIndexInWord
+                                Text(
+                                    text = ch.toString(),
+                                    fontSize = if (isCurrentLetter) 18.sp else 15.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = when {
+                                        isCurrentLetter -> ActionContinueBlue
+                                        isPastLetter -> ActionPlayGreen
+                                        else -> MutedSlateText
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Explicit Deck Finished Celebration Banner inside Canvas
+            if (isDeckComplete) {
+                Surface(
+                    color = PlaySurfaceWhite.copy(alpha = 0.96f),
+                    shape = RoundedCornerShape(22.dp),
+                    border = BorderStroke(3.dp, ActionPlayGreen),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(16.dp)
+                        .testTag("tracing_deck_complete_card")
+                ) {
+                    Column(
+                        modifier = Modifier.padding(18.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text("🌟🎉", fontSize = 36.sp)
+                        Text(
+                            text = "Deck Complete! You finished ${activity.title}!",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = DeepSlateInk,
+                            textAlign = TextAlign.Center
+                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Button(
+                                onClick = {
+                                    isDeckComplete = false
+                                    currentStep = 0
+                                    viewModel.saveActivityCheckpoint(activity, 0)
+                                    viewModel.audio.speakInstruction("Let's trace from the beginning!")
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = ActionPlayGreen),
+                                shape = RoundedCornerShape(16.dp),
+                                modifier = Modifier
+                                    .height(48.dp)
+                                    .testTag("tracing_replay_deck_button")
+                            ) {
+                                Text("Replay Deck 🔁", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold)
+                            }
+                            Button(
+                                onClick = { viewModel.navigateBack() },
+                                colors = ButtonDefaults.buttonColors(containerColor = ActionContinueBlue),
+                                shape = RoundedCornerShape(16.dp),
+                                modifier = Modifier
+                                    .height(48.dp)
+                                    .testTag("tracing_finish_world_button")
+                            ) {
+                                Text("Back to World", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        // Right: Effort Indicator, Phonics Cue & Next / Retry / Skip Controls
+        // Right: Compact, Guaranteed-Fit Effort Indicator, Feedback & Controls (Retry, Skip, Next)
         Column(
             modifier = Modifier
-                .weight(0.32f)
+                .weight(0.34f)
                 .fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
+            // Top Info Card (Compact so it never crowds out buttons on phone landscape)
             Surface(
                 color = SoftCreamCard,
-                shape = RoundedCornerShape(20.dp),
-                border = BorderStroke(2.dp, ActionContinueBlue),
+                shape = RoundedCornerShape(16.dp),
+                border = BorderStroke(1.5.dp, ActionContinueBlue),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
-                    modifier = Modifier.padding(14.dp),
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = activeGlyph,
-                        style = MaterialTheme.typography.displayLarge,
-                        fontSize = 54.sp,
-                        color = ActionContinueBlue
-                    )
-                    Text(
-                        text = "$activeGlyph is for $activeWord",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = DeepSlateInk
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = "Effort & Path Coverage: ${(coverageRatio * 100).roundToInt()}%",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MutedSlateText
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = activeGlyph,
+                            style = MaterialTheme.typography.headlineLarge,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = ActionContinueBlue
+                        )
+                        Text(
+                            text = "${safeStep + 1} / ${deck.size} • $activeWord",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = DeepSlateInk,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                     Spacer(Modifier.height(4.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Effort & Path Coverage: ${currentEval.coveragePercent}%",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MutedSlateText,
+                            modifier = Modifier.testTag("tracing_coverage_meter_text")
+                        )
+                        if (isAssistedTapMode) {
+                            Text(
+                                text = "Assisted Tap",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = ActionContinueBlue
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(3.dp))
                     LinearProgressIndicator(
-                        progress = { coverageRatio.coerceIn(0f, 1f) },
+                        progress = { currentEval.coverageRatio.coerceIn(0f, 1f) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(10.dp)
+                            .height(8.dp)
                             .clip(CircleShape),
                         color = ActionPlayGreen,
                         trackColor = Color(0xFFCBD5E1)
@@ -1006,112 +1376,152 @@ fun TracingStudioEngine(
                 }
             }
 
+            // Unified Status & Direction Message (always shows the exact same percentage as the meter)
             Text(
-                text = statusMessage,
-                style = MaterialTheme.typography.bodyMedium,
-                color = DeepSlateInk
+                text = currentEval.feedbackMessage,
+                style = MaterialTheme.typography.bodySmall,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = DeepSlateInk,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 2.dp)
+                    .testTag("tracing_feedback_status_text")
             )
 
-            // Retry, Skip & Next Step Buttons (Guaranteed by Specification)
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            // Bottom Action Controls: Hear Sound, Retry, Skip, Next Glyph (all >= 48.dp height!)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
                 Button(
                     onClick = {
                         val ch = activeGlyph.firstOrNull() ?: 'A'
-                        if (ch.isLetter()) {
+                        if (activeGlyph.length == 1 && ch.isLetter()) {
                             viewModel.audio.speakPhonicsLetter(ch, speakSoundNotName = true)
                         } else {
-                            viewModel.audio.speakInstruction("$activeGlyph for $activeWord!")
+                            viewModel.audio.speakInstruction("$activeGlyph for $activeWord! ${activeStrokeSpec.directionCue}")
                         }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
-                    shape = RoundedCornerShape(16.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                    shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(46.dp)
+                        .height(48.dp)
+                        .testTag("tracing_hear_sound_button")
                 ) {
-                    Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null, tint = DeepSlateInk)
+                    Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Hear Sound", tint = DeepSlateInk, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(6.dp))
-                    Text("Hear Sound", color = DeepSlateInk, fontWeight = FontWeight.Bold)
+                    Text("Hear Sound", color = DeepSlateInk, fontWeight = FontWeight.Bold, fontSize = 13.sp)
                 }
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
+                    // Retry clears current attempt without re-enabling duplicate star awards
                     Button(
                         onClick = {
-                            userPoints.clear()
-                            isCompleted = false
-                            statusMessage = "Canvas cleared—try tracing $activeGlyph again!"
+                            userSegmentsForCurrentStroke.clear()
+                            liveDragPoints.clear()
+                            completedStrokeIndices.clear()
+                            currentStrokeIdx = 0
+                            assistedTapCheckpointIdx = 0
+                            isAssistedTapMode = false
+                            isGlyphCompleted = false
+                            isDeckComplete = false
+                            currentEval = TracingEvaluationResult(
+                                coverageRatio = 0f,
+                                orderedRatio = 0f,
+                                offPathRatio = 0f,
+                                startedNearStart = false,
+                                reachedNearFinish = false,
+                                isShortcutOrTapCluster = false,
+                                isReversed = false,
+                                strokePassed = false,
+                                accuracyPercent = 0,
+                                feedbackMessage = "Canvas cleared—trace $activeGlyph from ⭐ (0%)"
+                            )
+                            viewModel.audio.speakInstruction("Try tracing $activeGlyph again from the green star!")
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = ActionRetryOrange),
-                        shape = RoundedCornerShape(16.dp),
+                        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier
                             .weight(1f)
-                            .height(46.dp)
+                            .height(48.dp)
                             .testTag("tracing_retry_button")
                     ) {
-                        Text("Retry", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold)
+                        Text("Retry", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold, fontSize = 13.sp, maxLines = 1)
                     }
 
+                    // Skip moves on without a completion reward and saves checkpoint
                     Button(
                         onClick = {
-                            currentStep = (currentStep + 1) % glyphsSequence.size
+                            if (safeStep < deck.lastIndex) {
+                                val nextIdx = safeStep + 1
+                                currentStep = nextIdx
+                                isDeckComplete = false
+                                viewModel.saveActivityCheckpoint(activity, nextIdx)
+                                val nextGlyph = deck[nextIdx]
+                                viewModel.audio.speakInstruction("Skipped to ${nextGlyph.glyph} for ${nextGlyph.wordHint}!")
+                            } else {
+                                isDeckComplete = true
+                                viewModel.saveActivityCheckpoint(activity, 0)
+                                viewModel.audio.speakInstruction("You reached the end of ${activity.title}! Tap Replay Deck to trace again.")
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF64748B)),
-                        shape = RoundedCornerShape(16.dp),
+                        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier
                             .weight(1f)
-                            .height(46.dp)
+                            .height(48.dp)
                             .testTag("tracing_skip_button")
                     ) {
-                        Icon(Icons.Default.SkipNext, contentDescription = "Skip", modifier = Modifier.size(18.dp))
+                        Icon(Icons.Default.SkipNext, contentDescription = "Skip", modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(2.dp))
-                        Text("Skip", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold)
+                        Text("Skip", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold, fontSize = 13.sp, maxLines = 1)
                     }
                 }
 
+                // Next advances in-deck with spoken/visual transition and explicit deck end
                 Button(
                     onClick = {
-                        currentStep = (currentStep + 1) % glyphsSequence.size
+                        if (safeStep < deck.lastIndex) {
+                            val nextIdx = safeStep + 1
+                            currentStep = nextIdx
+                            isDeckComplete = false
+                            viewModel.saveActivityCheckpoint(activity, nextIdx)
+                            val nextGlyph = deck[nextIdx]
+                            viewModel.audio.speakInstruction("Next up: ${nextGlyph.glyph} for ${nextGlyph.wordHint}!")
+                        } else {
+                            isDeckComplete = true
+                            viewModel.saveActivityCheckpoint(activity, 0)
+                            viewModel.audio.speakInstruction("Hooray! You finished all of ${activity.title}!")
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = ActionPlayGreen),
-                    shape = RoundedCornerShape(16.dp),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                    shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
                         .testTag("tracing_next_glyph_button")
                 ) {
-                    Text("Next Letter / Shape ▶", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = if (safeStep < deck.lastIndex) "Next Letter / Shape ▶" else "Finish Deck 🌟",
+                        color = PlaySurfaceWhite,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 13.sp,
+                        maxLines = 1
+                    )
                 }
             }
         }
-    }
-}
-
-private fun buildGuideCheckpointsForGlyph(glyph: String): List<Offset> {
-    return when (glyph.uppercase()) {
-        "A" -> listOf(
-            Offset(0.50f, 0.16f), Offset(0.38f, 0.48f), Offset(0.26f, 0.82f),
-            Offset(0.50f, 0.16f), Offset(0.62f, 0.48f), Offset(0.74f, 0.82f),
-            Offset(0.35f, 0.56f), Offset(0.50f, 0.56f), Offset(0.65f, 0.56f)
-        )
-        "◯", "O", "0" -> (0..11).map { i ->
-            val angle = (i.toFloat() / 11f) * 2f * PI.toFloat() - (PI.toFloat() / 2f)
-            Offset(0.50f + 0.26f * kotlin.math.cos(angle), 0.50f + 0.32f * sin(angle))
-        }
-        "｜", "1", "I" -> (0..8).map { i ->
-            Offset(0.50f, 0.16f + (i / 8f) * 0.68f)
-        }
-        "⌒" -> (0..10).map { i ->
-            val t = i / 10f
-            Offset(0.20f + t * 0.60f, 0.72f - sin(t * PI.toFloat()) * 0.48f)
-        }
-        else -> listOf(
-            Offset(0.28f, 0.18f), Offset(0.28f, 0.50f), Offset(0.28f, 0.82f),
-            Offset(0.48f, 0.22f), Offset(0.66f, 0.36f), Offset(0.48f, 0.50f),
-            Offset(0.68f, 0.66f), Offset(0.50f, 0.82f)
-        )
     }
 }
 
@@ -1125,7 +1535,14 @@ fun WaterLabScienceEngine(
     replayKey: Int,
     viewModel: WonderViewModel
 ) {
-    val labItems = remember(activity.id) { activity.items }
+    val labItems = remember(activity.id) {
+        activity.items.ifEmpty {
+            listOf(
+                GameItemOption("water_duck", "Rubber Duck", "🦆", "Float", "The hollow rubber duck floats on top!", sinksInWater = false, explanation = "Full of light air — Floats!", primaryColorHex = 0xFFEAB308),
+                GameItemOption("water_stone", "River Stone", "🪨", "Sink", "The heavy river stone sinks to the bottom!", sinksInWater = true, explanation = "Heavy & dense — Sinks!", primaryColorHex = 0xFF64748B)
+            )
+        }
+    }
     var currentIdx by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     val currentObject = labItems[currentIdx % labItems.size]
 
@@ -1135,10 +1552,10 @@ fun WaterLabScienceEngine(
     val objectYFraction by animateFloatAsState(
         targetValue = when {
             !droppedInWater -> 0.14f
-            currentObject.sinksInWater -> 0.82f
-            else -> 0.42f // Floats right on the water surface!
+            currentObject.sinksInWater -> 0.80f
+            else -> 0.40f // Floats right on the water surface!
         },
-        animationSpec = tween(durationMillis = 900),
+        animationSpec = tween(durationMillis = 800),
         label = "water_drop_y"
     )
 
@@ -1146,18 +1563,18 @@ fun WaterLabScienceEngine(
         modifier = Modifier
             .fillMaxSize()
             .testTag("engine_water_lab"),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         // Left: Interactive Animated Water Tank
         Box(
             modifier = Modifier
-                .weight(0.58f)
+                .weight(0.56f)
                 .fillMaxHeight()
-                .clip(RoundedCornerShape(24.dp))
+                .clip(RoundedCornerShape(22.dp))
                 .background(Color(0xFFE0F2FE))
                 .clickable {
                     if (!droppedInWater) {
-                        if (prediction == null) prediction = !currentObject.sinksInWater
+                        if (prediction == null) prediction = currentObject.sinksInWater
                         droppedInWater = true
                         viewModel.audio.playWaterSplash(currentObject.sinksInWater)
                         viewModel.audio.speakInstruction(currentObject.spokenText)
@@ -1168,18 +1585,15 @@ fun WaterLabScienceEngine(
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val waterTop = size.height * 0.44f
-                // Sky above water
                 drawRect(
                     color = Color(0xFFE0F2FE),
                     size = androidx.compose.ui.geometry.Size(size.width, waterTop)
                 )
-                // Deep water below surface
                 drawRect(
                     color = Color(0xFF0284C7).copy(alpha = 0.45f),
                     topLeft = Offset(0f, waterTop),
                     size = androidx.compose.ui.geometry.Size(size.width, size.height - waterTop)
                 )
-                // Sandy tank bottom
                 drawRect(
                     color = Color(0xFFFDE68A),
                     topLeft = Offset(0f, size.height * 0.88f),
@@ -1187,7 +1601,6 @@ fun WaterLabScienceEngine(
                 )
             }
 
-            // Surface Label & Bottom Label
             Text(
                 text = "🌊 Water Surface (Float Zone)",
                 fontSize = 12.sp,
@@ -1195,14 +1608,14 @@ fun WaterLabScienceEngine(
                 color = Color(0xFF0369A1),
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(12.dp)
+                    .padding(10.dp)
             )
 
             // Tested Object Inside Tank
             Column(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
-                    .padding(top = (objectYFraction * 240f).dp),
+                    .padding(top = (objectYFraction * 200f).dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Surface(
@@ -1210,10 +1623,10 @@ fun WaterLabScienceEngine(
                     color = PlaySurfaceWhite,
                     border = BorderStroke(3.dp, Color(currentObject.primaryColorHex)),
                     shadowElevation = 6.dp,
-                    modifier = Modifier.size(84.dp)
+                    modifier = Modifier.size(76.dp)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
-                        Text(text = currentObject.emoji, fontSize = 44.sp)
+                        Text(text = currentObject.emoji, fontSize = 40.sp)
                     }
                 }
                 Spacer(Modifier.height(4.dp))
@@ -1224,7 +1637,7 @@ fun WaterLabScienceEngine(
                     Text(
                         text = currentObject.label,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
+                        fontSize = 12.sp,
                         color = DeepSlateInk,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
                     )
@@ -1235,87 +1648,107 @@ fun WaterLabScienceEngine(
         // Right: Prediction Buttons (Float vs. Sink) & Scientific Explanation
         Column(
             modifier = Modifier
-                .weight(0.42f)
+                .weight(0.44f)
                 .fillMaxHeight(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(
-                    text = "Water Lab Experiment #${(currentIdx % labItems.size) + 1}",
-                    style = MaterialTheme.typography.titleLarge,
+                    text = "Water Lab Experiment #${(currentIdx % labItems.size) + 1} of ${labItems.size}",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.ExtraBold,
                     color = DeepSlateInk
                 )
                 Text(
-                    text = "Step 1: Predict if the ${currentObject.label} will Float on top or Sink to the bottom!",
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = "Predict: Will the ${currentObject.label} Float on top or Sink to the bottom?",
+                    style = MaterialTheme.typography.bodySmall,
                     color = MutedSlateText
                 )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
                         onClick = {
                             prediction = false
                             droppedInWater = true
+                            val rightGuess = !currentObject.sinksInWater
                             viewModel.audio.playWaterSplash(currentObject.sinksInWater)
-                            viewModel.audio.speakInstruction(currentObject.spokenText)
-                            viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false)
+                            if (rightGuess) {
+                                viewModel.audio.speakInstruction("You guessed Floats! ${currentObject.spokenText}")
+                                viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false)
+                            } else {
+                                viewModel.onGentleRetryNeeded(activity, "Look closely! ${currentObject.spokenText}")
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (prediction == false) ActionPlayGreen else ActionContinueBlue
                         ),
-                        shape = RoundedCornerShape(18.dp),
+                        shape = RoundedCornerShape(16.dp),
                         modifier = Modifier
                             .weight(1f)
-                            .height(54.dp)
+                            .height(48.dp)
                             .testTag("water_predict_float_button")
                     ) {
-                        Text("🛶 Floats!", style = MaterialTheme.typography.titleMedium, color = PlaySurfaceWhite)
+                        Text("🛶 Floats!", fontWeight = FontWeight.Bold, color = PlaySurfaceWhite)
                     }
 
                     Button(
                         onClick = {
                             prediction = true
                             droppedInWater = true
+                            val rightGuess = currentObject.sinksInWater
                             viewModel.audio.playWaterSplash(currentObject.sinksInWater)
-                            viewModel.audio.speakInstruction(currentObject.spokenText)
-                            viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false)
+                            if (rightGuess) {
+                                viewModel.audio.speakInstruction("You guessed Sinks! ${currentObject.spokenText}")
+                                viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false)
+                            } else {
+                                viewModel.onGentleRetryNeeded(activity, "Look closely! ${currentObject.spokenText}")
+                            }
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (prediction == true) ActionPlayGreen else Color(0xFF475569)
                         ),
-                        shape = RoundedCornerShape(18.dp),
+                        shape = RoundedCornerShape(16.dp),
                         modifier = Modifier
                             .weight(1f)
-                            .height(54.dp)
+                            .height(48.dp)
                             .testTag("water_predict_sink_button")
                     ) {
-                        Text("⚓ Sinks!", style = MaterialTheme.typography.titleMedium, color = PlaySurfaceWhite)
+                        Text("⚓ Sinks!", fontWeight = FontWeight.Bold, color = PlaySurfaceWhite)
                     }
                 }
             }
 
             // Result & Explanation Card
+            val predictionRight = prediction != null && (prediction == currentObject.sinksInWater)
             Surface(
                 color = SoftCreamCard,
-                shape = RoundedCornerShape(18.dp),
+                shape = RoundedCornerShape(16.dp),
                 border = BorderStroke(2.dp, Color(currentObject.primaryColorHex)),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column(modifier = Modifier.padding(14.dp)) {
+                Column(modifier = Modifier.padding(10.dp)) {
                     Text(
-                        text = if (droppedInWater) "🔬 Observation: ${currentObject.explanation}" else "Tap Floats! or Sinks! (or tap the tank) to drop the ${currentObject.label} in!",
-                        style = MaterialTheme.typography.titleMedium,
+                        text = if (droppedInWater) {
+                            val prefix = if (predictionRight) "🌟 Great prediction!" else "🔬 Let's observe!"
+                            "$prefix ${currentObject.explanation}"
+                        } else {
+                            "Tap Floats! or Sinks! (or tap the tank) to test the ${currentObject.label}!"
+                        },
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
                         color = DeepSlateInk
                     )
                     if (droppedInWater) {
-                        Spacer(Modifier.height(4.dp))
+                        Spacer(Modifier.height(2.dp))
                         Text(
                             text = currentObject.spokenText,
-                            fontSize = 13.sp,
-                            color = MutedSlateText
+                            fontSize = 12.sp,
+                            color = MutedSlateText,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
@@ -1326,13 +1759,13 @@ fun WaterLabScienceEngine(
                     currentIdx = (currentIdx + 1) % labItems.size
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = ActionPlayGreen),
-                shape = RoundedCornerShape(18.dp),
+                shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(50.dp)
+                    .height(48.dp)
                     .testTag("water_next_object_button")
             ) {
-                Text("Test Next Object ▶", style = MaterialTheme.typography.titleMedium, color = PlaySurfaceWhite)
+                Text("Test Next Object ▶", fontWeight = FontWeight.Bold, color = PlaySurfaceWhite)
             }
         }
     }
@@ -1358,5 +1791,3 @@ fun BalloonPopEngine(
         viewModel = viewModel
     )
 }
-
-

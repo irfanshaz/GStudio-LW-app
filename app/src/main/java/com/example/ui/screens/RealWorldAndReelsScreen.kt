@@ -128,7 +128,7 @@ fun RealWorldAndReelsScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(if (isReelsMode) ReelTheaterDark else CalmCoolBlueBg)
-            .padding(horizontal = 16.dp, vertical = 10.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
             .testTag("real_world_screen")
     ) {
         // Top Header with Category Filter (Animals vs. Objects vs. Films) + Mode Switcher (Scroll Cards vs. Wonder Reels)
@@ -141,7 +141,7 @@ fun RealWorldAndReelsScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                    .padding(horizontal = 8.dp, vertical = 6.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -157,7 +157,7 @@ fun RealWorldAndReelsScreen(
                     ) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = DeepSlateInk)
                     }
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(4.dp))
                     IconButton(
                         onClick = { viewModel.navigateHome() },
                         modifier = Modifier
@@ -170,14 +170,14 @@ fun RealWorldAndReelsScreen(
                     }
                 }
 
-                // Category Filter Pills: Animals | Objects | Films & Lessons | All
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                // Category Filter Pills: Animals | Objects | Films | All
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     listOf(
-                        RealMediaCategory.ANIMAL,
-                        RealMediaCategory.OBJECT,
-                        RealMediaCategory.FILM_LESSON,
-                        RealMediaCategory.ALL
-                    ).forEach { cat ->
+                        RealMediaCategory.ANIMAL to "Animals",
+                        RealMediaCategory.OBJECT to "Objects",
+                        RealMediaCategory.FILM_LESSON to "Films",
+                        RealMediaCategory.ALL to "All"
+                    ).forEach { (cat, shortLabel) ->
                         val selected = category == cat
                         Button(
                             onClick = {
@@ -191,19 +191,19 @@ fun RealWorldAndReelsScreen(
                                 containerColor = if (selected) ActionContinueBlue else SoftCreamCard,
                                 contentColor = if (selected) PlaySurfaceWhite else DeepSlateInk
                             ),
-                            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
-                            shape = RoundedCornerShape(16.dp),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
+                            shape = RoundedCornerShape(14.dp),
                             modifier = Modifier
                                 .height(48.dp)
                                 .testTag("real_world_cat_${cat.id}")
                         ) {
-                            Text("${cat.emoji} ${cat.label}", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            Text("${cat.emoji} $shortLabel", fontWeight = FontWeight.Bold, fontSize = 11.sp, maxLines = 1)
                         }
                     }
                 }
 
-                // View Mode Toggle: Scroll Cards vs. Wonder Reels (TikTok/Reels style)
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                // View Mode Toggle: Scroll Cards vs. Wonder Reels (Guaranteed visible on phone & tablet landscape)
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     Button(
                         onClick = {
                             viewModel.updateRealWorldMode(
@@ -216,14 +216,15 @@ fun RealWorldAndReelsScreen(
                             containerColor = if (!isReelsMode) ActionPlayGreen else SoftCreamCard,
                             contentColor = if (!isReelsMode) PlaySurfaceWhite else DeepSlateInk
                         ),
-                        shape = RoundedCornerShape(16.dp),
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier
                             .height(48.dp)
                             .testTag("mode_scroll_cards_button")
                     ) {
-                        Icon(Icons.Default.GridView, contentDescription = "Scroll Cards", modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(6.dp))
-                        Text("Scroll Cards", fontWeight = FontWeight.Bold)
+                        Icon(Icons.Default.GridView, contentDescription = "Scroll Cards", modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text("Scroll Cards", fontWeight = FontWeight.Bold, fontSize = 11.sp, maxLines = 1)
                     }
 
                     Button(
@@ -238,14 +239,15 @@ fun RealWorldAndReelsScreen(
                             containerColor = if (isReelsMode) ActionListenAmber else SoftCreamCard,
                             contentColor = DeepSlateInk
                         ),
-                        shape = RoundedCornerShape(16.dp),
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                        shape = RoundedCornerShape(14.dp),
                         modifier = Modifier
                             .height(48.dp)
                             .testTag("mode_wonder_reels_button")
                     ) {
-                        Icon(Icons.Default.Movie, contentDescription = "Wonder Reels", modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(6.dp))
-                        Text("Wonder Reels", fontWeight = FontWeight.Bold)
+                        Icon(Icons.Default.Movie, contentDescription = "Wonder Reels", modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text("Wonder Reels", fontWeight = FontWeight.Bold, fontSize = 11.sp, maxLines = 1)
                     }
                 }
             }

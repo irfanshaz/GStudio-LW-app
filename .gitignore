@@ -10,6 +10,14 @@
 /.idea/assetWizardSettings.xml
 .DS_Store
 /build
+/app/build
+/.build-outputs
+/.aistudio
+/public/assets/aistudio
+*.apk
+*.aab
+*.ap_
+*.dex
 /captures
 .externalNativeBuild
 .cxx

@@ -209,13 +209,32 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun launchSurprisePlay() {
-        val randomActivity = WonderCatalogRegistry.allActivities.random()
+        val ageBand = getCurrentAgeBand()
+        val hasEnoughFamilyPhotos = familyMembersState.value.size >= 2
+        val eligiblePool = WonderCatalogRegistry.allActivities.filter { act ->
+            // Exclude Who's Who Family Quiz if fewer than 2 family photos are configured
+            if (act.id == "w26_family_2" && !hasEnoughFamilyPhotos) false
+            else true
+        }
+        val agePreferred = when (ageBand) {
+            AgeBand.TODDLER_2_3 -> {
+                val shortcuts = WonderCatalogRegistry.getToyBoxShortcuts()
+                val triedIds = progressListState.value.filter { it.attempts > 0 }.map { it.activityId }.toSet()
+                val familiar = eligiblePool.filter { it.id in triedIds || it.featuredInToyBox || it.indexInWorld <= 3 }
+                familiar.ifEmpty { shortcuts.ifEmpty { eligiblePool } }
+            }
+            AgeBand.PRESCHOOL_4_5 -> eligiblePool.filter { it.id != "w08_math_10" }.ifEmpty { eligiblePool }
+            AgeBand.KINDER_5_6 -> eligiblePool
+        }
+        val randomActivity = agePreferred.random()
         navigateTo(WonderScreen.ActivityPlay(randomActivity))
+        audio.speakInstruction("Surprise Play! Let's play ${randomActivity.title}! ${randomActivity.instructionText}")
     }
 
     fun launchNextActivityInWorld(current: ActivityConfig) {
         val worldActivities = WonderCatalogRegistry.getActivitiesForWorld(current.worldId)
         val idx = worldActivities.indexOfFirst { it.id == current.id }
+        val isLastInWorld = idx == worldActivities.lastIndex
         val next = if (idx in 0 until worldActivities.lastIndex) {
             worldActivities[idx + 1]
         } else {
@@ -224,6 +243,24 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
         val stack = _navigationStack.value.dropLast(1)
         _navigationStack.value = stack
         navigateTo(WonderScreen.ActivityPlay(next))
+        if (isLastInWorld) {
+            audio.speakInstruction("Back to the first game in this world: ${next.title}!")
+        }
+    }
+
+    fun saveActivityCheckpoint(activity: ActivityConfig, stepIndex: Int) {
+        viewModelScope.launch {
+            repository.saveActivityStepCheckpoint(activity, stepIndex)
+        }
+    }
+
+    fun openSavedArtwork(art: SavedArtworkEntity) {
+        val matchingActivity = WonderCatalogRegistry.getActivitiesForWorld("w05_coloring")
+            .find { it.title == art.title || it.traceWordHint == art.templateName }
+            ?: WonderCatalogRegistry.getActivityById("w05_coloring_1")
+        if (matchingActivity != null) {
+            navigateTo(WonderScreen.ActivityPlay(matchingActivity))
+        }
     }
 
     fun triggerShowMeDemo(activity: ActivityConfig) {
