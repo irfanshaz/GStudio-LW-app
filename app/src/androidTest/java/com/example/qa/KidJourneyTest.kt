@@ -54,7 +54,7 @@ class KidJourneyTest {
             compose.onAllNodesWithTag("onboarding_screen").fetchSemanticsNodes().isNotEmpty() || vm.settingsState.value.onboardingCompleted
         }
         if (!vm.settingsState.value.onboardingCompleted) {
-            node("start_playing_button").performScrollTo().performClick()
+            node("start_playing_button").performClick()
         }
         compose.waitUntil(10000) { vm.settingsState.value.onboardingCompleted }
         compose.runOnIdle { vm.navigateHome() }
@@ -116,11 +116,11 @@ class KidJourneyTest {
         click("real_world_home_button")
         visible("home_screen")
         for (land in WonderCatalogRegistry.worlds.map { it.landId }.distinct()) {
-            node("land_card_${land.id}").performScrollTo().performClick()
+            node("land_card_${land.id}").performClick()
             visible("land_worlds_screen_${land.id}")
             evidence("land_${land.id}")
             for (world in WonderCatalogRegistry.getWorldsForLand(land)) {
-                node("world_card_${world.id}").performScrollTo().performClick()
+                node("world_card_${world.id}").performClick()
                 visible("world_activities_screen_${world.id}")
                 click("world_back_button")
                 visible("land_worlds_screen_${land.id}")
