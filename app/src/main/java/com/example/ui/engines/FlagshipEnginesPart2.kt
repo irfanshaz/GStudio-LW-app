@@ -2554,48 +2554,61 @@ private fun CvcWordBuilder(
     var assembled by remember(target.id, replayKey) { mutableStateOf("") }
     var retried by remember(target.id, replayKey) { mutableStateOf(false) }
     val complete = assembled == target.label
-    Column(
+    Row(
         Modifier.fillMaxSize().testTag("engine_cvc_builder"),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text("Build ${target.label.lowercase()} ${target.emoji}", fontSize = 28.sp)
-        Button(onClick = { viewModel.audio.speakInstruction(target.label.lowercase()) }) {
-            Text("Hear the word")
-        }
-        Text(
-            target.label.indices.joinToString("  ") { assembled.getOrNull(it)?.toString() ?: "＿" },
-            fontSize = 48.sp,
-            modifier = Modifier.testTag("cvc_slots")
-        )
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            letters.forEachIndexed { index, letter ->
-                Button(
-                    enabled = !complete,
-                    modifier = Modifier.size(72.dp).testTag("cvc_letter_$index"),
-                    onClick = {
-                        if (letter == target.label.getOrNull(assembled.length)) {
-                            assembled += letter
-                            if (assembled == target.label) {
-                                viewModel.onActivityMilestoneCompleted(
-                                    activity, hadRetriesInRound = retried,
-                                    speakMilestonePraise = false
-                                )
-                                viewModel.audio.speakInstruction(target.label.lowercase())
-                            }
-                        } else {
-                            retried = true
-                            viewModel.audio.speakInstruction("Try another letter for this space.")
-                        }
-                    }
-                ) { Text(letter.toString(), fontSize = 30.sp) }
+        Column(
+            Modifier.weight(0.36f),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Build ${target.label.lowercase()} ${target.emoji}", fontSize = 24.sp)
+            Button(onClick = { viewModel.audio.speakInstruction(target.label.lowercase()) }) {
+                Text("Hear the word")
+            }
+            if (complete) {
+                Button(onClick = {
+                    viewModel.saveActivityCheckpoint(activity, step + 1)
+                    onNext(step + 1)
+                }, modifier = Modifier.testTag("cvc_next")) { Text("Next word") }
             }
         }
-        if (complete) {
-            Button(onClick = {
-                viewModel.saveActivityCheckpoint(activity, step + 1)
-                onNext(step + 1)
-            }, modifier = Modifier.testTag("cvc_next")) { Text("Next word") }
+        Column(
+            Modifier.weight(0.64f),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                target.label.indices.joinToString("  ") { assembled.getOrNull(it)?.toString() ?: "＿" },
+                fontSize = 36.sp,
+                modifier = Modifier.testTag("cvc_slots")
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                letters.forEachIndexed { index, letter ->
+                    Button(
+                        enabled = !complete,
+                        modifier = Modifier.weight(1f).height(56.dp).testTag("cvc_letter_$index"),
+                        contentPadding = PaddingValues(0.dp),
+                        onClick = {
+                            if (letter == target.label.getOrNull(assembled.length)) {
+                                assembled += letter
+                                if (assembled == target.label) {
+                                    viewModel.onActivityMilestoneCompleted(
+                                        activity, hadRetriesInRound = retried,
+                                        speakMilestonePraise = false
+                                    )
+                                    viewModel.audio.speakInstruction(target.label.lowercase())
+                                }
+                            } else {
+                                retried = true
+                                viewModel.audio.speakInstruction("Try another letter for this space.")
+                            }
+                        }
+                    ) { Text(letter.toString(), fontSize = 26.sp) }
+                }
+            }
         }
     }
 }

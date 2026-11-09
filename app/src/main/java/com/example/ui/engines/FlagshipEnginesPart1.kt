@@ -909,7 +909,8 @@ fun TracingStudioEngine(
             val finalEval = eval.copy(
                 coverageRatio = 1.0f,
                 strokePassed = true,
-                accuracyPercent = strokeAccuracies.average().roundToInt(),
+                accuracyPercent = strokeAccuracies.average().roundToInt()
+                    .coerceAtMost(if (strokeAccuracies.all { it == 100 }) 100 else 99),
                 feedbackMessage = if (usedAssistance) {
                     "🌟 Assisted Tap-Along complete for $latestActiveGlyph ($latestActiveWord)!"
                 } else {

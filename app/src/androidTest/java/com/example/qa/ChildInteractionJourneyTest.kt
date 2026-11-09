@@ -64,6 +64,23 @@ class ChildInteractionJourneyTest {
         assertTrue(vm.audio.lastSpokenCaption.value.startsWith(second.narrationText))
     }
 
+    @Test fun wordBuilderRequiresLettersInOrder() {
+        val phonics = requireNotNull(WonderCatalogRegistry.getActivityById("w07_phonics_10"))
+        open(WonderScreen.ActivityPlay(phonics))
+        compose.onNodeWithTag("engine_cvc_builder").assertIsDisplayed()
+        val word = phonics.items.first().label
+        val wrongFirstLetter = word.first { it != word.first() }.toString()
+        compose.onNodeWithText(wrongFirstLetter).assertIsDisplayed().performClick()
+        compose.mainClock.advanceTimeBy(96)
+        compose.onNodeWithTag("cvc_next").assertDoesNotExist()
+        for (letter in word) {
+            compose.onNodeWithText(letter.toString()).assertIsDisplayed().performClick()
+            compose.mainClock.advanceTimeBy(96)
+        }
+        click("cvc_next")
+        compose.onNodeWithTag("cvc_next").assertDoesNotExist()
+    }
+
     @Test fun childCanSwitchBetweenMediaCardsAndReels() {
         open(WonderScreen.RealWorldHub())
         compose.onNodeWithTag("real_world_scroll_grid").assertIsDisplayed()
