@@ -2,6 +2,7 @@ package com.example.qa
 
 import android.graphics.Bitmap
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +18,7 @@ import org.junit.Test
 import java.io.File
 
 /** Baseline exploration: opening a card does not certify the educational content. */
+@OptIn(ExperimentalTestApi::class)
 class KidJourneyTest {
     @get:Rule val compose = createAndroidComposeRule<MainActivity>()
     private val instrumentation get() = InstrumentationRegistry.getInstrumentation()
@@ -26,7 +28,11 @@ class KidJourneyTest {
     private fun settle() = compose.mainClock.advanceTimeBy(96)
     private fun visible(tag: String) {
         settle()
-        node(tag).assertIsDisplayed()
+        try {
+            node(tag).assertIsDisplayed()
+        } catch (e: AssertionError) {
+            throw AssertionError("Expected visible control or screen: $tag", e)
+        }
     }
     private fun click(tag: String) {
         visible(tag)
@@ -39,11 +45,11 @@ class KidJourneyTest {
     }
     private fun evidence(name: String) {
         settle()
-        File(output, "$name.txt").writeText(compose.onRoot().printToString())
-        instrumentation.uiAutomation.takeScreenshot()?.let { bitmap ->
-            File(output, "$name.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
-            bitmap.recycle()
-        }
+        compose.waitForIdle()
+        val root = compose.onRoot()
+        File(output, "$name.txt").writeText(root.printToString())
+        val bitmap = root.captureToImage().asAndroidBitmap()
+        File(output, "$name.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
     }
     private fun record(id: String, action: () -> Unit): Boolean {
         return try {

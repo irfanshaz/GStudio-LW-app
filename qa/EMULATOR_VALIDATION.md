@@ -16,7 +16,7 @@ With a local Android SDK and a running emulator, generate the repository's expec
 - All 257 activity cards: visible card, open, activity screen rendered, screenshot/semantics, Back returns to the same card/page. World entry is seeded through the production view model to isolate each world; card activation and return use UI actions.
 - Navigation: Home, Toy Box, parent gate and return, media hub/reels/system Back, six lands, 27 world cards, Home.
 - Tracing: real touch input, Retry, Skip, Replay and Home across all three configured age bands, with before/after evidence.
-- Educational contract: “Uppercase I to P” must show I at the start. This assertion should remain red until the app is corrected; do not change it to assert the current wrong A.
+- Educational contract: Eight lesson entry checks cover the advertised starting letter, number, path or word. Keep these acceptance assertions until the app is corrected.
 
 Screenshots and semantics are diagnostic evidence, not an automatic visual approval. A card opening is not proof that its lesson, answer logic, audio, completion, reward persistence or accessibility is correct. This suite does not substitute for physical-device touch/audio tests or supervised usability sessions with children.
 
@@ -25,10 +25,11 @@ Screenshots and semantics are diagnostic evidence, not an automatic visual appro
 Each device uploads `kid-qa-<device>` even if assertions fail. Look for:
 
 - `kid-qa-evidence/kid-qa/results.tsv`: per-card navigation outcomes.
-- `activity_*.png/.txt`: rendered screens and semantic trees.
+- `activity_*.png/.txt`: rendered app window captures and semantic trees. The app window capture excludes emulator system overlays.
 - `cards_*.png`: every catalog page.
 - `trace_*.png/.txt`: tracing gestures and controls.
-- `tracing_range_contract.png/.txt`: the range acceptance failure.
-- JUnit/HTML reports, device properties and crash/full logs.
+- `contract_*.png/.txt`: tracing deck opening checks.
+- `guide_*.png/.txt`: traversal of the four tracing decks.
+- `instrumentation.txt`, device properties and crash/full logs.
 
 Do not classify a failed build or emulator boot as an app test failure. Do not classify missing evidence as a pass.
