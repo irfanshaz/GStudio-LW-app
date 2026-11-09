@@ -7,6 +7,9 @@ import json
 root = Path(__file__).resolve().parents[1]
 packs = sorted((root / 'public/assets/aistudio').glob('LWW_MediaPack_Batch*.zip'))
 packs += sorted((root / 'public/assets/aistudio').glob('LWW_AnimalMedia_V4_Unified*.zip'))
+# The Library copies supersede matching files from older repository archives.
+packs += sorted((root / 'public/assets/aistudio').glob('Library_LWW_MediaPack_Batch*.zip'))
+packs += sorted((root / 'public/assets/aistudio').glob('Library_LWW_AnimalMedia_V4_Batch*.zip'))
 members, rows = {}, {}
 fields = {
     'animals': ('common_name', 'image_filename', 'audio_filename', 'video_filename'),

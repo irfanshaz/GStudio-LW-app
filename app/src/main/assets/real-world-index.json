@@ -1255,17 +1255,17 @@
       "sha256": "2970bd9c1c29a134e9878722cdb4868c0bd524fc78ccc157327fbcc54e380fb3"
     },
     "animals/domestic/cow.webp": {
-      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "archive": "Library_LWW_MediaPack_Batch02.zip",
       "entry": "LittleWonderWorld_MediaPack/animals/domestic/cow.webp",
       "sha256": "e55a3a34cc15248df7082183bc668e0653159b83b6bc659267595ded7d1d6ca7"
     },
     "audio/animal_sounds/cow_moo.mp3": {
-      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "archive": "Library_LWW_AnimalMedia_V4_Batch02.zip",
       "entry": "audio/animal_sounds/cow_moo.mp3",
       "sha256": "26fedb0b759aeb34bcb0c0aeef3babf10a12bfccd5890d7a428950353b344626"
     },
     "videos/animals/cow_movement.mp4": {
-      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "archive": "Library_LWW_AnimalMedia_V4_Batch02.zip",
       "entry": "videos/animals/cow_movement.mp4",
       "sha256": "da3d1a3cf9f9bdfc792e25752cc1bf2ea0abfd1a42fe33adc01284012078b94d"
     },
@@ -1280,9 +1280,9 @@
       "sha256": "8fb7d0379d97643412cdafb34d9193c46fd1da1ed8ea98df7f5e7b8a9b0f41a6"
     },
     "videos/animals/goat_movement.mp4": {
-      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "archive": "Library_LWW_AnimalMedia_V4_Batch02.zip",
       "entry": "videos/animals/goat_movement.mp4",
-      "sha256": "31d10f2e941f125d4d2503923fd7f06461ef159bff038c1d2182457b54d73c29"
+      "sha256": "9035474a950fbedf0391c8b5c22f31ff27926ce7d7d7902afc9163c7cc10fd4c"
     },
     "animals/domestic/sheep.webp": {
       "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
@@ -1295,14 +1295,14 @@
       "sha256": "119501bd1c9ab45fcb3889fc57dab622096cf8390a2cd139f0f8a4256fe30a88"
     },
     "audio/animal_sounds/horse_neigh.mp3": {
-      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "archive": "Library_LWW_AnimalMedia_V4_Batch02.zip",
       "entry": "audio/animal_sounds/horse_neigh.mp3",
       "sha256": "c1f5e1599650ed166cf856ac33399021e549f4cdb11ebd4004618080f2df4ede"
     },
     "videos/animals/horse_movement.mp4": {
-      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "archive": "Library_LWW_AnimalMedia_V4_Batch02.zip",
       "entry": "videos/animals/horse_movement.mp4",
-      "sha256": "8c8f036236efe411b431b1b861aa15b66f622485badb25ec75d274b32d996552"
+      "sha256": "1e26d249194a9d417446690e0d2cbe63c278cca8db9f460401c0054be6ddfa7d"
     },
     "animals/domestic/donkey.webp": {
       "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
@@ -1325,49 +1325,49 @@
       "sha256": "0964cd735871123b9a21f5dbeb25e99105de596db9368a672a09bf4fd23560e9"
     },
     "thumbnails/farm_animals_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "archive": "Library_LWW_MediaPack_Batch02.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/farm_animals_thumb.webp",
       "sha256": "92c1f9b1b7e3416e0f6ccfbbbec38af736a7523869627edb47204e70350974f4"
     },
     "audio/narration/farm_animals_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "archive": "Library_LWW_MediaPack_Batch02.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/farm_animals_lesson_en.mp3",
       "sha256": "ae70b553592c05cb8e3276a11afdd631148c1ec81b2f05d46305a404b618720b"
     },
     "videos/animal_lessons/farm_animals_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "archive": "Library_LWW_MediaPack_Batch02.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/animal_lessons/farm_animals_lesson.mp4",
-      "sha256": "6b906cca0a1cb1a6f5df5debb3ebcfc0e364c39be1427f1c711994f04eb0f529"
+      "sha256": "81a23a7ab902c57c0bc6cf5790011042d24ac41272e840ec12378bfb93008328"
     },
     "thumbnails/fruits_and_colors_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "archive": "Library_LWW_MediaPack_Batch02.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/fruits_and_colors_thumb.webp",
       "sha256": "4ee50519af86472e5140ca09ed37cfc14283f3afee6fe81ba15e4e799d0abda1"
     },
     "audio/narration/fruits_and_colors_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "archive": "Library_LWW_MediaPack_Batch02.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/fruits_and_colors_lesson_en.mp3",
       "sha256": "1c9b2f300c5664fa1bb5e06eec40c4e5e0020ff74f4e25b2f02354bef05dc3e8"
     },
     "videos/object_lessons/fruits_and_colors_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "archive": "Library_LWW_MediaPack_Batch02.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/object_lessons/fruits_and_colors_lesson.mp4",
-      "sha256": "19d9ab8316ac8e1f67c65ff8b0980598c0dfe03cf6062b93df73766dc1d77d80"
+      "sha256": "9809faa288b7789bb4c43ef2b5a06fa45d88b463d4b7e94431a306ec13ade30e"
     },
     "thumbnails/shapes_around_us_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "archive": "Library_LWW_MediaPack_Batch02.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/shapes_around_us_thumb.webp",
       "sha256": "ac31e34b50156369968f1e396b2856f02809b7693f7fde9750e06e3b0d6f3384"
     },
     "audio/narration/shapes_around_us_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "archive": "Library_LWW_MediaPack_Batch02.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/shapes_around_us_lesson_en.mp3",
       "sha256": "f24d2112c615db56e400b6e1d8e6ba699462304fb8438babddec80bafffce706"
     },
     "videos/object_lessons/shapes_around_us_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
+      "archive": "Library_LWW_MediaPack_Batch02.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/object_lessons/shapes_around_us_lesson.mp4",
-      "sha256": "55ee0fe5b83aa3e2797a69d5ee4139f26d0dec64cfc677f9d2c86015e58d00c4"
+      "sha256": "e07043b1306a3d2b2dd5a97dabdb50049ff80dc26fbe1e204159607ec81fc04f"
     },
     "objects/fruits/orange.webp": {
       "archive": "LWW_MediaPack_Batch02_3d20be87.zip",
@@ -1470,7 +1470,7 @@
       "sha256": "b70a5b651005f77bca6f4f36afe988e9e95ab9d20e81b7b5cb3161b5020efaff"
     },
     "animals/birds/peacock.webp": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/animals/birds/peacock.webp",
       "sha256": "06f786da4d187f41f8391af7f83927e736cf382193613e0f7afe4112fdcf2c10"
     },
@@ -1535,67 +1535,67 @@
       "sha256": "2098931705f6ca68bc675dc2ec448877a39e16051da57d17e0b5ac385e5c4293"
     },
     "thumbnails/birds_and_their_sounds_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/birds_and_their_sounds_thumb.webp",
       "sha256": "64197078328622382043f03a30eace80ae1c8b0459c98b9e8f428f8fa7749027"
     },
     "audio/narration/birds_and_their_sounds_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/birds_and_their_sounds_lesson_en.mp3",
       "sha256": "9b07bd7be65b6bf1d049d43fee32428d55f1015361c8bea38fe5699e6b67c371"
     },
     "videos/animal_lessons/birds_and_their_sounds_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/animal_lessons/birds_and_their_sounds_lesson.mp4",
-      "sha256": "c8f07ffd40bd075eb2230ddb0fc9d1c68fa7203162744721a9a0cf5dfd1760ce"
+      "sha256": "36a56efe077c61dd0242108578ce706d043c9db3ebb6eb5d1267700338bfd45d"
     },
     "thumbnails/vehicles_and_transportation_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/vehicles_and_transportation_thumb.webp",
       "sha256": "4073a487df448259347d95cf6cb2fe184576f6c2f931722eb8da0ae4c65a2dc4"
     },
     "audio/narration/vehicles_and_transportation_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/vehicles_and_transportation_lesson_en.mp3",
       "sha256": "311190e70b2189b225315f03e9bc2a8c98d1b3aed4bd8be9c1eb51542be07e1d"
     },
     "videos/object_lessons/vehicles_and_transportation_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/object_lessons/vehicles_and_transportation_lesson.mp4",
-      "sha256": "1bb886673652029f008e09f02938b97b79d72467431b02dff3a9946c471e93d7"
+      "sha256": "6a61e5b9ebf8a25496da88462d013fa7911319fe3e44d910c4e93be20e7976bc"
     },
     "thumbnails/road_safety_for_children_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/road_safety_for_children_thumb.webp",
       "sha256": "4073a487df448259347d95cf6cb2fe184576f6c2f931722eb8da0ae4c65a2dc4"
     },
     "audio/narration/road_safety_for_children_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/road_safety_for_children_lesson_en.mp3",
       "sha256": "3c9f748c1593964c46f5e7ac6e5f904a97d69496fd70579bde2dc829e8ae0892"
     },
     "videos/good_habits/road_safety_for_children_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/good_habits/road_safety_for_children_lesson.mp4",
-      "sha256": "a74f30a46e534e2048955c4c260997f13cafb66f79ba984762764f25e3c47de7"
+      "sha256": "c01266eb71fd49be5ea3203b8a16dadee0ec17d8c3149ad50358dad9fc9ecab5"
     },
     "thumbnails/counting_objects_1_to_10_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/counting_objects_1_to_10_thumb.webp",
       "sha256": "4ee50519af86472e5140ca09ed37cfc14283f3afee6fe81ba15e4e799d0abda1"
     },
     "audio/narration/counting_objects_1_to_10_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/counting_objects_1_to_10_lesson_en.mp3",
       "sha256": "d1da90934667a5cf00194b429babe8359c2dd4d9b1c310e328a171456228b3fc"
     },
     "videos/numbers/counting_objects_1_to_10_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/numbers/counting_objects_1_to_10_lesson.mp4",
-      "sha256": "b2f53ccadcd4ed3468c8042cc1c58271d83651a72040a94a07f666c3d33ff4dc"
+      "sha256": "bc5f73f505e46217b2b668f40764b1cd1f819d44f678497fbf8b27e412788345"
     },
     "objects/vehicles/train.webp": {
-      "archive": "LWW_MediaPack_Batch04_8ae92927.zip",
+      "archive": "Library_LWW_MediaPack_Batch04.zip",
       "entry": "LittleWonderWorld_MediaPack/objects/vehicles/train.webp",
       "sha256": "9e3d2c446db270f888b4c0b95e4334e141776560cb6ad14b7f43ca3742b68bb5"
     },
@@ -1650,9 +1650,9 @@
       "sha256": "9f117d880721677b2e0cf2fd0ad3cef009dcf0c21b7d70a1c500b0a496db0ebc"
     },
     "animals/aquatic/dolphin.webp": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/animals/aquatic/dolphin.webp",
-      "sha256": "64b9a81846660c765bc09d08d1c2c29cbaad79269dcb0067a04757d16b7898e4"
+      "sha256": "dafa4931a82cd50d541b1997ffdc84f31908d9d6d8d066d43386fc3507fafbef"
     },
     "animals/aquatic/whale.webp": {
       "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
@@ -1660,7 +1660,7 @@
       "sha256": "1ba7188c63de138dd79b7a13b78a771509e2b8a8b2e4f75b7956308f9e4a5d31"
     },
     "audio/animal_sounds/whale_song.mp3": {
-      "archive": "LWW_AnimalMedia_V4_Unified_d0c43092.zip",
+      "archive": "Library_LWW_AnimalMedia_V4_Batch02.zip",
       "entry": "audio/animal_sounds/whale_song.mp3",
       "sha256": "d4c075c1e9f39e628e231f91449eb9130a8ed9b660392cfb7a77dcb9ac4ce318"
     },
@@ -1700,9 +1700,9 @@
       "sha256": "fb8127be5241476a96addce3129ff61331ae405181d8c82492f4a861b33eb1ed"
     },
     "animals/insects/butterfly.webp": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/animals/insects/butterfly.webp",
-      "sha256": "7d2058935da0c06350e11f0f426cac87aa3122f92c4eba8612fc166e9f1c164e"
+      "sha256": "da8abe2f371a05281e5a51baf9c5eb9cb88d7310a2948bface46b18620867c73"
     },
     "animals/insects/honeybee.webp": {
       "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
@@ -1740,9 +1740,9 @@
       "sha256": "fc5240ece14efdc00d1556ada2228a31454b343c722883146e72791ea8742b47"
     },
     "animals/reptiles/frog.webp": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/animals/reptiles/frog.webp",
-      "sha256": "80343ffddc2028b5521a5d4026ae2ddc7a469ce34051b396cf349463a470e2a1"
+      "sha256": "2855f16d9b41a81f7ad328f8881133f7df3f4c01dc8eac9a80109ccacc1f7e4a"
     },
     "animals/reptiles/crocodile.webp": {
       "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
@@ -1770,84 +1770,84 @@
       "sha256": "e07e8d8104e85760e075226cc017b38486e6429e3eb1fb03c7203399fd6a8444"
     },
     "thumbnails/brushing_teeth_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/brushing_teeth_thumb.webp",
-      "sha256": "a144febaf78097f83d04819bbdc3fd265b857db9e95072b130c0342a9c46c912"
+      "sha256": "c7255a291b181309e94fcfacae00ece790b40e56329773985ff0b507f5a390f8"
     },
     "audio/narration/brushing_teeth_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/brushing_teeth_lesson_en.mp3",
       "sha256": "f24d2112c615db56e400b6e1d8e6ba699462304fb8438babddec80bafffce706"
     },
     "videos/good_habits/brushing_teeth_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/good_habits/brushing_teeth_lesson.mp4",
       "sha256": "0c9a709fd484736d5de80bc5db856ea87cb7c26f9bc36ea52a02895cb96a1a34"
     },
     "thumbnails/washing_hands_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/washing_hands_thumb.webp",
-      "sha256": "6b6ebe08ab9261cd817c4ff327c78d4a8a83d683a4c0d9ebac40d154fc167747"
+      "sha256": "ac27b0490aa9ffefa5602356be37ad0b5631f6669458d42d16db20c8f8eff5ee"
     },
     "audio/narration/washing_hands_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/washing_hands_lesson_en.mp3",
       "sha256": "5a8dbebe4d90957c9a866ea459a8f011ab82a805e193e9cfd44b4249d50290a4"
     },
     "videos/good_habits/washing_hands_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/good_habits/washing_hands_lesson.mp4",
       "sha256": "5a041e2621ffb23e0945faa8fe89620f96dd26a2f5b8c4666b78c56c991845cd"
     },
     "thumbnails/weather_and_seasons_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/weather_and_seasons_thumb.webp",
-      "sha256": "54de70e070631b233b23c0e7af49b71a166c8a56f0102bc02c509451de66404b"
+      "sha256": "64f11d198e8c19b7d511a418f61db4ba9466c008b24995c7a2eff591c0f4bf25"
     },
     "audio/narration/weather_and_seasons_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/weather_and_seasons_lesson_en.mp3",
       "sha256": "eb662286b73424681210e593ac016034583ef1fdc55055278fde30723e40000b"
     },
     "videos/science/weather_and_seasons_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/science/weather_and_seasons_lesson.mp4",
       "sha256": "1639186b7db83a72699bc77029b7db5977ff6ed34c8874e5e3277d059dd4268a"
     },
     "thumbnails/day_and_night_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/day_and_night_thumb.webp",
-      "sha256": "54de70e070631b233b23c0e7af49b71a166c8a56f0102bc02c509451de66404b"
+      "sha256": "64f11d198e8c19b7d511a418f61db4ba9466c008b24995c7a2eff591c0f4bf25"
     },
     "audio/narration/day_and_night_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/day_and_night_lesson_en.mp3",
       "sha256": "7bc10a1eda268df838d274c2e5f764fff55c3fdb9c2011d5670da8b56c10349d"
     },
     "videos/science/day_and_night_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/science/day_and_night_lesson.mp4",
       "sha256": "e2dd729cb2c0e92eecc3054e3f2fa6518af3f4abdf93d3e191a95d17238add3a"
     },
     "thumbnails/solar_system_intro_thumb.webp": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/thumbnails/solar_system_intro_thumb.webp",
-      "sha256": "54de70e070631b233b23c0e7af49b71a166c8a56f0102bc02c509451de66404b"
+      "sha256": "64f11d198e8c19b7d511a418f61db4ba9466c008b24995c7a2eff591c0f4bf25"
     },
     "audio/narration/solar_system_intro_lesson_en.mp3": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/audio/narration/solar_system_intro_lesson_en.mp3",
       "sha256": "4e89ce115fbb017f9a6b3d390d77f741868747a3d5090f3f075cbb4fa900c58b"
     },
     "videos/science/solar_system_intro_lesson.mp4": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/videos/science/solar_system_intro_lesson.mp4",
       "sha256": "40a40ddc5d3f7d694f9a6158704b72e71ce7f1f55e70a2d784b3373f1afa3119"
     },
     "objects/everyday/ball.webp": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/objects/everyday/ball.webp",
-      "sha256": "38179fa08ec196391fb15300b1995f0c6a8dc8c50e220c5ed862a14b705f26cb"
+      "sha256": "a59e62a3ae1a48d74aa6d1956cf0a993ec81873db1e56cc8c9b8c5284deb6c85"
     },
     "objects/everyday/book.webp": {
       "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
@@ -1915,9 +1915,9 @@
       "sha256": "1f31d927e11d9bfab7f723542ab629050920bccdb61100786ff05aaaa7202b91"
     },
     "objects/nature/rainbow.webp": {
-      "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",
+      "archive": "Library_LWW_MediaPack_Batch05.zip",
       "entry": "LittleWonderWorld_MediaPack/objects/nature/rainbow.webp",
-      "sha256": "9cb334eef98aae6810327701f857481e2a40be26b4372299391130293d7d2230"
+      "sha256": "8e23a21c5b5996a34c56bfb67fa17e7d556b00d9cfb7e65c044df8e631e31ec3"
     },
     "objects/nature/sun.webp": {
       "archive": "LWW_MediaPack_Batch05_0ce1d53b.zip",

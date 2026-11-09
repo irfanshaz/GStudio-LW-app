@@ -17,11 +17,12 @@ The debug key stays local. Use the original key for an in-place update.
 `python3 scripts/index_media.py` indexes the checked-in Little Wonder World media
 batches and unified animal pack. The build verifies the SHA-256 of each indexed
 file before staging it into the APK. Metadata-only references do not create cards.
-The package includes 118 indexed pictures, 22 audio entries and 22 video entries.
+Run the indexer for current picture, audio, and video coverage counts.
 Source ZIPs contain both generated and recorded assets. Availability and byte
 integrity are not authenticity verification. The pack metadata labels the lion
-call as generated. Library copies with differing bytes and the unverified Drive
-links are not inputs to this reproducible build.
+call as generated. The Library versions of batches 02, 04 and 05 and animal batch 02 take precedence
+where they provide replacement media. Library batches 01 and 03 matched the existing
+repository archives byte for byte. The Drive links could not be independently matched.
 
 Try Real World → Animals → Lion with airplane mode on. Listen repeats the
 bundled call, Hear Name speaks the label, and an upward swipe advances one card.
