@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-app_id=com.aistudio.littlewonderworld.wvkqzp
+app_id=com.aistudio.littlewonderworld.wvkqzp.preview
 output=child-interaction-evidence
 mkdir -p "$output"
 

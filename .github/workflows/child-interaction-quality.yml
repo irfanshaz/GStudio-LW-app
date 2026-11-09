@@ -1,7 +1,7 @@
 name: Child interaction validation
 on:
   push:
-    branches: [fix/child-interaction-quality]
+    branches: [fix/preview-apk-install]
   workflow_dispatch:
 jobs:
   validate:
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: child-interaction-validation
+          name: wonder-world-preview-validation
           path: |
             child-interaction-evidence/
             app/build/reports/tests/
