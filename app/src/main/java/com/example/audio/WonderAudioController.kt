@@ -156,22 +156,26 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
                 )
                 engine.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
                     override fun onStart(utteranceId: String?) {
+                        if (utteranceId != "wonder_teacher_${latestSpeechToken.get()}") return
                         _isTeacherSpeaking.value = true
                         _backgroundMusicDuckVolume.value = 0.18f
                     }
 
                     override fun onDone(utteranceId: String?) {
+                        if (utteranceId != "wonder_teacher_${latestSpeechToken.get()}") return
                         _isTeacherSpeaking.value = false
                         _backgroundMusicDuckVolume.value = 1.0f
                     }
 
                     @Deprecated("Deprecated in Java")
                     override fun onError(utteranceId: String?) {
+                        if (utteranceId != "wonder_teacher_${latestSpeechToken.get()}") return
                         _isTeacherSpeaking.value = false
                         _backgroundMusicDuckVolume.value = 1.0f
                     }
 
                     override fun onStop(utteranceId: String?, interrupted: Boolean) {
+                        if (utteranceId != "wonder_teacher_${latestSpeechToken.get()}") return
                         _isTeacherSpeaking.value = false
                         _backgroundMusicDuckVolume.value = 1.0f
                     }
@@ -281,6 +285,20 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
      * ("Let's play together! Find the blue balloon, and take your time.")
      * so adults can compare voices honestly before choosing.
      */
+    fun playGardenAudition(playful: Boolean) {
+        val lines = listOf(
+            "Hello! Let's help our garden grow.",
+            "Put three seeds in the pot.",
+            "Seed starts with the letter S.",
+            "Touch one seed at a time as you count.",
+            "Sunny planted the seeds. A little rain fell. Soon, a green shoot appeared.",
+            "You planted three seeds. Your garden is growing!"
+        )
+        _lastSpokenCaption.value = lines.joinToString("\n")
+        speakDirectedInternal(lines.joinToString("... "),
+            if (playful) VoicePerformanceCategory.SUCCESS else VoicePerformanceCategory.STORY, true)
+    }
+
     fun previewVoiceOption(voiceId: String) {
         setSelectedTeacherVoice(voiceId)
         _lastSpokenCaption.value = VoiceAssetManifest.STANDARD_PREVIEW_SENTENCE
@@ -496,10 +514,9 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         languageCode: String,
         pitchMultiplier: Float = 1.0f
     ) {
-        val token = latestSpeechToken.incrementAndGet()
+        stopSpeechOnly()
+        val token = latestSpeechToken.get()
         _lastSpokenCaption.value = nativeCaption
-        speechSequenceJob?.cancel()
-        runCatching { tts?.stop() }
 
         if (sfxEnabled) {
             playSample(sfxBalloonPopId, volume = 0.42f, rate = pitchMultiplier.coerceIn(0.92f, 1.08f))
@@ -520,10 +537,9 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         phoneticFallbackSpeech: String,
         languageCode: String
     ) {
-        val token = latestSpeechToken.incrementAndGet()
+        stopSpeechOnly()
+        val token = latestSpeechToken.get()
         _lastSpokenCaption.value = nativeCaption
-        speechSequenceJob?.cancel()
-        runCatching { tts?.stop() }
 
         if (narrationEnabled && isTtsReady) {
             speechSequenceJob = scope.launch {
@@ -549,16 +565,20 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
                 else -> Locale.US
             }
             if (targetLocale != Locale.US) {
-                val avail = engine.isLanguageAvailable(targetLocale)
-                if (avail >= TextToSpeech.LANG_AVAILABLE) {
-                    engine.language = targetLocale
+                val nativeVoice = engine.voices.orEmpty().filter {
+                    it.locale.language == targetLocale.language && !it.isNetworkConnectionRequired
+                }.sortedBy { it.name }.firstOrNull()
+                if (nativeVoice != null) {
+                    engine.voice = nativeVoice
                     speakNowWithCategory(
                         text = sanitizeForWarmSpeech(nativeSpeech),
-                        category = VoicePerformanceCategory.DISCOVERY
+                        category = VoicePerformanceCategory.DISCOVERY,
+                        preserveCurrentVoice = true
                     )
                     return
                 }
             }
+            _lastSpokenCaption.value = phoneticFallbackSpeech
             engine.language = Locale.US
             applySelectedTeacherVoiceToEngine(_selectedVoiceId.value)
             speakNowWithCategory(
@@ -793,23 +813,23 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         }
     }
 
-    private fun speakNowWithCategory(text: String, category: VoicePerformanceCategory) {
+    private fun speakNowWithCategory(text: String, category: VoicePerformanceCategory, preserveCurrentVoice: Boolean = false) {
         runCatching {
             val engine = tts ?: return
-            applySelectedTeacherVoiceToEngine(_selectedVoiceId.value)
+            if (!preserveCurrentVoice) applySelectedTeacherVoiceToEngine(_selectedVoiceId.value)
             engine.setPitch(category.pitch.coerceIn(0.98f, 1.02f))
             engine.setSpeechRate(category.speechRate.coerceIn(0.80f, 0.94f))
             val params = Bundle().apply {
                 putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f)
             }
-            val estimatedDurationMs = (text.length * 68L).coerceIn(900L, 6500L)
+            val estimatedDurationMs = (text.length * 100L).coerceIn(2000L, 120000L)
             activateMusicDucking(estimatedDurationMs)
             // Always QUEUE_FLUSH so only one voice plays at a time and stale lines never pile up
             engine.speak(
                 text,
                 TextToSpeech.QUEUE_FLUSH,
                 params,
-                "wonder_teacher_${System.currentTimeMillis()}"
+                "wonder_teacher_${latestSpeechToken.get()}"
             )
         }
     }

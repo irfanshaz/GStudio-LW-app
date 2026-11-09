@@ -1,5 +1,6 @@
 package com.example.data
 
+import com.example.garden.GardenProgress
 import android.content.Context
 import androidx.room.Dao
 import androidx.room.Database
@@ -18,6 +19,9 @@ import kotlinx.coroutines.flow.Flow
 data class ProfileSettingsEntity(
     @PrimaryKey val id: Int = 1,
     val ageBandId: String = "4-5",
+    val readingLevelId: String = "",
+    val mathLevelId: String = "",
+    val instructionLanguage: String = "en",
     val buddyId: String = "sunny_cub",
     val selectedVoiceId: String = "teacher_warm_default",
     val narrationEnabled: Boolean = true,
@@ -79,6 +83,30 @@ data class CustomMediaOverrideEntity(
 
 @Dao
 interface WonderDao {
+    @Query("UPDATE profile_settings SET ageBandId = :age, buddyId = :buddy, onboardingCompleted = 1 WHERE id = 1")
+    suspend fun finishOnboarding(age: String, buddy: String)
+    @Query("UPDATE profile_settings SET ageBandId = :age, buddyId = :buddy WHERE id = 1")
+    suspend fun updateAgeBuddy(age: String, buddy: String)
+    @Query("UPDATE profile_settings SET selectedVoiceId = :voice WHERE id = 1")
+    suspend fun updateVoice(voice: String)
+    @Query("UPDATE profile_settings SET narrationEnabled = :narration, musicEnabled = :music, sfxEnabled = :sfx, reducedMotion = :reduced, autoAdaptiveDifficulty = :adaptive WHERE id = 1")
+    suspend fun updateAudio(narration: Boolean, music: Boolean, sfx: Boolean, reduced: Boolean, adaptive: Boolean)
+
+    @Query("UPDATE profile_settings SET readingLevelId = :level WHERE id = 1")
+    suspend fun updateReadingLevel(level: String)
+    @Query("UPDATE profile_settings SET mathLevelId = :level WHERE id = 1")
+    suspend fun updateMathLevel(level: String)
+    @Query("UPDATE profile_settings SET instructionLanguage = :language WHERE id = 1")
+    suspend fun updateInstructionLanguage(language: String)
+    @Query("SELECT * FROM garden_progress WHERE id = 1")
+    fun observeGarden(): Flow<GardenProgress?>
+    @Query("SELECT * FROM garden_progress WHERE id = 1")
+    suspend fun getGarden(): GardenProgress?
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveGarden(progress: GardenProgress)
+    @Query("DELETE FROM garden_progress")
+    suspend fun clearGarden()
+
     @Query("SELECT * FROM profile_settings WHERE id = 1")
     fun observeSettings(): Flow<ProfileSettingsEntity?>
 
@@ -137,18 +165,28 @@ interface WonderDao {
 @Database(
     entities = [
         ProfileSettingsEntity::class,
+        GardenProgress::class,
         ActivityProgressEntity::class,
         SavedArtworkEntity::class,
         FamilyMemberEntity::class,
         CustomMediaOverrideEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class WonderDatabase : RoomDatabase() {
     abstract fun wonderDao(): WonderDao
 
     companion object {
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE profile_settings ADD COLUMN readingLevelId TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE profile_settings ADD COLUMN mathLevelId TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE profile_settings ADD COLUMN instructionLanguage TEXT NOT NULL DEFAULT 'en'")
+                db.execSQL("CREATE TABLE IF NOT EXISTS garden_progress (id INTEGER NOT NULL, stage INTEGER NOT NULL, readingIndex INTEGER NOT NULL, seedCount INTEGER NOT NULL, hintsMask INTEGER NOT NULL, retriesMask INTEGER NOT NULL, readingLevelId TEXT NOT NULL, mathLevelId TEXT NOT NULL, PRIMARY KEY(id))")
+            }
+        }
+
         private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL(
@@ -167,7 +205,7 @@ abstract class WonderDatabase : RoomDatabase() {
                     WonderDatabase::class.java,
                     "little_wonder_world_v1.db"
                 )
-                    .addMigrations(MIGRATION_2_3)
+                    .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance

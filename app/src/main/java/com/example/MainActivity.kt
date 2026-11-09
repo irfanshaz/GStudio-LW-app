@@ -19,6 +19,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.garden.GardenScreen
 import com.example.model.AgeBand
 import com.example.model.LearningBuddy
 import com.example.ui.engines.ActivityPlayScreen
@@ -98,6 +99,8 @@ fun LittleWonderWorldApp(
                     viewModel.completeOnboarding(chosenAge, chosenBuddy)
                 }
             )
+
+            is WonderScreen.Garden -> GardenScreen(viewModel)
 
             is WonderScreen.Home -> HomeScreen(
                 viewModel = viewModel,

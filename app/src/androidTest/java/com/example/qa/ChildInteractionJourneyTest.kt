@@ -5,6 +5,8 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import com.example.garden.LearningSubject
 import androidx.lifecycle.ViewModelProvider
 import com.example.MainActivity
 import com.example.data.WonderCatalogRegistry
@@ -42,6 +44,42 @@ class ChildInteractionJourneyTest {
     private fun click(tag: String) {
         compose.onNodeWithTag(tag).assertIsDisplayed().performClick()
         compose.mainClock.advanceTimeBy(96)
+    }
+
+    @Test fun independentLevelsGardenResumeAndCompletion() {
+        open(WonderScreen.ParentCorner(unlocked = true))
+        click("parent_tab_1")
+        compose.onNodeWithTag("subject_READING_2-3").performScrollTo().performClick()
+        compose.onNodeWithTag("subject_MATH_5-6").performScrollTo().performClick()
+        compose.waitUntil(10000) { vm.settingsState.value.readingLevelId == "2-3" && vm.settingsState.value.mathLevelId == "5-6" }
+        compose.runOnIdle { vm.startGarden(true); vm.navigateHome() }
+        compose.mainClock.advanceTimeBy(96)
+        click("featured_creative_garden_card")
+        compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value != null }
+        click("garden_read_S")
+        compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.stage == 1 }
+        click("garden_add_seed")
+        compose.waitUntil(10000) { vm.gardenState.value?.seedCount == 1 }
+        click("garden_plant")
+        compose.waitUntil(10000) { vm.gardenState.value?.retriesMask == 2 }
+        assertEquals(1, vm.gardenState.value?.stage)
+        compose.activityRule.scenario.recreate()
+        compose.activityRule.scenario.onActivity { vm = ViewModelProvider(it)[WonderViewModel::class.java] }
+        compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.seedCount == 1 }
+        open(WonderScreen.Garden)
+        repeat(7) { expected ->
+            click("garden_add_seed")
+            compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.seedCount == expected + 2 }
+        }
+        click("garden_plant")
+        compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.stage == 2 }
+        click("garden_choice_sun")
+        compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.stage == 3 }
+        click("garden_choice_water")
+        compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.stage == 4 }
+        compose.onNodeWithTag("garden_complete").assertIsDisplayed()
+        assertEquals("2-3", vm.gardenState.value?.readingLevelId)
+        assertEquals("5-6", vm.gardenState.value?.mathLevelId)
     }
 
     @Test fun pianoPlaysThroughFourRewardsWithoutSpeech() {

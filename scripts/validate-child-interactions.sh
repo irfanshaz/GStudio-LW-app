@@ -14,4 +14,4 @@ adb logcat -c
 trap 'adb logcat -d > "$output/logcat.txt"' EXIT
 adb shell am instrument -w -r -e class com.example.qa.ChildInteractionJourneyTest \
   "$app_id.test/androidx.test.runner.AndroidJUnitRunner" | tee "$output/instrumentation.txt"
-grep -Eq '^OK \(4 tests\)' "$output/instrumentation.txt"
+grep -Eq '^OK \(5 tests\)' "$output/instrumentation.txt"

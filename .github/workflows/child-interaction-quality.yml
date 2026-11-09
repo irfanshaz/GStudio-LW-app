@@ -1,7 +1,7 @@
-name: Child interaction validation
+name: Garden and child interaction validation
 on:
   push:
-    branches: [fix/child-interaction-quality]
+    branches: [feature/wonder-garden]
   workflow_dispatch:
 jobs:
   validate:
