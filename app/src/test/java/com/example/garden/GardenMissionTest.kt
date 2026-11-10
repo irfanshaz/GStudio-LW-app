@@ -34,6 +34,7 @@ class GardenMissionTest {
         state = GardenMission.reduce(state, GardenAction.NeedChoice("sun"))
         state = GardenMission.reduce(state, GardenAction.StoryChoice("water"))
         assertEquals(4, state.stage)
+        assertEquals(1, state.completedGardens)
         assertEquals(2, state.retriesMask)
         assertEquals(state, GardenMission.reduce(state, GardenAction.AddSeed))
     }

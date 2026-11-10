@@ -24,7 +24,7 @@ jobs:
           if [ ! -f debug.keystore ]; then
             keytool -genkeypair -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -dname "CN=Android Debug,O=Android,C=US" -keyalg RSA -validity 10000
           fi
-      - run: gradle testDebugUnitTest assembleDebug assembleDebugAndroidTest --no-daemon
+      - run: gradle testDebugUnitTest assembleDebug assembleDebugAndroidTest -PgardenPreview=true --no-daemon
       - name: Enable emulator acceleration
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -34,6 +34,8 @@ jobs:
           test -r /dev/kvm && test -w /dev/kvm
       - name: Simulate child interactions on Android 35
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          APP_ID: com.aistudio.littlewonderworld.wvkqzp.garden
         with:
           api-level: 35
           arch: x86_64

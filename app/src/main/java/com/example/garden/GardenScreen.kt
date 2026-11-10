@@ -61,6 +61,7 @@ fun SubjectLearningControls(settings: ProfileSettingsEntity, viewModel: WonderVi
             val garden by viewModel.gardenState.collectAsState()
             garden?.let { progress ->
                 Text("Garden play record", style = MaterialTheme.typography.titleMedium)
+                Text("Gardens grown: ${progress.completedGardens}")
                 GardenMission.stageNames.take(progress.stage).forEachIndexed { index, title ->
                     val support = when {
                         progress.hintsMask and (1 shl index) != 0 -> "finished with a hint"
@@ -148,6 +149,7 @@ fun GardenScreen(viewModel: WonderViewModel) {
         Row(Modifier.fillMaxWidth().weight(1f), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             Column(Modifier.weight(0.36f).fillMaxHeight().verticalScroll(rememberScrollState()), horizontalAlignment = Alignment.CenterHorizontally) {
                 SunnyGardenScene(state.stage, settings.reducedMotion)
+                if (state.completedGardens > 0) Text("🌻 ${state.completedGardens} garden${if (state.completedGardens == 1) "" else "s"} grown", fontWeight = FontWeight.Bold)
                 GardenMission.stageNames.forEachIndexed { index, title ->
                     val complete = state.stage > index
                     OutlinedButton(

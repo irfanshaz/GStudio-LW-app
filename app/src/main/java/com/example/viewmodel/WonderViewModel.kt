@@ -143,8 +143,10 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             database.withTransaction {
                 val dao = database.wonderDao()
-                if (restart || dao.getGarden() == null) {
-                    dao.saveGarden(GardenMission.fresh(dao.getSettingsOnce() ?: ProfileSettingsEntity()))
+                val previous = dao.getGarden()
+                if (restart || previous == null) {
+                    dao.saveGarden(GardenMission.fresh(dao.getSettingsOnce() ?: ProfileSettingsEntity())
+                        .copy(completedGardens = previous?.completedGardens ?: 0))
                 }
             }
         }

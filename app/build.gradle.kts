@@ -8,12 +8,15 @@ plugins {
   alias(libs.plugins.google.services)
 }
 
+val gardenPreview = providers.gradleProperty("gardenPreview").orNull == "true"
+
 android {
   namespace = "com.example"
   compileSdk { version = release(36) { minorApiLevel = 1 } }
 
   defaultConfig {
     applicationId = "com.aistudio.littlewonderworld.wvkqzp"
+    manifestPlaceholders["wonderAppLabel"] = "@string/app_name"
     minSdk = 24
     targetSdk = 36
     versionCode = 16
@@ -50,6 +53,10 @@ android {
       signingConfig = signingConfigs.getByName("release")
     }
     debug {
+      if (gardenPreview) {
+        applicationIdSuffix = ".garden"
+        manifestPlaceholders["wonderAppLabel"] = "Wonder World Garden"
+      }
       // Do not remove or modify this signingConfig assignment. It is necessary for Android apps in
       // AI Studio.
       signingConfig = signingConfigs.getByName("debugConfig")

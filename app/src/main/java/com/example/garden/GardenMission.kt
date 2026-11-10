@@ -10,6 +10,7 @@ import com.example.data.ProfileSettingsEntity
 data class GardenProgress(
     @PrimaryKey val id: Int = 1,
     val stage: Int = 0,
+    val completedGardens: Int = 0,
     val readingIndex: Int = 0,
     val seedCount: Int = 0,
     val hintsMask: Int = 0,
@@ -63,7 +64,7 @@ object GardenMission {
             GardenAction.RemoveSeed -> if (state.stage == 1) state.copy(seedCount = (state.seedCount - 1).coerceAtLeast(0)) else state
             GardenAction.PlantSeeds -> if (state.stage != 1) state else if (state.seedCount == seedTarget(state.mathLevelId)) state.copy(stage = 2) else retry()
             is GardenAction.NeedChoice -> if (state.stage != 2) state else if (action.value == "sun") state.copy(stage = 3) else retry()
-            is GardenAction.StoryChoice -> if (state.stage != 3) state else if (action.value == "water") state.copy(stage = 4) else retry()
+            is GardenAction.StoryChoice -> if (state.stage != 3) state else if (action.value == "water") state.copy(stage = 4, completedGardens = state.completedGardens + 1) else retry()
         }
     }
 }

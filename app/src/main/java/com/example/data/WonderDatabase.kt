@@ -183,7 +183,7 @@ abstract class WonderDatabase : RoomDatabase() {
                 db.execSQL("ALTER TABLE profile_settings ADD COLUMN readingLevelId TEXT NOT NULL DEFAULT ''")
                 db.execSQL("ALTER TABLE profile_settings ADD COLUMN mathLevelId TEXT NOT NULL DEFAULT ''")
                 db.execSQL("ALTER TABLE profile_settings ADD COLUMN instructionLanguage TEXT NOT NULL DEFAULT 'en'")
-                db.execSQL("CREATE TABLE IF NOT EXISTS garden_progress (id INTEGER NOT NULL, stage INTEGER NOT NULL, readingIndex INTEGER NOT NULL, seedCount INTEGER NOT NULL, hintsMask INTEGER NOT NULL, retriesMask INTEGER NOT NULL, readingLevelId TEXT NOT NULL, mathLevelId TEXT NOT NULL, PRIMARY KEY(id))")
+                db.execSQL("CREATE TABLE IF NOT EXISTS garden_progress (id INTEGER NOT NULL, stage INTEGER NOT NULL, completedGardens INTEGER NOT NULL, readingIndex INTEGER NOT NULL, seedCount INTEGER NOT NULL, hintsMask INTEGER NOT NULL, retriesMask INTEGER NOT NULL, readingLevelId TEXT NOT NULL, mathLevelId TEXT NOT NULL, PRIMARY KEY(id))")
             }
         }
 

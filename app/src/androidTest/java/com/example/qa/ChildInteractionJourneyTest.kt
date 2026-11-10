@@ -1,5 +1,12 @@
 package com.example.qa
 
+import android.graphics.Bitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.onRoot
+import androidx.test.platform.app.InstrumentationRegistry
+import java.io.File
+
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -46,6 +53,13 @@ class ChildInteractionJourneyTest {
         compose.mainClock.advanceTimeBy(96)
     }
 
+    private fun captureGarden(name: String) {
+        compose.mainClock.advanceTimeBy(96)
+        val directory = File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir, "garden-evidence").apply { mkdirs() }
+        val bitmap = compose.onRoot().captureToImage().asAndroidBitmap()
+        File(directory, "$name.png").outputStream().use { bitmap.compress(Bitmap.CompressFormat.PNG, 100, it) }
+    }
+
     @Test fun independentLevelsGardenResumeAndCompletion() {
         open(WonderScreen.ParentCorner(unlocked = true))
         click("parent_tab_1")
@@ -56,6 +70,7 @@ class ChildInteractionJourneyTest {
         compose.mainClock.advanceTimeBy(96)
         click("featured_creative_garden_card")
         compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value != null }
+        captureGarden("reading")
         click("garden_read_S")
         compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.stage == 1 }
         click("garden_add_seed")
@@ -71,12 +86,14 @@ class ChildInteractionJourneyTest {
             click("garden_add_seed")
             compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.seedCount == expected + 2 }
         }
+        captureGarden("counting")
         click("garden_plant")
         compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.stage == 2 }
         click("garden_choice_sun")
         compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.stage == 3 }
         click("garden_choice_water")
         compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.stage == 4 }
+        captureGarden("complete")
         compose.onNodeWithTag("garden_complete").assertIsDisplayed()
         assertEquals("2-3", vm.gardenState.value?.readingLevelId)
         assertEquals("5-6", vm.gardenState.value?.mathLevelId)

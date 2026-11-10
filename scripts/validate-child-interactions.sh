@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-app_id=com.aistudio.littlewonderworld.wvkqzp
+app_id=${APP_ID:-com.aistudio.littlewonderworld.wvkqzp}
 output=child-interaction-evidence
 mkdir -p "$output"
 
@@ -11,7 +11,12 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb install -r -t app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
 
 adb logcat -c
-trap 'adb logcat -d > "$output/logcat.txt"' EXIT
+collect_evidence() {
+  adb logcat -d > "$output/logcat.txt" || true
+  adb exec-out run-as "$app_id" tar -C files -cf - garden-evidence > "$output/garden.tar" || true
+  if [ -s "$output/garden.tar" ]; then tar -xf "$output/garden.tar" -C "$output" || true; fi
+}
+trap collect_evidence EXIT
 adb shell am instrument -w -r -e class com.example.qa.ChildInteractionJourneyTest \
   "$app_id.test/androidx.test.runner.AndroidJUnitRunner" | tee "$output/instrumentation.txt"
 grep -Eq '^OK \(5 tests\)' "$output/instrumentation.txt"

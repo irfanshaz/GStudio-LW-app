@@ -1,0 +1,10 @@
+id,language,purpose,text
+sunny_greeting,en,greeting,"Hello! Let's help our garden grow."
+sunny_count_three,en,instruction,"Put three seeds in the pot."
+sunny_letter_s,en,letter_name,"Seed starts with the letter S."
+sunny_count_hint,en,hint,"Touch one seed at a time as you count."
+sunny_story,en,story,"Sunny planted the seeds. A little rain fell. Soon, a green shoot appeared."
+sunny_complete,en,completion,"You planted three seeds. Your garden is growing!"
+garden_light_te,te,instruction,"మొక్కకు వెలుతురు ఏది ఇస్తుంది?"
+garden_story_te,te,story,"సన్నీ విత్తనాలు నాటింది. మట్టి పొడిగా ఉంది. విత్తనాలకు ఏమి ఇవ్వాలి?"
+garden_complete_te,te,completion,"నీ తోట పెరుగుతోంది! మొక్కను పెంచడానికి సన్నీకి సహాయం చేశావు."
