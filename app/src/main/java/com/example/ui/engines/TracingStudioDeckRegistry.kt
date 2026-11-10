@@ -1059,7 +1059,7 @@ object TracingStudioDeckRegistry {
         }.coerceIn(0f, 1f)
 
         val coveragePct = (effectiveCoverage * 100f).roundToInt()
-        val scribbleRejected = offPathRatio > 0.12f
+        val scribbleRejected = offPathRatio > if (isToddlerBand) 0.24f else 0.12f
 
         val guideLength = checkpointPixels.zipWithNext().sumOf { (a, b) ->
             (b - a).getDistance().toDouble()
@@ -1067,7 +1067,7 @@ object TracingStudioDeckRegistry {
         val drawnLength = rawSegments.sumOf { segment ->
             segment.zipWithNext().sumOf { (a, b) -> (b - a).getDistance().toDouble() }
         }.toFloat()
-        val hasContinuousTravel = isTinyDotTemplate || drawnLength >= guideLength * 0.80f
+        val hasContinuousTravel = isTinyDotTemplate || drawnLength >= guideLength * if (isToddlerBand) 0.65f else 0.80f
 
         val passed = hasContinuousTravel && !isTapCluster &&
             !isReversed &&
@@ -1075,7 +1075,7 @@ object TracingStudioDeckRegistry {
             !isShortcutAcrossShape &&
             startedNearStart &&
             reachedNearFinish &&
-            effectiveCoverage >= max(requiredCoverageRatio, if (isToddlerBand) 0.80f else 0.85f)
+            effectiveCoverage >= if (isToddlerBand) 0.68f else max(requiredCoverageRatio, 0.85f)
 
         val travelRatio = if (isTinyDotTemplate) 1f else (drawnLength / guideLength).coerceIn(0f, 1f)
         val measuredAccuracy = (effectiveCoverage * (1f - offPathRatio) * travelRatio * 100f).roundToInt()
@@ -1087,7 +1087,7 @@ object TracingStudioDeckRegistry {
 
         val message = when {
             passed -> "🌟 Great tracing! ($coveragePct%)"
-            scribbleRejected -> "Stay on the dots! ($coveragePct%)"
+            scribbleRejected -> if (isToddlerBand) "Try inside the wide trail." else "Stay on the dots! ($coveragePct%)"
             isReversed -> "Start at the green star ⭐! ($coveragePct%)"
             !startedNearStart -> "Start here at the green star ⭐! ($coveragePct%)"
             !hasContinuousTravel || isTapCluster -> "Slide your finger along the dots! ($coveragePct%)"

@@ -273,12 +273,12 @@ class ExampleUnitTest {
         val lessonsAndFilms = RealWorldMediaRegistry.getItemsByCategory(RealMediaCategory.FILM_LESSON)
 
         assertEquals(64, animals.size)
-        assertEquals(71, objects.size)
-        assertEquals(22, lessonsAndFilms.size)
+        assertEquals(78, objects.size)
+        assertEquals(23, lessonsAndFilms.size)
 
         val allItems = RealWorldMediaRegistry.allMediaItems
-        assertEquals(157, allItems.size)
-        assertEquals(157, allItems.map { it.id }.toSet().size)
+        assertEquals(165, allItems.size)
+        assertEquals(165, allItems.map { it.id }.toSet().size)
         assertTrue(allItems.all { it.manifest.checksumSha256Prefix.isNotBlank() && it.funFacts.isNotEmpty() })
     }
 

@@ -145,6 +145,17 @@ class ChildInteractionJourneyTest {
         compose.onNodeWithTag("cvc_next").assertDoesNotExist()
     }
 
+    @Test fun bundledAnimalLessonShowsTimedCaptionAfterPlaybackStarts() {
+        open(WonderScreen.RealWorldHub(category = com.example.model.RealMediaCategory.FILM_LESSON))
+        click("watch_reel_lesson_wild_and_domestic_animals_pilot")
+        compose.onNodeWithTag("reel_video_surface").assertIsDisplayed()
+        compose.waitUntil(20_000) {
+            compose.mainClock.advanceTimeBy(240)
+            compose.onAllNodes(androidx.compose.ui.test.hasText("Look at the Elephant!", substring = true))
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+    }
+
     @Test fun childCanSwitchBetweenMediaCardsAndReels() {
         open(WonderScreen.RealWorldHub())
         compose.onNodeWithTag("real_world_scroll_grid").assertIsDisplayed()

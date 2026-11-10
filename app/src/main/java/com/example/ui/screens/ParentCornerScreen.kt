@@ -1389,7 +1389,7 @@ private fun MediaManifestAndGoogleFlowCard(
                 color = DeepSlateInk
             )
             Text(
-                text = "Reconciled inventory of Animals (64), Objects (71), and Narrated Lessons/Films (22). You can attach your own Google Flow .mp4 video clips or custom images to any item below for instant playback inside Wonder Reels.",
+                text = "Browse catalog entries, including items with bundled pictures and video. You can attach an MP4 or custom picture to any item below.",
                 fontSize = 13.sp,
                 color = MutedSlateText
             )
@@ -1400,28 +1400,28 @@ private fun MediaManifestAndGoogleFlowCard(
             ) {
                 MetricPillCard(
                     label = "Animals Pack",
-                    value = "${summary.expectedAnimals} Verified",
+                    value = "${summary.expectedAnimals} cards",
                     sub = "123-Atlas Reconciled",
                     color = ActionPlayGreen,
                     modifier = Modifier.weight(1f)
                 )
                 MetricPillCard(
                     label = "Objects Pack",
-                    value = "${summary.expectedObjects} Verified",
+                    value = "${summary.expectedObjects} cards",
                     sub = "Sound & Action Cards",
                     color = ActionContinueBlue,
                     modifier = Modifier.weight(1f)
                 )
                 MetricPillCard(
                     label = "Lessons & Films",
-                    value = "${summary.expectedLessonsAndFilms} Verified",
-                    sub = "16 Lessons + 6 Films",
+                    value = "${summary.expectedLessonsAndFilms} entries",
+                    sub = "Videos and illustrated lessons",
                     color = ActionListenAmber,
                     modifier = Modifier.weight(1f)
                 )
                 MetricPillCard(
-                    label = "AI & Flow Clips",
-                    value = "${summary.aiGeneratedStartingFramesCount + summary.userCustomOverridesCount}",
+                    label = "Bundled media",
+                    value = "${summary.bundledVerifiedCount}",
                     sub = "${summary.userCustomOverridesCount} User Flow Imports",
                     color = Color(0xFF8B5CF6),
                     modifier = Modifier.weight(1f)

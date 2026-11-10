@@ -1,7 +1,7 @@
 name: Garden and child interaction validation
 on:
   push:
-    branches: [feature/wonder-garden]
+    branches: [fix/toddler-tracing-media]
   workflow_dispatch:
 jobs:
   validate:

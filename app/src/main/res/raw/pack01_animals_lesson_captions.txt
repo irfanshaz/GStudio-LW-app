@@ -1,0 +1,19 @@
+1
+00:00:00,500 --> 00:00:04,500
+Welcome to Little Wonder World! Let's explore our animal friends!
+
+2
+00:00:05,000 --> 00:00:09,500
+Look at the Elephant! It is the largest land animal and has a long trunk.
+
+3
+00:00:10,000 --> 00:00:14,500
+Here is the Lion! Known as the King of the Jungle, lions live in the savanna.
+
+4
+00:00:15,000 --> 00:00:19,500
+Meet the Dog! Dogs are loyal domestic friends that love to play and protect us.
+
+5
+00:00:20,000 --> 00:00:24,500
+And here is the Cat! Cats are gentle domestic pets with sharp senses.

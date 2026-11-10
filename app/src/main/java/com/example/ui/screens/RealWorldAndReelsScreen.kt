@@ -1,6 +1,13 @@
 package com.example.ui.screens
 
 import android.net.Uri
+import android.media.MediaPlayer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import android.widget.VideoView
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -53,6 +60,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -140,116 +148,57 @@ fun RealWorldAndReelsScreen(
             shape = RoundedCornerShape(20.dp),
             shadowElevation = 4.dp
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 6.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+            Column(
+                Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                // Back & Home
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
                     IconButton(
                         onClick = { viewModel.navigateBack() },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(SoftCreamCard)
-                            .testTag("real_world_back_button")
+                        modifier = Modifier.size(48.dp).testTag("real_world_back_button")
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = DeepSlateInk)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = if (isReelsMode) PlaySurfaceWhite else DeepSlateInk)
                     }
-                    Spacer(Modifier.width(4.dp))
                     IconButton(
                         onClick = { viewModel.navigateHome() },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(SoftCreamCard)
-                            .testTag("real_world_home_button")
+                        modifier = Modifier.size(48.dp).testTag("real_world_home_button")
                     ) {
-                        Icon(Icons.Default.Home, contentDescription = "Home", tint = DeepSlateInk)
+                        Icon(Icons.Default.Home, "Home", tint = if (isReelsMode) PlaySurfaceWhite else DeepSlateInk)
+                    }
+                    listOf(false to "Cards", true to "Reels").forEach { (reels, label) ->
+                        Button(
+                            onClick = { viewModel.updateRealWorldMode(category, reels, 0) },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = if (isReelsMode == reels) ActionContinueBlue else SoftCreamCard,
+                                contentColor = if (isReelsMode == reels) PlaySurfaceWhite else DeepSlateInk
+                            ),
+                            contentPadding = PaddingValues(horizontal = 6.dp),
+                            modifier = Modifier.weight(1f).height(48.dp).testTag(
+                                if (reels) "mode_wonder_reels_button" else "mode_scroll_cards_button"
+                            )
+                        ) { Text(label, maxLines = 1, overflow = TextOverflow.Ellipsis) }
                     }
                 }
-
-                // Category Filter Pills: Animals | Objects | Films | All
-                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     listOf(
                         RealMediaCategory.ANIMAL to "Animals",
                         RealMediaCategory.OBJECT to "Objects",
                         RealMediaCategory.FILM_LESSON to "Films",
                         RealMediaCategory.ALL to "All"
-                    ).forEach { (cat, shortLabel) ->
-                        val selected = category == cat
+                    ).forEach { (cat, label) ->
                         Button(
-                            onClick = {
-                                viewModel.updateRealWorldMode(
-                                    category = cat,
-                                    isReelsMode = isReelsMode,
-                                    initialReelIndex = 0
-                                )
-                            },
+                            onClick = { viewModel.updateRealWorldMode(cat, isReelsMode, 0) },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (selected) ActionContinueBlue else SoftCreamCard,
-                                contentColor = if (selected) PlaySurfaceWhite else DeepSlateInk
+                                containerColor = if (category == cat) ActionContinueBlue else SoftCreamCard,
+                                contentColor = if (category == cat) PlaySurfaceWhite else DeepSlateInk
                             ),
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp),
-                            shape = RoundedCornerShape(14.dp),
-                            modifier = Modifier
-                                .height(48.dp)
-                                .testTag("real_world_cat_${cat.id}")
-                        ) {
-                            Text("${cat.emoji} $shortLabel", fontWeight = FontWeight.Bold, fontSize = 11.sp, maxLines = 1)
-                        }
-                    }
-                }
-
-                // View Mode Toggle: Scroll Cards vs. Wonder Reels (Guaranteed visible on phone & tablet landscape)
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Button(
-                        onClick = {
-                            viewModel.updateRealWorldMode(
-                                category = category,
-                                isReelsMode = false,
-                                initialReelIndex = 0
-                            )
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (!isReelsMode) ActionPlayGreen else SoftCreamCard,
-                            contentColor = if (!isReelsMode) PlaySurfaceWhite else DeepSlateInk
-                        ),
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                        shape = RoundedCornerShape(14.dp),
-                        modifier = Modifier
-                            .height(48.dp)
-                            .testTag("mode_scroll_cards_button")
-                    ) {
-                        Icon(Icons.Default.GridView, contentDescription = "Scroll Cards", modifier = Modifier.size(16.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Scroll Cards", fontWeight = FontWeight.Bold, fontSize = 11.sp, maxLines = 1)
-                    }
-
-                    Button(
-                        onClick = {
-                            viewModel.updateRealWorldMode(
-                                category = category,
-                                isReelsMode = true,
-                                initialReelIndex = 0
-                            )
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (isReelsMode) ActionListenAmber else SoftCreamCard,
-                            contentColor = DeepSlateInk
-                        ),
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                        shape = RoundedCornerShape(14.dp),
-                        modifier = Modifier
-                            .height(48.dp)
-                            .testTag("mode_wonder_reels_button")
-                    ) {
-                        Icon(Icons.Default.Movie, contentDescription = "Wonder Reels", modifier = Modifier.size(16.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Wonder Reels", fontWeight = FontWeight.Bold, fontSize = 11.sp, maxLines = 1)
+                            contentPadding = PaddingValues(horizontal = 4.dp),
+                            modifier = Modifier.weight(1f).height(48.dp).testTag("real_world_cat_${cat.id}")
+                        ) { Text(label, maxLines = 1, overflow = TextOverflow.Ellipsis) }
                     }
                 }
             }
@@ -314,7 +263,7 @@ private fun RealWorldScrollCard(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(215.dp)
+            .height(232.dp)
             .clip(RoundedCornerShape(22.dp))
             .clickable { onHearSoundAndFact() }
             .testTag("media_card_${item.id}"),
@@ -408,7 +357,7 @@ private fun RealWorldScrollCard(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .weight(1f)
-                            .height(34.dp)
+                            .height(48.dp)
                     ) {
                         Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Hear Sound", tint = DeepSlateInk, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(4.dp))
@@ -422,7 +371,8 @@ private fun RealWorldScrollCard(
                         shape = RoundedCornerShape(12.dp),
                         modifier = Modifier
                             .weight(1f)
-                            .height(34.dp)
+                            .height(48.dp)
+                            .testTag("watch_reel_${item.id}")
                     ) {
                         Icon(Icons.Default.PlayArrow, contentDescription = "Watch Reel", tint = PlaySurfaceWhite, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(4.dp))
@@ -456,12 +406,13 @@ private fun WonderReelsVerticalFeed(
     )
     val coroutineScope = rememberCoroutineScope()
     var subtitlesVisible by remember { mutableStateOf(true) }
+    val settings by viewModel.settingsState.collectAsState()
 
     // Auto-speak and trigger sound signature whenever the child settles on a new Reel
     LaunchedEffect(pagerState.settledPage, items) {
         viewModel.audio.stopAllAudio()
         val currentItem = items.getOrNull(pagerState.settledPage) ?: return@LaunchedEffect
-        if (overridesMap[currentItem.id]?.localVideoPath?.let { File(it).exists() } == true) return@LaunchedEffect
+        if (currentItem.hasVideo(overridesMap[currentItem.id])) return@LaunchedEffect
         viewModel.audio.playAnimalOrObjectSignature(
             baseFreqHz = currentItem.soundFreqHz,
             label = currentItem.title,
@@ -494,7 +445,8 @@ private fun WonderReelsVerticalFeed(
                     overrideEntity = override,
                     isActivePage = pagerState.settledPage == pageIndex,
                     subtitlesVisible = subtitlesVisible,
-                    reducedMotion = reducedMotion
+                    reducedMotion = reducedMotion,
+                    narrationEnabled = settings.narrationEnabled
                 )
             }
         }
@@ -514,8 +466,9 @@ private fun WonderReelsVerticalFeed(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 // Reel Position Counter
@@ -554,7 +507,8 @@ private fun WonderReelsVerticalFeed(
                     Text("Prev Reel", fontWeight = FontWeight.Bold)
                 }
 
-                // Hear Sound Button
+                // MP4 narration is already part of the video.
+                if (!activeItem.hasVideo(overridesMap[activeItem.id])) {
                 Button(
                     onClick = {
                         viewModel.audio.playAnimalOrObjectSignature(
@@ -596,6 +550,7 @@ private fun WonderReelsVerticalFeed(
                     Text("Fun Fact", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold)
                 }
 
+                }
                 // Toggle Subtitles Button
                 Button(
                     onClick = { subtitlesVisible = !subtitlesVisible },
@@ -642,8 +597,43 @@ private fun SingleWonderReelStage(
     overrideEntity: CustomMediaOverrideEntity?,
     isActivePage: Boolean,
     subtitlesVisible: Boolean,
-    reducedMotion: Boolean
+    reducedMotion: Boolean,
+    narrationEnabled: Boolean
 ) {
+    val context = LocalContext.current
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val overrideVideo = overrideEntity?.localVideoPath?.let(::File)?.takeIf { it.isFile }
+    val videoUri = overrideVideo?.let(Uri::fromFile)
+        ?: item.bundledVideoRes?.let { Uri.parse("android.resource://${context.packageName}/$it") }
+    var videoView by remember(videoUri) { mutableStateOf<VideoView?>(null) }
+    var player by remember(videoUri) { mutableStateOf<MediaPlayer?>(null) }
+    var videoFailed by remember(videoUri) { mutableStateOf(false) }
+    var positionMs by remember(videoUri) { mutableIntStateOf(0) }
+    val timedCaptions = remember(context, item.bundledCaptionsRes, overrideVideo) {
+        if (overrideVideo != null) emptyList()
+        else item.bundledCaptionsRes?.let { res ->
+            context.resources.openRawResource(res).bufferedReader().use { parseReelCaptions(it.readText()) }
+        }.orEmpty()
+    }
+    LaunchedEffect(videoView, isActivePage, subtitlesVisible) {
+        val view = videoView ?: return@LaunchedEffect
+        while (isActivePage && subtitlesVisible) {
+            positionMs = view.currentPosition
+            delay(200)
+        }
+    }
+    LaunchedEffect(player, narrationEnabled) {
+        player?.setVolume(if (narrationEnabled) 1f else 0f, if (narrationEnabled) 1f else 0f)
+    }
+    DisposableEffect(lifecycle, videoView, isActivePage) {
+        val view = videoView
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_STOP) view?.pause()
+            else if (event == Lifecycle.Event.ON_START && isActivePage) view?.start()
+        }
+        lifecycle.addObserver(observer)
+        onDispose { lifecycle.removeObserver(observer) }
+    }
     val transition = rememberInfiniteTransition(label = "living_reel_motion")
     val phase by transition.animateFloat(
         initialValue = 0f,
@@ -671,26 +661,35 @@ private fun SingleWonderReelStage(
 
 
     Box(modifier = Modifier.fillMaxSize()) {
-        val customVideoPath = overrideEntity?.localVideoPath
         val customImagePath = overrideEntity?.localImagePath
-
-        if (customVideoPath != null && File(customVideoPath).exists() && isActivePage) {
-            // 1. Native Offline MP4 Video Playback for user-imported Google Flow clips
-            AndroidView(
-                factory = { ctx ->
-                    VideoView(ctx).apply {
-                        setVideoURI(Uri.fromFile(File(customVideoPath)))
-                        setOnPreparedListener { mp ->
-                            mp.isLooping = true
-                            start()
+        if (videoUri != null && isActivePage && !videoFailed) {
+            androidx.compose.runtime.key(videoUri) {
+                AndroidView(
+                    factory = { ctx ->
+                        VideoView(ctx).apply {
+                            setOnPreparedListener { mp ->
+                                player = mp
+                                mp.isLooping = overrideVideo != null
+                                val volume = if (narrationEnabled) 1f else 0f
+                                mp.setVolume(volume, volume)
+                                if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) start()
+                            }
+                            setOnErrorListener { _, _, _ ->
+                                videoFailed = true
+                                true
+                            }
+                            setVideoURI(videoUri)
+                            videoView = this
                         }
+                    },
+                    modifier = Modifier.align(Alignment.Center).fillMaxSize().testTag("reel_video_surface"),
+                    onRelease = { view ->
+                        player = null
+                        videoView = null
+                        view.stopPlayback()
                     }
-                },
-                modifier = Modifier.fillMaxSize(),
-                onRelease = { videoView ->
-                    runCatching { videoView.stopPlayback() }
-                }
-            )
+                )
+            }
         } else {
             // 2. Living Motion Reel Renderer (Bundled AI Artwork or Custom Photo + Dynamic Habitat Motion Canvas)
             if (customImagePath != null && File(customImagePath).exists()) {
@@ -786,55 +785,25 @@ private fun SingleWonderReelStage(
             }
         }
 
-        // Top Overlay Badge: Title, Category & Manifest Status
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(14.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
+        Surface(
+            modifier = Modifier.align(Alignment.TopStart).padding(8.dp),
+            color = Color.Black.copy(alpha = 0.72f),
+            shape = RoundedCornerShape(12.dp)
         ) {
-            Surface(
-                color = Color.Black.copy(alpha = 0.65f),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = item.emoji, fontSize = 26.sp)
-                    Spacer(Modifier.width(8.dp))
-                    Column {
-                        Text(
-                            text = item.title,
-                            style = MaterialTheme.typography.titleLarge,
-                            color = PlaySurfaceWhite
-                        )
-                        Text(
-                            text = "${item.habitatOrGroup} • ${item.soundDescription}",
-                            fontSize = 12.sp,
-                            color = Color(0xFFBAE6FD)
-                        )
-                    }
-                }
-            }
-
-            Surface(
-                color = Color.Black.copy(alpha = 0.65f),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text(
-                    text = if (overrideEntity?.localVideoPath != null) "Google Flow MP4" else item.manifest.status.label,
-                    color = Color(0xFFA7F3D0),
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
-                )
-            }
+            Text(
+                text = if (videoFailed) "${item.title} · Video unavailable" else item.title,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                color = PlaySurfaceWhite,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
         }
 
         // Bottom Synchronized Subtitles & Narration Strip
-        if (subtitlesVisible) {
+        val caption = if (videoUri != null && !videoFailed) {
+            timedCaptions.firstOrNull { positionMs in it.startMs until it.endMs }?.text
+        } else captionList[subtitleIndex % captionList.size]
+        if (subtitlesVisible && !caption.isNullOrBlank()) {
             Surface(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
@@ -856,12 +825,33 @@ private fun SingleWonderReelStage(
                     )
                     Spacer(Modifier.width(10.dp))
                     Text(
-                        text = captionList[subtitleIndex % captionList.size],
+                        text = caption,
                         style = MaterialTheme.typography.titleMedium,
                         color = PlaySurfaceWhite
                     )
                 }
             }
         }
+    }
+}
+
+private fun RealWorldMediaItem.hasVideo(override: CustomMediaOverrideEntity?) =
+    bundledVideoRes != null || override?.localVideoPath?.let { File(it).isFile } == true
+
+internal data class ReelCaption(val startMs: Int, val endMs: Int, val text: String)
+
+internal fun parseReelCaptions(source: String): List<ReelCaption> {
+    val timePattern = Regex("(\\d{2}):(\\d{2}):(\\d{2}),(\\d{3})")
+    fun milliseconds(match: MatchResult): Int {
+        val (hour, minute, second, ms) = match.destructured
+        return ((hour.toInt() * 60 + minute.toInt()) * 60 + second.toInt()) * 1000 + ms.toInt()
+    }
+    return source.trim().split(Regex("\\r?\\n\\s*\\r?\\n")).mapNotNull { block ->
+        val lines = block.lines()
+        val timing = lines.indexOfFirst { "-->" in it }
+        if (timing < 0) return@mapNotNull null
+        val times = timePattern.findAll(lines[timing]).toList()
+        if (times.size != 2) return@mapNotNull null
+        ReelCaption(milliseconds(times[0]), milliseconds(times[1]), lines.drop(timing + 1).joinToString(" "))
     }
 }

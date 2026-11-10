@@ -573,16 +573,15 @@ fun HomeScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("🦁🚂", fontSize = 26.sp)
-                                Spacer(Modifier.width(10.dp))
-                                Text(
-                                    text = "Wonder Reels",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = PlaySurfaceWhite
-                                )
-                            }
+                            Text(
+                                text = "Wonder Reels",
+                                modifier = Modifier.weight(1f).padding(end = 6.dp),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = PlaySurfaceWhite,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
                             Surface(
                                 color = ActionPlayGreen,
                                 shape = CircleShape,

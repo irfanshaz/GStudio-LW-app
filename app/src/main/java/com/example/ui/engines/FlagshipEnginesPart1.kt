@@ -48,6 +48,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SkipNext
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,6 +63,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
@@ -839,8 +841,12 @@ fun TracingStudioEngine(
     }
 
     val density = LocalDensity.current
-    val tolerancePx = with(density) { (adaptive.tracingToleranceDp * 0.3f).coerceIn(10f, 20f).dp.toPx() }
     val isToddlerBand = adaptive.baseAgeBand == AgeBand.TODDLER_2_3
+    var wideTrail by rememberSaveable(activity.id, isToddlerBand) { mutableStateOf(isToddlerBand) }
+    val tolerancePx = with(density) {
+        if (wideTrail) 28.dp.toPx()
+        else (adaptive.tracingToleranceDp * 0.3f).coerceIn(10f, 20f).dp.toPx()
+    }
 
     var canvasSize by remember { mutableStateOf(Offset(600f, 340f)) }
 
@@ -858,7 +864,7 @@ fun TracingStudioEngine(
     val latestCheckpoints by rememberUpdatedState(activeCheckpointPixels)
     val latestTolerancePx by rememberUpdatedState(tolerancePx)
     val latestRequiredCoverage by rememberUpdatedState(adaptive.tracingCoverageRequired)
-    val latestIsToddler by rememberUpdatedState(isToddlerBand)
+    val latestWideTrail by rememberUpdatedState(wideTrail)
     val latestSafeStep by rememberUpdatedState(safeStep)
     val latestSafeStrokeIdx by rememberUpdatedState(safeStrokeIdx)
     val latestTotalStrokes by rememberUpdatedState(strokes.size)
@@ -873,7 +879,7 @@ fun TracingStudioEngine(
             rawSegments = segments,
             tolerancePx = latestTolerancePx,
             requiredCoverageRatio = latestRequiredCoverage,
-            isToddlerBand = latestIsToddler
+            isToddlerBand = latestWideTrail
         )
         // Combine completed strokes with active stroke coverage so multi-stroke progress is smooth and accurate
         val completedFraction = completedStrokeIndices.size.toFloat() / latestTotalStrokes.coerceAtLeast(1).toFloat()
@@ -925,7 +931,7 @@ fun TracingStudioEngine(
                     activity = activity,
                     hadRetriesInRound = hadRetries,
                     nextStepIndex = nextSavedIdx,
-                    tracingAccuracyPercent = if (usedAssistance) null else finalEval.accuracyPercent
+                    tracingAccuracyPercent = if (usedAssistance || latestWideTrail) null else finalEval.accuracyPercent
                 )
             } else {
                 viewModel.audio.playSuccessChime()
@@ -968,7 +974,11 @@ fun TracingStudioEngine(
                     if (isDeckComplete) return@pointerInput
                     detectDragGestures(
                         onDragStart = { startOffset ->
-                            isAssistedTapMode = false
+                            if (isAssistedTapMode) {
+                                userSegmentsForCurrentStroke.clear()
+                                assistedTapCheckpointIdx = 0
+                                isAssistedTapMode = false
+                            }
                             liveDragPoints.clear()
                             liveDragPoints.add(startOffset)
                             val candidateSegments = userSegmentsForCurrentStroke.toList() + listOf(liveDragPoints.toList())
@@ -1012,7 +1022,9 @@ fun TracingStudioEngine(
                         val distToNext = hypot(targetPt.x - tapOffset.x, targetPt.y - tapOffset.y)
 
                         if (distToNext <= latestTolerancePx * 1.6f) {
+                            if (!isAssistedTapMode) userSegmentsForCurrentStroke.clear()
                             isAssistedTapMode = true
+                            usedAssistance = true
                             val prevPt = if (targetIdx > 0) cps[targetIdx - 1] else targetPt
                             userSegmentsForCurrentStroke.add(listOf(prevPt, targetPt))
                             assistedTapCheckpointIdx = targetIdx + 1
@@ -1075,12 +1087,12 @@ fun TracingStudioEngine(
                                 else -> Color(0xFFE2E8F0)
                             },
                             style = Stroke(
-                                width = if (isActiveStroke) tolerancePx * 0.95f else tolerancePx * 0.65f,
+                                width = if (isActiveStroke) tolerancePx * 2f else tolerancePx * 0.65f,
                                 cap = StrokeCap.Round,
                                 join = StrokeJoin.Round
                             )
                         )
-                        drawPath(
+                        if (!wideTrail || isAssistedTapMode) drawPath(
                             path = strokePath,
                             color = when {
                                 isDoneStroke -> ActionPlayGreen
@@ -1107,6 +1119,7 @@ fun TracingStudioEngine(
                     userSegmentsForCurrentStroke.toList() + if (liveDragPoints.isNotEmpty()) listOf(liveDragPoints.toList()) else emptyList()
                 )
                 activeCheckpointPixels.forEachIndexed { idx, pt ->
+                    if (wideTrail && !isAssistedTapMode && idx != 0 && idx != activeCheckpointPixels.lastIndex) return@forEachIndexed
                     val isCovered = resampledUser.any { up -> hypot(up.x - pt.x, up.y - pt.y) <= tolerancePx }
                     drawCircle(
                         color = when {
@@ -1354,7 +1367,11 @@ fun TracingStudioEngine(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = if (isGlyphCompleted) "Completed" else "Stroke progress: ${currentEval.coveragePercent}%",
+                            text = when {
+                                isGlyphCompleted -> "Completed"
+                                wideTrail -> "Follow the trail"
+                                else -> "Stroke progress: ${currentEval.coveragePercent}%"
+                            },
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
                             color = MutedSlateText,
@@ -1384,7 +1401,7 @@ fun TracingStudioEngine(
 
             // Unified Status & Direction Message (always shows the exact same percentage as the meter)
             Text(
-                text = currentEval.feedbackMessage,
+                text = if (wideTrail) currentEval.feedbackMessage.substringBeforeLast(" (") else currentEval.feedbackMessage,
                 style = MaterialTheme.typography.bodySmall,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -1402,26 +1419,47 @@ fun TracingStudioEngine(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Button(
-                    onClick = {
-                        val ch = activeGlyph.firstOrNull() ?: 'A'
-                        if (activeGlyph.length == 1 && ch.isLetter()) {
-                            viewModel.audio.speakPhonicsLetter(ch, speakSoundNotName = true)
-                        } else {
-                            viewModel.audio.speakInstruction("$activeGlyph for $activeWord! ${activeStrokeSpec.directionCue}")
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
-                    shape = RoundedCornerShape(14.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .testTag("tracing_hear_sound_button")
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Hear Sound", tint = DeepSlateInk, modifier = Modifier.size(18.dp))
-                    Spacer(Modifier.width(6.dp))
-                    Text("Hear Sound", color = DeepSlateInk, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Button(
+                        onClick = {
+                            val ch = activeGlyph.firstOrNull() ?: 'A'
+                            if (activeGlyph.length == 1 && ch.isLetter()) {
+                                viewModel.audio.speakPhonicsLetter(ch, speakSoundNotName = true)
+                            } else {
+                                viewModel.audio.speakInstruction("$activeGlyph for $activeWord! ${activeStrokeSpec.directionCue}")
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
+                        shape = RoundedCornerShape(14.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                            .testTag("tracing_hear_sound_button")
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Hear Sound", tint = DeepSlateInk, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(6.dp))
+                        Text("Hear", color = DeepSlateInk, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            wideTrail = !wideTrail
+                            liveDragPoints.clear()
+                            userSegmentsForCurrentStroke.clear()
+                            assistedTapCheckpointIdx = 0
+                            isAssistedTapMode = false
+                            if (!isGlyphCompleted) {
+                                currentEval = currentEval.copy(
+                                    coverageRatio = completedStrokeIndices.size.toFloat() / strokes.size,
+                                    feedbackMessage = "Start at the green dot and follow the guide."
+                                )
+                            }
+                        },
+                        contentPadding = PaddingValues(horizontal = 4.dp),
+                        modifier = Modifier.weight(1.25f).height(48.dp).testTag("tracing_guide_mode")
+                    ) {
+                        Text(if (wideTrail) "Wide trail" else "Dotted guide", maxLines = 2)
+                    }
                 }
 
                 Row(

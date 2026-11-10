@@ -100,10 +100,10 @@ class ExampleRobolectricTest {
 
         val manifestSummary = RealWorldMediaRegistry.buildManifestSummary(customOverridesCount = 2)
         assertEquals(64, manifestSummary.expectedAnimals)
-        assertEquals(71, manifestSummary.expectedObjects)
-        assertEquals(22, manifestSummary.expectedLessonsAndFilms)
-        assertEquals(157, manifestSummary.bundledVerifiedCount)
-        assertEquals(8, manifestSummary.aiGeneratedStartingFramesCount)
+        assertEquals(78, manifestSummary.expectedObjects)
+        assertEquals(23, manifestSummary.expectedLessonsAndFilms)
+        assertEquals(23, manifestSummary.bundledVerifiedCount)
+        assertEquals(23, manifestSummary.aiGeneratedStartingFramesCount)
         assertEquals(2, manifestSummary.userCustomOverridesCount)
 
         assertEquals(4, LearningBuddy.entries.size)

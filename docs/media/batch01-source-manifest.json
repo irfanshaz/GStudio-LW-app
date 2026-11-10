@@ -1,0 +1,305 @@
+{
+  "media_pack_name": "Little Wonder World 2.0 Multimedia Library",
+  "pack_version": "2.0.0-pilot.1",
+  "batch_id": "Batch 01 (Pilot Pack)",
+  "creation_date": "2026-11-04",
+  "target_application": "Little Wonder World Android App (Offline)",
+  "target_audience": "Children aged 3-8 years",
+  "supported_languages": [
+    "en",
+    "te",
+    "hi"
+  ],
+  "total_packaged_assets": 36,
+  "manifest_schema_version": "1.0",
+  "assets": [
+    {
+      "path": "INTEGRATION_INSTRUCTIONS.md",
+      "file_type": "text/markdown",
+      "file_size_bytes": 6573,
+      "file_size_kb": 6.42,
+      "sha256": "6ee0cc775f374beef8cdd22bf35c54aa5c58516dfb18670aaef8f07b7e845b58",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "LICENSES.csv",
+      "file_type": "text/csv",
+      "file_size_bytes": 4793,
+      "file_size_kb": 4.68,
+      "sha256": "a96df0f58df68717e1be7a80fa077835754895b1d1c6293bba32e185128b4793",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "QA_REPORT.md",
+      "file_type": "text/markdown",
+      "file_size_bytes": 7126,
+      "file_size_kb": 6.96,
+      "sha256": "ab43375797de6e4b3eee2c9bcbf4c9c82bbaf5d3dd962617379db5ecb074e690",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "README.md",
+      "file_type": "text/markdown",
+      "file_size_bytes": 3471,
+      "file_size_kb": 3.39,
+      "sha256": "5fa394a85d1604f45b477cc89545f422aeb24ff1f9fc7f650e465af93d737790",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/domestic/cat.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 152496,
+      "file_size_kb": 148.92,
+      "sha256": "ef85c3f9f5b2fb63bfaa58394d42d919b05151423baf543b428c7fbc92d0ba16",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/domestic/dog.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 244542,
+      "file_size_kb": 238.81,
+      "sha256": "7550e9d231e479d94be8ec0ff8a233b2f87ec6a6c16ffcf89757d3d9303e42ed",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/wild/elephant.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 305446,
+      "file_size_kb": 298.29,
+      "sha256": "a410ca4460acb13666008f7e3180e46cc539ddcc4065a3cecc7f2673e95efc3d",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/wild/lion.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 230280,
+      "file_size_kb": 224.88,
+      "sha256": "c1a5f5eeba2f4e58928da8e1c79702cc76bf3c90d2eeae3f16bca6613ad367a8",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/wild/tiger.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 339820,
+      "file_size_kb": 331.86,
+      "sha256": "67054138a6167c8afe94e82dfb5b539d840ebf52a267185f16b4dea28dc89840",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "audio/narration/wild_and_domestic_animals_lesson_en.mp3",
+      "file_type": "audio/mpeg",
+      "file_size_bytes": 401284,
+      "file_size_kb": 391.88,
+      "sha256": "3225243ab0d49aa795f7f2d31319c0367f86ec7080a524077f58b3f23b502292",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/animals.json",
+      "file_type": "application/json",
+      "file_size_bytes": 7464,
+      "file_size_kb": 7.29,
+      "sha256": "856c10fa1b29d610d19adecd89bbd256d42a7025e5b40db57d30dc5011d27742",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/lessons.json",
+      "file_type": "application/json",
+      "file_size_bytes": 2994,
+      "file_size_kb": 2.92,
+      "sha256": "66d77753f16353c63faf128cc13780d51256bbd34fac644c8df7149e322be89c",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/objects.json",
+      "file_type": "application/json",
+      "file_size_bytes": 5607,
+      "file_size_kb": 5.48,
+      "sha256": "0ba3953d7b2637ca36988edfe7c4916295e13e0076e71fa27ad50916d3c34976",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/translations_en.json",
+      "file_type": "application/json",
+      "file_size_bytes": 2629,
+      "file_size_kb": 2.57,
+      "sha256": "ecb31e44271cc56fc6b8b1ea373636c5c18606f448b1d2a1cf6307922d8a8530",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/translations_hi.json",
+      "file_type": "application/json",
+      "file_size_bytes": 5064,
+      "file_size_kb": 4.95,
+      "sha256": "d2ad32d9be475e4a7f93a8fd27bd61e790e985112c7ebb7cd17dfc73b1506c34",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/translations_te.json",
+      "file_type": "application/json",
+      "file_size_bytes": 5402,
+      "file_size_kb": 5.28,
+      "sha256": "f4fadaaebcbc1bdc258b8f66d4524d72df1cbe0d47def765300ee96df38ebf58",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/fruits/apple.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 76588,
+      "file_size_kb": 74.79,
+      "sha256": "383738fbf75e358a8c6750541f4989cf68bbaabc85059490511bd16293360fbf",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/fruits/banana.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 16890,
+      "file_size_kb": 16.49,
+      "sha256": "f37057daba62f5cc2b5dc5121c1159f1d51ebfe3aa9a7378b6eefbd44fda49d6",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/fruits/mango.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 38974,
+      "file_size_kb": 38.06,
+      "sha256": "fcbeb3778cddafa8cd05bbebf62ba84cbfcc3b1abbea09f722718ac7e15601ea",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/shapes/circle.svg",
+      "file_type": "image/svg+xml",
+      "file_size_bytes": 118,
+      "file_size_kb": 0.12,
+      "sha256": "e79805e5c22b8d56b8a854db68f78825659f125dab224361c1add24f72b0bf2e",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/shapes/heart.svg",
+      "file_type": "image/svg+xml",
+      "file_size_bytes": 243,
+      "file_size_kb": 0.24,
+      "sha256": "6527a600671878c28e86f40f786d3b221c088ee718b75cf3fdd64f930408cced",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/shapes/square.svg",
+      "file_type": "image/svg+xml",
+      "file_size_bytes": 137,
+      "file_size_kb": 0.13,
+      "sha256": "308e1f3755d07575433d3dab40963ed11ba21721a537cab36203feaf80bb86f1",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/shapes/star.svg",
+      "file_type": "image/svg+xml",
+      "file_size_bytes": 180,
+      "file_size_kb": 0.18,
+      "sha256": "3f2d47b748a7b85237b94364a3d37e1187f069d2aeba87d7eb90a35b726d4d82",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/shapes/triangle.svg",
+      "file_type": "image/svg+xml",
+      "file_size_bytes": 124,
+      "file_size_kb": 0.12,
+      "sha256": "3f4a64fcbffbeb7a36f73966eafe04a4b20d370bdc18879708476b50cce8b95b",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/vehicles/bus.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 59660,
+      "file_size_kb": 58.26,
+      "sha256": "b6490241fc09a31439503cb83dbdfe9bde00597a6d51496152fd675d82c034dc",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/vehicles/car.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 49826,
+      "file_size_kb": 48.66,
+      "sha256": "2970bd9c1c29a134e9878722cdb4868c0bd524fc78ccc157327fbcc54e380fb3",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "prompts/image_prompts.md",
+      "file_type": "text/markdown",
+      "file_size_bytes": 6131,
+      "file_size_kb": 5.99,
+      "sha256": "d3c3176b901ef13de85fc43dddd2da3c166a6ca052595ddcc5c09dab091b17de",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "prompts/veo_prompts.md",
+      "file_type": "text/markdown",
+      "file_size_bytes": 4631,
+      "file_size_kb": 4.52,
+      "sha256": "125966149bc284eb6e7b034390c90ee870a6f8176fdee50b0fa94dd5d4948ab8",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "reports/asset_inventory.csv",
+      "file_type": "text/csv",
+      "file_size_bytes": 3373,
+      "file_size_kb": 3.29,
+      "sha256": "dc5a32f249297a7b042b65c15612d934b5b2b933ee825145702fd3f0a31bb6cc",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "reports/missing_assets.csv",
+      "file_type": "text/csv",
+      "file_size_bytes": 3684,
+      "file_size_kb": 3.6,
+      "sha256": "3454215cf9a4a7f46a5aa3cd45aeb062715350dbbc0d206425d49c5c23b1cd6f",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "reports/optimization_report.csv",
+      "file_type": "text/csv",
+      "file_size_bytes": 1530,
+      "file_size_kb": 1.49,
+      "sha256": "ac291f973f990e68e4fdc708613628468042e03fd4a838cce78cec1f364198a4",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "thumbnails/wild_and_domestic_animals_thumb.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 253324,
+      "file_size_kb": 247.39,
+      "sha256": "529e6f86968a00e74cd334f589b5ff97cd8ae94dc661f26d2b985a4a898cc9fe",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/animal_lessons/wild_and_domestic_animals_lesson.hi.srt",
+      "file_type": "text/plain (subtitles)",
+      "file_size_bytes": 1032,
+      "file_size_kb": 1.01,
+      "sha256": "11e5e97990ac754087adcd53553ae9b78137e38c13988b6f61cc96369f26b540",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/animal_lessons/wild_and_domestic_animals_lesson.mp4",
+      "file_type": "video/mp4",
+      "file_size_bytes": 3240423,
+      "file_size_kb": 3164.48,
+      "sha256": "d7aafd19cd5984353e73bf56d31fd87601e0731ec3a13b6e970489e464d1a89c",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/animal_lessons/wild_and_domestic_animals_lesson.srt",
+      "file_type": "text/plain (subtitles)",
+      "file_size_bytes": 532,
+      "file_size_kb": 0.52,
+      "sha256": "33c7ebeae35da3e52dd3c8f4bb51ebb20b55dcd577592f45c8436adf2a5a8cd3",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/animal_lessons/wild_and_domestic_animals_lesson.te.srt",
+      "file_type": "text/plain (subtitles)",
+      "file_size_bytes": 1112,
+      "file_size_kb": 1.09,
+      "sha256": "2aa59f1c9ccc1602826205b820298a280c8e0f672751df18efbd4ba29100d5bf",
+      "qa_status": "validated_passed"
+    }
+  ]
+}

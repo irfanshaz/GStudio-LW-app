@@ -28,6 +28,7 @@ object RealWorldMediaRegistry {
             allMediaItems
         } else {
             allMediaItems.filter { it.category == category }
+                .sortedByDescending { it.bundledVideoRes != null }
         }
     }
 
@@ -45,11 +46,11 @@ object RealWorldMediaRegistry {
         val aiFrames = allMediaItems.count { it.bundledDrawableRes != null }
         return ManifestSummaryReport(
             expectedAnimals = 64,
-            expectedObjects = 71,
-            expectedLessonsAndFilms = 22,
-            bundledVerifiedCount = allMediaItems.size,
+            expectedObjects = allMediaItems.count { it.category == RealMediaCategory.OBJECT },
+            expectedLessonsAndFilms = allMediaItems.count { it.category == RealMediaCategory.FILM_LESSON },
+            bundledVerifiedCount = allMediaItems.count { it.bundledDrawableRes != null || it.bundledVideoRes != null },
             aiGeneratedStartingFramesCount = aiFrames,
-            proceduralMotionAndAudioVerifiedCount = allMediaItems.size,
+            proceduralMotionAndAudioVerifiedCount = allMediaItems.count { it.bundledVideoRes == null },
             userCustomOverridesCount = customOverridesCount
         )
     }
@@ -501,6 +502,6 @@ object RealWorldMediaRegistry {
             )
         }
 
-        return items
+        return Batch01Media.mergeWith(items)
     }
 }

@@ -97,7 +97,7 @@ class WonderRepository(
                     smoothFirstTryCount = if (!hadRetriesInRound) 1 else 0,
                     gentleRetryCount = if (hadRetriesInRound) 1 else 0,
                     adaptiveComfortDelta = initialDelta,
-                    lastTracingAccuracyPercent = tracingAccuracyPercent ?: 85,
+                    lastTracingAccuracyPercent = tracingAccuracyPercent ?: 0,
                     isFavorite = false,
                     lastPlayedEpochMs = now,
                     savedStepIndex = nextStepIndex ?: 0
