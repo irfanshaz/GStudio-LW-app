@@ -524,16 +524,16 @@ fun HomeScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     FeaturedSpotlightCard(
-                        title = "Creative Garden",
-                        subtitle = "My Sketch Pad, Music Piano & 30 Storytime Books!",
-                        emoji = "🎨🎹",
+                        title = "Grow with Sunny",
+                        subtitle = "Read, count and grow your own garden",
+                        emoji = "🌱🦁",
                         accentColor = LandCreativeViolet,
-                        badgeText = "Featured Studio",
+                        badgeText = "My Adventure",
                         modifier = Modifier
                             .fillMaxWidth()
                             .weight(1f)
                             .testTag("featured_creative_garden_card"),
-                        onClick = { viewModel.navigateTo(WonderScreen.LandWorlds(LandId.CREATIVE_GARDEN)) }
+                        onClick = { viewModel.navigateTo(WonderScreen.Garden) }
                     )
 
                     FeaturedSpotlightCard(

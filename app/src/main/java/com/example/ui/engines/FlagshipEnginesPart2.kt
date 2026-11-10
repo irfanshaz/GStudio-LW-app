@@ -37,6 +37,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -115,12 +122,12 @@ fun AnimalSafariSoundsEngine(
     var roundIdx by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var hadRetries by remember(roundIdx, replayKey) { mutableStateOf(false) }
 
-    val choices = remember(allItems, roundIdx, adaptive.effectiveChoiceCount) {
-        val count = adaptive.effectiveChoiceCount.coerceIn(2, allItems.size)
+    val target = allItems[roundIdx % allItems.size]
+    val choices = remember(allItems, roundIdx, adaptive.effectiveChoiceCount, replayKey) {
+        val count = adaptive.effectiveChoiceCount.coerceIn(1, allItems.size)
         val rotated = allItems.drop(roundIdx % allItems.size) + allItems.take(roundIdx % allItems.size)
-        rotated.take(count)
+        rotated.take(count).shuffled()
     }
-    val target = choices.first()
     var promptMessage by remember(roundIdx, replayKey, activity.id) {
         mutableStateOf("Listen and tap: ${target.label} (${target.categoryOrTarget})")
     }
@@ -730,6 +737,19 @@ fun MusicInstrumentsEngine(
     var instrumentMode by remember(activity.id, replayKey) { mutableIntStateOf(defaultMode) }
     var notesPlayed by remember(activity.id, replayKey) { mutableIntStateOf(0) }
 
+    val musicScope = rememberCoroutineScope()
+    var demoJob by remember { mutableStateOf<Job?>(null) }
+    DisposableEffect(activity.id, replayKey, instrumentMode) {
+        onDispose {
+            demoJob?.cancel()
+            viewModel.audio.stopAllAudio()
+        }
+    }
+    fun beginPlaying() {
+        demoJob?.cancel()
+        viewModel.audio.stopSpeechOnly()
+    }
+
     val scaleNotes = listOf(
         Triple("C", 261.63f, Color(0xFFEF4444)),
         Triple("D", 293.66f, Color(0xFFF97316)),
@@ -811,12 +831,18 @@ fun MusicInstrumentsEngine(
 
             Button(
                 onClick = {
-                    val notesToPlay = currentEchoPattern
-                    notesToPlay.forEachIndexed { idx, noteName ->
-                        val freq = scaleNotes.find { it.first == noteName }?.second ?: 261.63f
-                        viewModel.audio.playNoteHz(freq, 220 + idx * 40, isXylophone = instrumentMode == 1 || instrumentMode == 5)
+                    demoJob?.cancel()
+                    viewModel.audio.stopAllAudio()
+                    val notesToPlay = currentEchoPattern.toList()
+                    demoJob = musicScope.launch {
+                        echoFeedback = "Listen to the notes"
+                        notesToPlay.forEach { noteName ->
+                            val freq = scaleNotes.find { it.first == noteName }?.second ?: 261.63f
+                            viewModel.audio.playNoteHz(freq, 220, isXylophone = true)
+                            delay(600)
+                        }
+                        echoFeedback = "Your turn!"
                     }
-                    viewModel.audio.speakInstruction("Listen: ${notesToPlay.joinToString(", ")}. Now play it back!")
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
@@ -852,10 +878,11 @@ fun MusicInstrumentsEngine(
                                 .size(136.dp)
                                 .clip(CircleShape)
                                 .clickable {
+                                    beginPlaying()
                                     notesPlayed += 1
                                     viewModel.audio.playNoteHz(freq, 220, isDrum = idx < 3, isXylophone = idx == 3)
                                     if (notesPlayed % 6 == 0) {
-                                        viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false)
+                                        viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false, speakMilestonePraise = false, playMilestoneChime = false)
                                     }
                                 }
                                 .testTag("drum_pad_$idx"),
@@ -929,7 +956,7 @@ fun MusicInstrumentsEngine(
                                         val freq = if (opt.id.contains("low") || opt.id.contains("drum")) 130f else if (opt.id.contains("high") || opt.id.contains("bell")) 784f else 392f
                                         viewModel.audio.playNoteHz(freq, 300, isDrum = opt.id.contains("drum"), isXylophone = opt.id.contains("xylo") || opt.id.contains("bell"))
                                         if (opt.id == targetSound.id) {
-                                            viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false)
+                                            viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false, speakMilestonePraise = false, playMilestoneChime = false)
                                             quizIdx += 1
                                         } else {
                                             viewModel.onGentleRetryNeeded(activity, "That's ${opt.label}. Listen for ${targetSound.label}!")
@@ -980,6 +1007,7 @@ fun MusicInstrumentsEngine(
                                 .fillMaxHeight(heightFraction)
                                 .clip(RoundedCornerShape(20.dp))
                                 .clickable {
+                                    beginPlaying()
                                     notesPlayed += 1
                                     val pitchMultiplier = if (instrumentMode == 4) 1.5f else 1.0f
                                     viewModel.audio.playNoteHz(
@@ -992,7 +1020,7 @@ fun MusicInstrumentsEngine(
                                         if (noteName == expected) {
                                             if (echoStep + 1 >= currentEchoPattern.size) {
                                                 echoFeedback = "🎉 Echo Complete: ${currentEchoPattern.joinToString(" → ")}!"
-                                                viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false)
+                                                viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false, speakMilestonePraise = false, playMilestoneChime = false)
                                                 echoRound += 1
                                                 echoStep = 0
                                             } else {
@@ -1004,7 +1032,7 @@ fun MusicInstrumentsEngine(
                                             echoFeedback = "Listen closely! Start with ${currentEchoPattern.first()} (${currentEchoPattern.joinToString(" → ")})"
                                         }
                                     } else if (notesPlayed % 8 == 0) {
-                                        viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false)
+                                        viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false, speakMilestonePraise = false, playMilestoneChime = false)
                                     }
                                 }
                                 .testTag("music_key_$noteName"),
@@ -1051,6 +1079,7 @@ fun MemoryMatchEngine(
     replayKey: Int,
     viewModel: WonderViewModel
 ) {
+    var hadMismatch by remember(activity.id, replayKey) { mutableStateOf(false) }
     val pairCount = adaptive.memoryPairCount.coerceIn(2, 6)
     val baseItems = remember(activity.id) {
         activity.items.ifEmpty {
@@ -1123,12 +1152,13 @@ fun MemoryMatchEngine(
                                             if (flippedIndices.size == 2) {
                                                 val firstIdx = flippedIndices[0]
                                                 val secondIdx = flippedIndices[1]
+                                                if (deck[firstIdx].id != deck[secondIdx].id) hadMismatch = true
                                                 if (deck[firstIdx].id == deck[secondIdx].id) {
                                                     matchedIndices.add(firstIdx)
                                                     matchedIndices.add(secondIdx)
                                                     flippedIndices.clear()
                                                     if (matchedIndices.size == deck.size) {
-                                                        viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false)
+                                                        viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = hadMismatch)
                                                     }
                                                 }
                                             }
@@ -1197,19 +1227,25 @@ fun PhonicsWordQuizEngine(
     var stepIdx by remember(activity.id, replayKey) { mutableIntStateOf(savedStepIndex.coerceAtLeast(0)) }
     var hadRetries by remember(stepIdx, replayKey) { mutableStateOf(false) }
 
-    val choices = remember(pool, stepIdx, adaptive.effectiveChoiceCount) {
-        val count = adaptive.effectiveChoiceCount.coerceIn(2, pool.size)
-        val rotated = pool.drop(stepIdx % pool.size) + pool.take(stepIdx % pool.size)
-        rotated.take(count)
+    if (activity.id == "w07_phonics_10") {
+        CvcWordBuilder(activity, pool, stepIdx, replayKey, viewModel) { next ->
+            stepIdx = next
+        }
+        return
     }
-    val target = choices.first()
+    val target = pool[stepIdx % pool.size]
+    val choices = remember(pool, stepIdx, adaptive.effectiveChoiceCount, replayKey) {
+        val count = adaptive.effectiveChoiceCount.coerceIn(1, pool.size)
+        val rotated = pool.drop(stepIdx % pool.size) + pool.take(stepIdx % pool.size)
+        rotated.take(count).shuffled()
+    }
 
     val headerPrompt = remember(activity.id, target, stepIdx) {
         when (activity.id) {
-            "w07_phonics_4" -> "Uppercase → Lowercase: Tap ${target.label} (${target.categoryOrTarget}) ${target.emoji}"
-            "w07_phonics_5" -> "Rhyming Word Families: Tap ${target.label} (${target.categoryOrTarget}) ${target.emoji}"
-            "w07_phonics_6" -> "Missing Letter Bridge: ${target.categoryOrTarget} → Tap ${target.label}!"
-            "w07_phonics_7" -> "Alphabet Train Order: ${target.categoryOrTarget} → Tap ${target.label}!"
+            "w07_phonics_4" -> "Find the lowercase partner for ${target.label.first()}"
+            "w07_phonics_5" -> "What rhymes with ${target.label.substringAfter("•").trim()}?"
+            "w07_phonics_6" -> "Which letter is missing? ${target.categoryOrTarget}"
+            "w07_phonics_7" -> "Which letter belongs here? ${target.categoryOrTarget}"
             "w07_phonics_10" -> "CVC Word Builder: Blend ${target.label.toCharArray().joinToString("-")} for ${target.categoryOrTarget} ${target.emoji}"
             "w07_phonics_11", "w07_phonics_12" -> "Step ${(stepIdx % pool.size) + 1} of ${pool.size}: Tap ${target.label} (${target.categoryOrTarget}) ${target.emoji}"
             else -> "Tap the tile for: ${target.label} (${target.categoryOrTarget}) ${target.emoji}"
@@ -1312,7 +1348,11 @@ fun PhonicsWordQuizEngine(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = item.label,
+                            text = when (activity.id) {
+                                "w07_phonics_4" -> item.label.last().toString()
+                                "w07_phonics_5" -> item.label.substringBefore("•").trim()
+                                else -> item.label
+                            },
                             style = MaterialTheme.typography.displayLarge,
                             fontSize = if (item.label.length <= 2) 56.sp else 36.sp,
                             color = DeepSlateInk,
@@ -1519,6 +1559,14 @@ fun StorybookReaderEngine(
     var hadRetries by remember(activity.id, replayKey) { mutableStateOf(false) }
     var completedAtLeastOnce by remember(activity.id, replayKey) { mutableStateOf(false) }
     val currentPage = pages[pageIdx.coerceIn(0, pages.lastIndex)]
+    LaunchedEffect(activity.id, pageIdx, replayKey) {
+        viewModel.audio.stopSpeechOnly()
+        viewModel.audio.speakStoryPage(currentPage.narrationText, currentPage.interactivePrompt)
+    }
+    DisposableEffect(activity.id) {
+        onDispose { viewModel.audio.stopSpeechOnly() }
+    }
+
     var feedbackBanner by remember(activity.id, pageIdx, replayKey) {
         mutableStateOf(currentPage.interactivePrompt)
     }
@@ -1559,10 +1607,6 @@ fun StorybookReaderEngine(
                         Button(
                             onClick = {
                                 pageIdx = 0
-                                viewModel.audio.speakStoryPage(
-                                    narrationText = pages.first().narrationText,
-                                    interactivePrompt = pages.first().interactivePrompt
-                                )
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = SoftCreamCard, contentColor = DeepSlateInk),
                             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
@@ -1619,8 +1663,7 @@ fun StorybookReaderEngine(
                     text = currentPage.narrationText,
                     style = MaterialTheme.typography.bodyLarge,
                     color = DeepSlateInk,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
+                    modifier = Modifier.height(100.dp).verticalScroll(rememberScrollState())
                 )
                 Button(
                     onClick = {
@@ -1666,27 +1709,18 @@ fun StorybookReaderEngine(
                                 if (isReadAgainChoice && pageIdx == pages.lastIndex) {
                                     if (!completedAtLeastOnce) {
                                         completedAtLeastOnce = true
-                                        viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = hadRetries)
+                                        viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = hadRetries, speakMilestonePraise = false)
                                     }
                                     pageIdx = 0
-                                    viewModel.audio.speakStoryPage(
-                                        narrationText = pages.first().narrationText,
-                                        interactivePrompt = pages.first().interactivePrompt
-                                    )
                                 } else if (isCorrectChoice) {
-                                    viewModel.audio.speakInstruction(choiceLabel)
                                     if (pageIdx < pages.lastIndex) {
                                         pageIdx += 1
                                     } else {
                                         if (!completedAtLeastOnce) {
                                             completedAtLeastOnce = true
-                                            viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = hadRetries)
+                                            viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = hadRetries, speakMilestonePraise = false)
                                         }
                                         pageIdx = 0
-                                        viewModel.audio.speakStoryPage(
-                                            narrationText = pages.first().narrationText,
-                                            interactivePrompt = pages.first().interactivePrompt
-                                        )
                                     }
                                 } else {
                                     hadRetries = true
@@ -1701,7 +1735,7 @@ fun StorybookReaderEngine(
                                 }
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = if (idx == currentPage.correctChoiceIndex) ActionPlayGreen else ActionContinueBlue
+                                containerColor = ActionContinueBlue
                             ),
                             shape = RoundedCornerShape(16.dp),
                             modifier = Modifier
@@ -2499,6 +2533,80 @@ fun FlashcardAndFamilyEngine(
                             )
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+/** A word is earned only after the child places every letter in order. */
+@Composable
+private fun CvcWordBuilder(
+    activity: ActivityConfig,
+    pool: List<GameItemOption>,
+    step: Int,
+    replayKey: Int,
+    viewModel: WonderViewModel,
+    onNext: (Int) -> Unit
+) {
+    val target = pool[step % pool.size]
+    val letters = remember(target.id, replayKey) { target.label.toList().shuffled() }
+    var assembled by remember(target.id, replayKey) { mutableStateOf("") }
+    var retried by remember(target.id, replayKey) { mutableStateOf(false) }
+    val complete = assembled == target.label
+    Row(
+        Modifier.fillMaxSize().testTag("engine_cvc_builder"),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(
+            Modifier.weight(0.36f),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Build ${target.label.lowercase()} ${target.emoji}", fontSize = 24.sp)
+            Button(onClick = { viewModel.audio.speakInstruction(target.label.lowercase()) }) {
+                Text("Hear the word")
+            }
+            if (complete) {
+                Button(onClick = {
+                    viewModel.saveActivityCheckpoint(activity, step + 1)
+                    onNext(step + 1)
+                }, modifier = Modifier.testTag("cvc_next")) { Text("Next word") }
+            }
+        }
+        Column(
+            Modifier.weight(0.64f),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                target.label.indices.joinToString("  ") { assembled.getOrNull(it)?.toString() ?: "＿" },
+                fontSize = 36.sp,
+                modifier = Modifier.testTag("cvc_slots")
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                letters.forEachIndexed { index, letter ->
+                    Button(
+                        enabled = !complete,
+                        modifier = Modifier.weight(1f).height(56.dp).testTag("cvc_letter_$index"),
+                        contentPadding = PaddingValues(0.dp),
+                        onClick = {
+                            if (letter == target.label.getOrNull(assembled.length)) {
+                                assembled += letter
+                                if (assembled == target.label) {
+                                    viewModel.onActivityMilestoneCompleted(
+                                        activity, hadRetriesInRound = retried,
+                                        speakMilestonePraise = false
+                                    )
+                                    viewModel.audio.speakInstruction(target.label.lowercase())
+                                }
+                            } else {
+                                retried = true
+                                viewModel.audio.speakInstruction("Try another letter for this space.")
+                            }
+                        }
+                    ) { Text(letter.toString(), fontSize = 26.sp) }
                 }
             }
         }

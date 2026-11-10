@@ -1,5 +1,7 @@
 package com.example.viewmodel
 
+import com.example.garden.*
+import androidx.room.withTransaction
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
@@ -33,6 +35,7 @@ import kotlinx.coroutines.launch
 
 sealed interface WonderScreen {
     data object Onboarding : WonderScreen
+    data object Garden : WonderScreen
     data object Home : WonderScreen
     data object ToyBox : WonderScreen
     data class LandWorlds(val landId: LandId) : WonderScreen
@@ -120,13 +123,56 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    val gardenState = database.wonderDao().observeGarden()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    fun setSubjectLevel(subject: LearningSubject, level: String) {
+        if (AgeBand.entries.none { it.id == level }) return
+        viewModelScope.launch {
+            if (subject == LearningSubject.READING) database.wonderDao().updateReadingLevel(level)
+            else database.wonderDao().updateMathLevel(level)
+        }
+    }
+
+    fun setInstructionLanguage(language: String) {
+        if (language !in listOf("en", "te")) return
+        viewModelScope.launch { database.wonderDao().updateInstructionLanguage(language) }
+    }
+
+    fun startGarden(restart: Boolean = false) {
+        viewModelScope.launch {
+            database.withTransaction {
+                val dao = database.wonderDao()
+                val previous = dao.getGarden()
+                if (restart || previous == null) {
+                    dao.saveGarden(GardenMission.fresh(dao.getSettingsOnce() ?: ProfileSettingsEntity())
+                        .copy(completedGardens = previous?.completedGardens ?: 0))
+                }
+            }
+        }
+    }
+
+    fun actInGarden(action: GardenAction) {
+        viewModelScope.launch {
+            database.withTransaction {
+                val dao = database.wonderDao()
+                val state = dao.getGarden() ?: return@withTransaction
+                dao.saveGarden(GardenMission.reduce(state, action))
+            }
+        }
+    }
+
     fun getCurrentAgeBand(): AgeBand = AgeBand.fromId(settingsState.value.ageBandId)
     fun getCurrentBuddy(): LearningBuddy = LearningBuddy.fromId(settingsState.value.buddyId)
 
     fun getAdaptiveParametersFor(activity: ActivityConfig): AdaptiveChallengeParameters {
         val progress = progressListState.value.find { it.activityId == activity.id }
         return AdaptiveLearningEngine.computeParameters(
-            ageBand = getCurrentAgeBand(),
+            ageBand = when (activity.worldId) {
+                "w07_phonics", "w09_stories", "w27_rhymes" -> settingsState.value.subjectLevel(LearningSubject.READING)
+                "w08_math" -> settingsState.value.subjectLevel(LearningSubject.MATH)
+                else -> getCurrentAgeBand()
+            },
             autoAdaptEnabled = settingsState.value.autoAdaptiveDifficulty,
             progress = progress,
             recentSessionRetries = _sessionRetries.value,
@@ -279,13 +325,14 @@ class WonderViewModel(application: Application) : AndroidViewModel(application) 
         hadRetriesInRound: Boolean = false,
         nextStepIndex: Int? = null,
         tracingAccuracyPercent: Int? = null,
-        speakMilestonePraise: Boolean = true
+        speakMilestonePraise: Boolean = true,
+        playMilestoneChime: Boolean = true
     ) {
         if (!hadRetriesInRound) {
             _sessionSmoothWins.value += 1
             _sessionRetries.value = 0
         }
-        audio.playSuccessChime()
+        if (playMilestoneChime) audio.playSuccessChime()
         if (speakMilestonePraise) {
             audio.speakSincereSuccess()
         }

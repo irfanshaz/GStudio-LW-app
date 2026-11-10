@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Approved Sunny art kept strictly within the 66dp adaptive safe zone -->
     <item
-        android:width="66dp"
-        android:height="66dp"
+        android:width="58dp"
+        android:height="58dp"
         android:drawable="@drawable/img_launcher_wonder_cub_1794160808743"
+        android:gravity="center" />
+    <!-- Small golden star trail inside the 66dp adaptive safe zone -->
+    <item
+        android:width="108dp"
+        android:height="108dp"
+        android:drawable="@drawable/ic_launcher_star_trail"
         android:gravity="center" />
 </layer-list>

@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.pager.VerticalPager
@@ -116,6 +117,7 @@ fun RealWorldAndReelsScreen(
     reducedMotion: Boolean
 ) {
     val items = remember(category) { RealWorldMediaRegistry.getItemsByCategory(category) }
+    val gridState = rememberLazyGridState()
     val overridesMap = remember(mediaOverrides) { mediaOverrides.associateBy { it.mediaId } }
 
     DisposableEffect(Unit) {
@@ -258,7 +260,8 @@ fun RealWorldAndReelsScreen(
         if (!isReelsMode) {
             // SCROLL CARDS MODE: Kids can scroll smoothly through Animal or Object cards
             LazyVerticalGrid(
-                columns = GridCells.Fixed(3),
+                columns = GridCells.Adaptive(220.dp),
+                state = gridState,
                 modifier = Modifier
                     .fillMaxSize()
                     .testTag("real_world_scroll_grid"),
@@ -456,7 +459,9 @@ private fun WonderReelsVerticalFeed(
 
     // Auto-speak and trigger sound signature whenever the child settles on a new Reel
     LaunchedEffect(pagerState.settledPage, items) {
+        viewModel.audio.stopAllAudio()
         val currentItem = items.getOrNull(pagerState.settledPage) ?: return@LaunchedEffect
+        if (overridesMap[currentItem.id]?.localVideoPath?.let { File(it).exists() } == true) return@LaunchedEffect
         viewModel.audio.playAnimalOrObjectSignature(
             baseFreqHz = currentItem.soundFreqHz,
             label = currentItem.title,
@@ -664,14 +669,6 @@ private fun SingleWonderReelStage(
         (item.subtitles + item.funFacts).distinct().ifEmpty { listOf(item.subtitle) }
     }
 
-    LaunchedEffect(isActivePage, item.id) {
-        if (isActivePage && captionList.size > 1) {
-            while (true) {
-                delay(3800)
-                subtitleIndex = (subtitleIndex + 1) % captionList.size
-            }
-        }
-    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         val customVideoPath = overrideEntity?.localVideoPath

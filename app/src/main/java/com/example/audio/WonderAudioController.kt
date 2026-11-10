@@ -50,6 +50,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
     private var isTtsReady = false
     private var speechSequenceJob: Job? = null
+    private var voiceStreamId: Int = 0
     private var duckRestoreJob: Job? = null
 
     // Monotonic token to discard stale speech when a child pops several balloons rapidly
@@ -98,6 +99,12 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
 
     private val _lastAuditionClipId = MutableStateFlow<String?>(null)
     val lastAuditionClipId: StateFlow<String?> = _lastAuditionClipId.asStateFlow()
+
+    private val _lastPlayedClipId = MutableStateFlow<String?>(null)
+    val lastPlayedClipId: StateFlow<String?> = _lastPlayedClipId.asStateFlow()
+
+    private val _activeAuditionStyle = MutableStateFlow<String?>(null)
+    val activeAuditionStyle: StateFlow<String?> = _activeAuditionStyle.asStateFlow()
 
     var narrationEnabled: Boolean = true
     var sfxEnabled: Boolean = true
@@ -155,22 +162,26 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
                 )
                 engine.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
                     override fun onStart(utteranceId: String?) {
+                        if (utteranceId != "wonder_teacher_${latestSpeechToken.get()}") return
                         _isTeacherSpeaking.value = true
                         _backgroundMusicDuckVolume.value = 0.18f
                     }
 
                     override fun onDone(utteranceId: String?) {
+                        if (utteranceId != "wonder_teacher_${latestSpeechToken.get()}") return
                         _isTeacherSpeaking.value = false
                         _backgroundMusicDuckVolume.value = 1.0f
                     }
 
                     @Deprecated("Deprecated in Java")
                     override fun onError(utteranceId: String?) {
+                        if (utteranceId != "wonder_teacher_${latestSpeechToken.get()}") return
                         _isTeacherSpeaking.value = false
                         _backgroundMusicDuckVolume.value = 1.0f
                     }
 
                     override fun onStop(utteranceId: String?, interrupted: Boolean) {
+                        if (utteranceId != "wonder_teacher_${latestSpeechToken.get()}") return
                         _isTeacherSpeaking.value = false
                         _backgroundMusicDuckVolume.value = 1.0f
                     }
@@ -275,14 +286,89 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         }
     }
 
+    fun hasBundledRawVoiceClip(clipId: String): Boolean {
+        val entry = VoiceAssetManifest.allManifestEntries.find { it.clipId == clipId }
+        val rawName = entry?.expectedRawFileName?.substringBeforeLast(".") ?: clipId
+        return runCatching {
+            appContext.resources.getIdentifier(rawName, "raw", appContext.packageName) != 0
+        }.getOrDefault(false)
+    }
+
+    fun canSpeakLanguageOffline(languageCode: String): Boolean {
+        if (languageCode.equals("en", ignoreCase = true)) return isTtsReady
+        return runCatching {
+            val engine = tts ?: return false
+            engine.voices.orEmpty().any {
+                it.locale.language.equals(languageCode, ignoreCase = true) && !it.isNetworkConnectionRequired
+            }
+        }.getOrDefault(false)
+    }
+
+    fun canPlayTeluguPrompt(clipId: String? = null): Boolean {
+        if (clipId != null && hasBundledRawVoiceClip(clipId)) return true
+        return canSpeakLanguageOffline("te")
+    }
+
     /**
-     * Previews any voice option in Parent Corner using the exact same sentence
-     * ("Let's play together! Find the blue balloon, and take your time.")
-     * so adults can compare voices honestly before choosing.
+     * Plays the full 6-line Sunny Garden Audition set from `docs/gemini/garden-voice-scripts.csv`
+     * in either Calm (`AUDITION_CALM`) or Playful (`AUDITION_PLAYFUL`) delivery.
+     * Uses bundled studio WAVs if present in `res/raw/`, otherwise uses device speech fallback.
      */
+    fun playGardenAudition(playful: Boolean) {
+        val entries = if (playful) {
+            VoiceAssetManifest.gardenAuditionPlayfulClips
+        } else {
+            VoiceAssetManifest.gardenAuditionCalmClips
+        }
+        val styleId = if (playful) "playful" else "calm"
+        val firstClipId = entries.firstOrNull()?.clipId ?: "sunny_intro_$styleId"
+        _activeAuditionStyle.value = styleId
+        _lastAuditionClipId.value = firstClipId
+        _lastPlayedClipId.value = firstClipId
+        _lastSpokenCaption.value = entries.joinToString("\n") { it.displayCaption }
+
+        val category = if (playful) {
+            VoicePerformanceCategory.AUDITION_PLAYFUL
+        } else {
+            VoicePerformanceCategory.AUDITION_CALM
+        }
+        speakDirectedInternal(
+            text = entries.joinToString("... ") { it.spokenScript },
+            category = category,
+            ignoreMuteForPreview = true
+        )
+    }
+
+    /**
+     * Plays a single line from the 6-line Sunny Garden Audition set in either Calm or Playful style.
+     */
+    fun playGardenAuditionLine(entry: VoiceClipManifestEntry, playful: Boolean) {
+        val styleId = if (playful) "playful" else "calm"
+        _activeAuditionStyle.value = styleId
+        _lastAuditionClipId.value = entry.clipId
+        _lastPlayedClipId.value = entry.clipId
+        _lastSpokenCaption.value = entry.displayCaption
+
+        stopSpeechOnly()
+        if (tryPlayBundledRawVoiceClip(entry.clipId)) {
+            return
+        }
+        val category = if (playful) {
+            VoicePerformanceCategory.AUDITION_PLAYFUL
+        } else {
+            VoicePerformanceCategory.AUDITION_CALM
+        }
+        speakDirectedInternal(
+            text = entry.spokenScript,
+            category = category,
+            ignoreMuteForPreview = true
+        )
+    }
+
     fun previewVoiceOption(voiceId: String) {
         setSelectedTeacherVoice(voiceId)
         _lastSpokenCaption.value = VoiceAssetManifest.STANDARD_PREVIEW_SENTENCE
+        _lastPlayedClipId.value = "standard_voice_preview"
         if (!narrationEnabled) {
             // Even if narration was muted, allow explicit preview button to play the sample
             speakDirectedInternal(
@@ -295,6 +381,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         speakDirected(
             text = VoiceAssetManifest.STANDARD_PREVIEW_SENTENCE,
             category = VoicePerformanceCategory.INSTRUCTION,
+            clipId = "standard_voice_preview",
             interrupt = true
         )
     }
@@ -304,6 +391,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
      */
     fun playAuditionClip(entry: VoiceClipManifestEntry) {
         _lastAuditionClipId.value = entry.clipId
+        _lastPlayedClipId.value = entry.clipId
         _lastSpokenCaption.value = entry.displayCaption
 
         if (entry.clipId == "audition_06_phonics") {
@@ -337,7 +425,8 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
 
     /**
      * Primary directed teacher speech entrypoint.
-     * 1. Updates visible text caption immediately so text is always visible even if speech is muted/unavailable.
+     * 1. Updates visible text caption and [lastPlayedClipId] immediately so text and clip ID are always
+     *    recorded even if speech is muted/unavailable.
      * 2. Checks if a bundled studio WAV exists in res/raw/ for [clipId] first.
      * 3. Otherwise speaks one voice at a time with category-directed rate, comfortable pitch (1.0f), and audio ducking.
      */
@@ -347,7 +436,10 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         clipId: String? = null,
         interrupt: Boolean = true
     ) {
+        if (!interrupt && (_isTeacherSpeaking.value || speechSequenceJob?.isActive == true)) return
         _lastSpokenCaption.value = text
+        _lastPlayedClipId.value = clipId
+        stopSpeechOnly()
         if (!narrationEnabled) return
 
         if (clipId != null && tryPlayBundledRawVoiceClip(clipId)) {
@@ -361,18 +453,20 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         )
     }
 
-    fun speakInstruction(text: String, interrupt: Boolean = true) {
+    fun speakInstruction(text: String, interrupt: Boolean = true, clipId: String? = null) {
         speakDirected(
             text = text,
             category = VoicePerformanceCategory.INSTRUCTION,
+            clipId = clipId,
             interrupt = interrupt
         )
     }
 
-    fun speakDiscovery(text: String) {
+    fun speakDiscovery(text: String, clipId: String? = null) {
         speakDirected(
             text = text,
             category = VoicePerformanceCategory.DISCOVERY,
+            clipId = clipId,
             interrupt = true
         )
     }
@@ -422,7 +516,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         speakDirected(
             text = finalPrompt,
             category = VoicePerformanceCategory.RETRY,
-            clipId = if (gentlePrompt.isNullOrBlank()) chosen.clipId else null,
+            clipId = if (gentlePrompt.isNullOrBlank()) chosen.clipId else "garden_retry_gentle",
             interrupt = true
         )
     }
@@ -431,13 +525,14 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
      * Speaks a storybook page at a slower, unhurried picture-book pace (0.83f)
      * with natural phrasing and a pause before the page-turn prompt.
      */
-    fun speakStoryPage(narrationText: String, interactivePrompt: String = "") {
+    fun speakStoryPage(narrationText: String, interactivePrompt: String = "", clipId: String? = null) {
         val combinedDisplay = if (interactivePrompt.isNotBlank()) {
             "$narrationText  •  $interactivePrompt"
         } else {
             narrationText
         }
         _lastSpokenCaption.value = combinedDisplay
+        _lastPlayedClipId.value = clipId
         if (!narrationEnabled) return
 
         val phrasedScript = if (interactivePrompt.isNotBlank()) {
@@ -493,10 +588,9 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         languageCode: String,
         pitchMultiplier: Float = 1.0f
     ) {
-        val token = latestSpeechToken.incrementAndGet()
+        stopSpeechOnly()
+        val token = latestSpeechToken.get()
         _lastSpokenCaption.value = nativeCaption
-        speechSequenceJob?.cancel()
-        runCatching { tts?.stop() }
 
         if (sfxEnabled) {
             playSample(sfxBalloonPopId, volume = 0.42f, rate = pitchMultiplier.coerceIn(0.92f, 1.08f))
@@ -515,19 +609,52 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         nativeCaption: String,
         nativeSpeech: String,
         phoneticFallbackSpeech: String,
-        languageCode: String
+        languageCode: String,
+        clipId: String? = null,
+        fallbackClipId: String? = null,
+        category: VoicePerformanceCategory = VoicePerformanceCategory.INSTRUCTION
     ) {
-        val token = latestSpeechToken.incrementAndGet()
-        _lastSpokenCaption.value = nativeCaption
-        speechSequenceJob?.cancel()
-        runCatching { tts?.stop() }
+        stopSpeechOnly()
+        val token = latestSpeechToken.get()
 
-        if (narrationEnabled && isTtsReady) {
-            speechSequenceJob = scope.launch {
-                if (token == latestSpeechToken.get()) {
-                    speakLocalizedInternal(nativeSpeech, phoneticFallbackSpeech, languageCode)
+        // 1. Prefer bundled raw clip for native language if available
+        if (clipId != null && hasBundledRawVoiceClip(clipId)) {
+            _lastSpokenCaption.value = nativeCaption
+            _lastPlayedClipId.value = clipId
+            if (narrationEnabled) {
+                tryPlayBundledRawVoiceClip(clipId)
+            }
+            return
+        }
+
+        // 2. Next, use offline native TTS voice if installed on device
+        if (canSpeakLanguageOffline(languageCode)) {
+            _lastSpokenCaption.value = nativeCaption
+            _lastPlayedClipId.value = clipId
+            if (narrationEnabled && isTtsReady) {
+                speechSequenceJob = scope.launch {
+                    if (token == latestSpeechToken.get()) {
+                        speakLocalizedInternal(nativeSpeech, phoneticFallbackSpeech, languageCode, category)
+                    }
                 }
             }
+            return
+        }
+
+        // 3. Fallback: play matching English fallback and keep visible caption accurate in English
+        _lastSpokenCaption.value = phoneticFallbackSpeech
+        _lastPlayedClipId.value = fallbackClipId ?: clipId
+        if (!narrationEnabled) return
+
+        if (fallbackClipId != null && tryPlayBundledRawVoiceClip(fallbackClipId)) {
+            return
+        }
+        if (isTtsReady) {
+            speakDirectedInternal(
+                text = phoneticFallbackSpeech,
+                category = category,
+                ignoreMuteForPreview = false
+            )
         } else if (sfxEnabled) {
             playSample(sfxGentleTryId, volume = 0.35f)
         }
@@ -536,7 +663,8 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
     private fun speakLocalizedInternal(
         nativeSpeech: String,
         phoneticFallbackSpeech: String,
-        languageCode: String
+        languageCode: String,
+        category: VoicePerformanceCategory = VoicePerformanceCategory.DISCOVERY
     ) {
         runCatching {
             val engine = tts ?: return
@@ -546,32 +674,42 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
                 else -> Locale.US
             }
             if (targetLocale != Locale.US) {
-                val avail = engine.isLanguageAvailable(targetLocale)
-                if (avail >= TextToSpeech.LANG_AVAILABLE) {
-                    engine.language = targetLocale
+                val nativeVoice = engine.voices.orEmpty().filter {
+                    it.locale.language == targetLocale.language && !it.isNetworkConnectionRequired
+                }.sortedBy { it.name }.firstOrNull()
+                if (nativeVoice != null) {
+                    engine.voice = nativeVoice
                     speakNowWithCategory(
                         text = sanitizeForWarmSpeech(nativeSpeech),
-                        category = VoicePerformanceCategory.DISCOVERY
+                        category = category,
+                        preserveCurrentVoice = true
                     )
                     return
                 }
             }
+            _lastSpokenCaption.value = phoneticFallbackSpeech
             engine.language = Locale.US
             applySelectedTeacherVoiceToEngine(_selectedVoiceId.value)
             speakNowWithCategory(
                 text = sanitizeForWarmSpeech(phoneticFallbackSpeech),
-                category = VoicePerformanceCategory.DISCOVERY
+                category = category
             )
         }
     }
 
     /**
-     * Separate Letter Names and Schwa-Free Pure Letter Sounds (Section 1: Phonics).
-     * Avoids adding an extra "uh" to consonants such as /m/ ("mmmm") and /s/ ("ssss").
+     * Separate Letter Names and Schwa-Free Pure Letter Sounds (Section 1 & Section 3: Phonics).
+     * Avoids adding an extra "uh" to consonants such as /m/ ("mmmm") and /s/ ("ssss"),
+     * and records distinct clip IDs for letter name (`phonics_s_name`) vs isolated sound (`phonics_s_isolated_sound`).
      */
     fun speakPhonicsLetter(letter: Char, speakSoundNotName: Boolean) {
         val upper = letter.uppercaseChar()
         val entry = VoiceAssetManifest.phonicsManifest[upper]
+        val distinctClipId = if (speakSoundNotName) {
+            "phonics_${upper.lowercaseChar()}_isolated_sound"
+        } else {
+            "phonics_${upper.lowercaseChar()}_name"
+        }
         val displayCaption = if (entry != null) {
             if (speakSoundNotName) {
                 "$upper says ${entry.ipaSymbol} • ${entry.exampleWord}"
@@ -582,18 +720,18 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
             "Letter $upper"
         }
         _lastSpokenCaption.value = displayCaption
+        _lastPlayedClipId.value = distinctClipId
+        stopSpeechOnly()
         if (!narrationEnabled) return
 
-        val token = latestSpeechToken.incrementAndGet()
-        speechSequenceJob?.cancel()
-        runCatching { tts?.stop() }
+        val token = latestSpeechToken.get()
 
         // Play bundled pure phoneme WAV clip for /m/ and /s/ when speaking pure letter sounds
         if (speakSoundNotName && (upper == 'M' || upper == 'S')) {
             val pureSampleId = if (upper == 'M') voicePhonicsMPureId else voicePhonicsSPureId
             speechSequenceJob = scope.launch {
                 activateMusicDucking(1400L)
-                playSample(pureSampleId, volume = 0.72f)
+                playVoiceSample(pureSampleId, volume = 0.72f)
                 delay(420L)
                 if (token == latestSpeechToken.get() && isTtsReady && entry != null) {
                     speakNowWithCategory(
@@ -627,12 +765,39 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         }
     }
 
+    /**
+     * Speaks a segmented phonics blend (e.g. `phonics_blend_sun_segmented` or `phonics_blend_seed_segmented`)
+     * or a whole target word (`phonics_word_sun_whole` or `phonics_word_seed_whole`) using its distinct clip ID.
+     */
+    fun speakPhonicsClip(clipId: String) {
+        val entry = VoiceAssetManifest.distinctPhonicsClips.find { it.clipId == clipId }
+            ?: VoiceAssetManifest.allManifestEntries.find { it.clipId == clipId }
+        val caption = entry?.displayCaption ?: clipId
+        val script = entry?.spokenScript ?: clipId
+        val category = entry?.category ?: VoicePerformanceCategory.PHONICS_SOUND
+        speakDirected(
+            text = caption,
+            category = category,
+            clipId = clipId,
+            interrupt = true
+        ).also {
+            if (narrationEnabled && !hasBundledRawVoiceClip(clipId) && isTtsReady) {
+                speakDirectedInternal(script, category, ignoreMuteForPreview = false)
+            }
+        }
+    }
+
+    /**
+     * Plays an instrument note and immediately stops any active or queued foreground narration
+     * so voice prompts never talk over piano or xylophone play.
+     */
     fun playNoteHz(
         freqHz: Float,
         durationMs: Int = 340,
         isXylophone: Boolean = false,
         isDrum: Boolean = false
     ) {
+        stopSpeechOnly()
         if (!sfxEnabled && !musicEnabled) return
         val duckFactor = _backgroundMusicDuckVolume.value
         if (!isDrum) {
@@ -720,6 +885,8 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
             _isTeacherSpeaking.value = false
             _backgroundMusicDuckVolume.value = 1.0f
             tts?.stop()
+            soundPool.stop(voiceStreamId)
+            voiceStreamId = 0
         }
     }
 
@@ -747,7 +914,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         val cachedSoundId = rawVoiceClipSoundPoolIds[rawName]
         if (cachedSoundId != null && cachedSoundId != 0) {
             activateMusicDucking(1400L)
-            playSample(cachedSoundId, volume = 0.85f)
+            playVoiceSample(cachedSoundId, volume = 0.85f)
             return true
         }
         val resId = appContext.resources.getIdentifier(rawName, "raw", appContext.packageName)
@@ -755,9 +922,10 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
             val loadedId = soundPool.load(appContext, resId, 1)
             rawVoiceClipSoundPoolIds[rawName] = loadedId
             activateMusicDucking(1400L)
-            scope.launch {
+            val token = latestSpeechToken.get()
+            speechSequenceJob = scope.launch {
                 delay(45L)
-                playSample(loadedId, volume = 0.85f)
+                if (token == latestSpeechToken.get()) playVoiceSample(loadedId, volume = 0.85f)
             }
             return true
         }
@@ -770,9 +938,8 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         ignoreMuteForPreview: Boolean
     ) {
         if (!narrationEnabled && !ignoreMuteForPreview) return
-        val token = latestSpeechToken.incrementAndGet()
-        speechSequenceJob?.cancel()
-        runCatching { tts?.stop() }
+        stopSpeechOnly()
+        val token = latestSpeechToken.get()
 
         val cleanText = sanitizeForWarmSpeech(text)
         if (isTtsReady) {
@@ -789,23 +956,23 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         }
     }
 
-    private fun speakNowWithCategory(text: String, category: VoicePerformanceCategory) {
+    private fun speakNowWithCategory(text: String, category: VoicePerformanceCategory, preserveCurrentVoice: Boolean = false) {
         runCatching {
             val engine = tts ?: return
-            applySelectedTeacherVoiceToEngine(_selectedVoiceId.value)
+            if (!preserveCurrentVoice) applySelectedTeacherVoiceToEngine(_selectedVoiceId.value)
             engine.setPitch(category.pitch.coerceIn(0.98f, 1.02f))
             engine.setSpeechRate(category.speechRate.coerceIn(0.80f, 0.94f))
             val params = Bundle().apply {
                 putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f)
             }
-            val estimatedDurationMs = (text.length * 68L).coerceIn(900L, 6500L)
+            val estimatedDurationMs = (text.length * 100L).coerceIn(2000L, 120000L)
             activateMusicDucking(estimatedDurationMs)
             // Always QUEUE_FLUSH so only one voice plays at a time and stale lines never pile up
             engine.speak(
                 text,
                 TextToSpeech.QUEUE_FLUSH,
                 params,
-                "wonder_teacher_${System.currentTimeMillis()}"
+                "wonder_teacher_${latestSpeechToken.get()}"
             )
         }
     }
@@ -818,6 +985,14 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
             delay(durationMs)
             _isTeacherSpeaking.value = false
             _backgroundMusicDuckVolume.value = 1.0f
+        }
+    }
+
+    private fun playVoiceSample(soundId: Int, volume: Float) {
+        if (soundId == 0) return
+        runCatching {
+            soundPool.stop(voiceStreamId)
+            voiceStreamId = soundPool.play(soundId, volume, volume, 1, 0, 1f)
         }
     }
 

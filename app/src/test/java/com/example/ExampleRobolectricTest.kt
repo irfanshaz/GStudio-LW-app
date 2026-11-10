@@ -31,7 +31,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(qualifiers = "w731dp-h411dp-land-xxhdpi", sdk = [34])
+@Config(qualifiers = "w731dp-h411dp-land-xxhdpi", sdk = [36])
 class ExampleRobolectricTest {
 
     @get:Rule

@@ -31,50 +31,21 @@ class WonderRepository(
     }
 
     suspend fun completeOnboarding(ageBand: AgeBand, buddy: LearningBuddy) {
-        val current = dao.getSettingsOnce() ?: ProfileSettingsEntity()
-        dao.upsertSettings(
-            current.copy(
-                ageBandId = ageBand.id,
-                buddyId = buddy.id,
-                onboardingCompleted = true
-            )
-        )
+        ensureInitialized()
+        dao.finishOnboarding(ageBand.id, buddy.id)
     }
 
     suspend fun updateAgeAndBuddy(ageBand: AgeBand, buddy: LearningBuddy) {
-        val current = dao.getSettingsOnce() ?: ProfileSettingsEntity()
-        dao.upsertSettings(
-            current.copy(
-                ageBandId = ageBand.id,
-                buddyId = buddy.id
-            )
-        )
+        dao.updateAgeBuddy(ageBand.id, buddy.id)
     }
 
-    suspend fun updateSelectedVoice(voiceId: String) {
-        val current = dao.getSettingsOnce() ?: ProfileSettingsEntity()
-        dao.upsertSettings(
-            current.copy(selectedVoiceId = voiceId)
-        )
-    }
+    suspend fun updateSelectedVoice(voiceId: String) { dao.updateVoice(voiceId) }
 
     suspend fun updateAudioAndMotionSettings(
-        narrationEnabled: Boolean,
-        musicEnabled: Boolean,
-        sfxEnabled: Boolean,
-        reducedMotion: Boolean,
-        autoAdaptiveDifficulty: Boolean = true
+        narrationEnabled: Boolean, musicEnabled: Boolean, sfxEnabled: Boolean,
+        reducedMotion: Boolean, autoAdaptiveDifficulty: Boolean = true
     ) {
-        val current = dao.getSettingsOnce() ?: ProfileSettingsEntity()
-        dao.upsertSettings(
-            current.copy(
-                narrationEnabled = narrationEnabled,
-                musicEnabled = musicEnabled,
-                sfxEnabled = sfxEnabled,
-                reducedMotion = reducedMotion,
-                autoAdaptiveDifficulty = autoAdaptiveDifficulty
-            )
-        )
+        dao.updateAudio(narrationEnabled, musicEnabled, sfxEnabled, reducedMotion, autoAdaptiveDifficulty)
     }
 
     suspend fun recordActivityOpened(activity: ActivityConfig) {
@@ -310,6 +281,7 @@ class WonderRepository(
     }
 
     suspend fun resetAllChildData() = withContext(Dispatchers.IO) {
+        dao.clearGarden()
         dao.clearAllProgress()
         dao.clearAllArtworks()
         dao.clearAllFamilyMembers()

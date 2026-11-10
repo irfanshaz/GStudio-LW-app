@@ -65,6 +65,7 @@ import com.example.data.ActivityProgressEntity
 import com.example.data.AdaptiveLearningEngine
 import com.example.data.CustomMediaOverrideEntity
 import com.example.data.FamilyMemberEntity
+import com.example.garden.SubjectLearningControls
 import com.example.data.ProfileSettingsEntity
 import com.example.data.RealWorldMediaRegistry
 import com.example.data.SavedArtworkEntity
@@ -444,6 +445,7 @@ private fun ParentCornerUnlockedContent(
                 }
 
                 1 -> {
+                    item { SubjectLearningControls(settings, viewModel) }
                     // TAB 1: Age Band, Speaking Buddy, Adaptive Learning & Media Controls
                     item {
                         Card(
