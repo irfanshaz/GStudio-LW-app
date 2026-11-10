@@ -179,7 +179,7 @@ fun GardenScreen(viewModel: WonderViewModel) {
                         if (active.readingLevelId == "2-3") OutlinedButton(onClick = { viewModel.audio.speakPhonicsLetter('S', true) }) { Text("Hear S sound") }
                     }
                     1 -> {
-                        Text("${active.seedCount} seeds  ${"• ".repeat(active.seedCount)}", fontSize = 26.sp, modifier = Modifier.testTag("garden_seed_count"))
+                        Text("${active.seedCount} seed${if (active.seedCount == 1) "" else "s"}  ${"• ".repeat(active.seedCount)}", fontSize = 26.sp, modifier = Modifier.testTag("garden_seed_count"))
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             Button(onClick = { act(GardenAction.AddSeed) }, enabled = active.seedCount < 10, modifier = Modifier.height(56.dp).testTag("garden_add_seed")) { Text("Add seed") }
                             OutlinedButton(onClick = { act(GardenAction.RemoveSeed) }, enabled = active.seedCount > 0, modifier = Modifier.height(56.dp).testTag("garden_remove_seed")) { Text("Take one out") }

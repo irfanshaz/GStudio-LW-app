@@ -57,7 +57,12 @@ class GardenMigrationTest {
             assertEquals("2-3", dao.getSettingsOnce()?.mathLevelId)
             val garden = GardenMission.fresh(requireNotNull(dao.getSettingsOnce()))
             dao.saveGarden(garden.copy(stage = 1, seedCount = 2))
-            assertEquals(2, dao.getGarden()?.seedCount)
+            database.close()
+            val reopened = Room.databaseBuilder(context, WonderDatabase::class.java, name).build()
+            try {
+                assertEquals(2, reopened.wonderDao().getGarden()?.seedCount)
+                assertEquals("5-6", reopened.wonderDao().getGarden()?.readingLevelId)
+            } finally { reopened.close() }
         } finally { database.close(); context.deleteDatabase(name) }
     }
 }

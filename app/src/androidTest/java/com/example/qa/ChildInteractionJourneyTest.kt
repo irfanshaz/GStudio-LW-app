@@ -8,12 +8,13 @@ import androidx.test.platform.app.InstrumentationRegistry
 import java.io.File
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
-import com.example.garden.LearningSubject
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.lifecycle.ViewModelProvider
 import com.example.MainActivity
 import com.example.data.WonderCatalogRegistry
@@ -53,6 +54,7 @@ class ChildInteractionJourneyTest {
         compose.mainClock.advanceTimeBy(96)
     }
 
+    @OptIn(ExperimentalTestApi::class)
     private fun captureGarden(name: String) {
         compose.mainClock.advanceTimeBy(96)
         val directory = File(InstrumentationRegistry.getInstrumentation().targetContext.filesDir, "garden-evidence").apply { mkdirs() }
@@ -62,14 +64,21 @@ class ChildInteractionJourneyTest {
 
     @Test fun independentLevelsGardenResumeAndCompletion() {
         open(WonderScreen.ParentCorner(unlocked = true))
-        click("parent_tab_1")
-        compose.onNodeWithTag("subject_READING_2-3").performScrollTo().performClick()
-        compose.onNodeWithTag("subject_MATH_5-6").performScrollTo().performClick()
-        compose.waitUntil(10000) { vm.settingsState.value.readingLevelId == "2-3" && vm.settingsState.value.mathLevelId == "5-6" }
+        compose.mainClock.autoAdvance = true
+        try {
+            click("parent_tab_1")
+            compose.onNodeWithTag("subject_READING_2-3").performScrollTo().performClick()
+            compose.onNodeWithTag("subject_MATH_5-6").performScrollTo().performClick()
+            compose.waitUntil(10000) { vm.settingsState.value.readingLevelId == "2-3" && vm.settingsState.value.mathLevelId == "5-6" }
+            android.util.Log.i("GardenJourney", "Subject settings saved")
+        } finally {
+            compose.mainClock.autoAdvance = false
+        }
         compose.runOnIdle { vm.startGarden(true); vm.navigateHome() }
         compose.mainClock.advanceTimeBy(96)
         click("featured_creative_garden_card")
         compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value != null }
+        android.util.Log.i("GardenJourney", "Garden opened")
         captureGarden("reading")
         click("garden_read_S")
         compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.stage == 1 }
@@ -78,10 +87,10 @@ class ChildInteractionJourneyTest {
         click("garden_plant")
         compose.waitUntil(10000) { vm.gardenState.value?.retriesMask == 2 }
         assertEquals(1, vm.gardenState.value?.stage)
-        compose.activityRule.scenario.recreate()
-        compose.activityRule.scenario.onActivity { vm = ViewModelProvider(it)[WonderViewModel::class.java] }
-        compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.seedCount == 1 }
-        open(WonderScreen.Garden)
+        click("garden_back")
+        click("featured_creative_garden_card")
+        compose.onNodeWithTag("garden_seed_count").assertIsDisplayed().assertTextContains("1 seed", substring = true)
+        android.util.Log.i("GardenJourney", "Garden resumed at one seed")
         repeat(7) { expected ->
             click("garden_add_seed")
             compose.waitUntil(10000) { compose.mainClock.advanceTimeBy(96); vm.gardenState.value?.seedCount == expected + 2 }

@@ -17,6 +17,6 @@ collect_evidence() {
   if [ -s "$output/garden.tar" ]; then tar -xf "$output/garden.tar" -C "$output" || true; fi
 }
 trap collect_evidence EXIT
-adb shell am instrument -w -r -e class com.example.qa.ChildInteractionJourneyTest \
+timeout 180s adb shell am instrument -w -r -e class com.example.qa.ChildInteractionJourneyTest \
   "$app_id.test/androidx.test.runner.AndroidJUnitRunner" | tee "$output/instrumentation.txt"
 grep -Eq '^OK \(5 tests\)' "$output/instrumentation.txt"
