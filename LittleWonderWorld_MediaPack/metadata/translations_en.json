@@ -1,0 +1,272 @@
+{
+  "language_code": "en",
+  "language_name": "English",
+  "batch": "Batch05",
+  "animals": {
+    "aquatic_dolphin": {
+      "name": "Dolphin",
+      "fact_1": "Dolphins are friendly, intelligent marine mammals that breathe air through a blowhole on top of their head!",
+      "fact_2": "Dolphins talk to each other under the sea using clicks and whistles and love leaping over waves.",
+      "activity": "Dolphin Wave Leap: Put your hands together in front and make a smooth jumping wave motion through the air!"
+    },
+    "aquatic_whale": {
+      "name": "Whale",
+      "fact_1": "The Blue Whale is the largest animal ever to live on Earth—even bigger than the biggest dinosaurs!",
+      "fact_2": "Whales sing deep, gentle underwater songs that travel for miles through the ocean.",
+      "activity": "Whale Spout Breath: Take a deep breath in and blow a gentle 'Whoosh' up toward the ceiling like a whale's water spout!"
+    },
+    "aquatic_shark": {
+      "name": "Shark",
+      "fact_1": "Sharks have skeletons made of flexible cartilage instead of hard bone, helping them swim swiftly!",
+      "fact_2": "A shark's triangular dorsal fin glides through the water to keep it balanced.",
+      "activity": "Fin Glide: Place one hand on top of your head like a shark fin and swim smoothly in a circle!"
+    },
+    "aquatic_octopus": {
+      "name": "Octopus",
+      "fact_1": "An octopus has eight flexible arms lined with little suction cups and three hearts!",
+      "fact_2": "Octopuses are masters of camouflage and can change their skin color in the blink of an eye.",
+      "activity": "Eight Wavy Arms: Wiggle all your fingers and arms like a graceful octopus swaying in the sea!"
+    },
+    "aquatic_sea_turtle": {
+      "name": "Sea Turtle",
+      "fact_1": "Sea turtles have a hard protective shell and flipper-like legs that let them glide gracefully through the ocean!",
+      "fact_2": "Mother sea turtles return to the exact same sandy beach where they were born to lay their eggs.",
+      "activity": "Turtle Flipper Swim: Sweep both arms slowly back and forth like a sea turtle gliding over coral reefs!"
+    },
+    "aquatic_crab": {
+      "name": "Crab",
+      "fact_1": "Crabs have ten legs—their front two legs have strong pincers called claws!",
+      "fact_2": "Because of the way their leg joints bend, crabs love walking sideways across the sandy beach.",
+      "activity": "Sideways Crab Walk: Pinch your thumbs and fingers like crab claws and take three steps sideways!"
+    },
+    "aquatic_jellyfish": {
+      "name": "Jellyfish",
+      "fact_1": "Jellyfish have umbrella-shaped bells that pulse gently to float through the water—and they are 95% water!",
+      "fact_2": "Jellyfish have drifted through Earth's oceans for hundreds of millions of years.",
+      "activity": "Umbrella Float: Open and close your hands softly like an umbrella pulsing gently in the ocean!"
+    },
+    "aquatic_seahorse": {
+      "name": "Seahorse",
+      "fact_1": "A seahorse is a tiny fish with a head shaped like a little horse and a curly tail that holds onto seagrass!",
+      "fact_2": "Unlike most animals, it is the father seahorse who carries the babies in a safe pouch until they hatch.",
+      "activity": "Curly Tail Hold: Curl one finger around your other wrist like a seahorse holding onto a piece of seagrass!"
+    },
+    "aquatic_starfish": {
+      "name": "Starfish",
+      "fact_1": "Most starfish have five arms radiating from the center like a star in the sky!",
+      "fact_2": "Underneath its arms, a starfish has hundreds of tiny tube feet that help it crawl and hold onto rocks.",
+      "activity": "Five-Point Star Pose: Stand with your legs apart and arms stretched wide so your whole body looks like a starfish!"
+    },
+    "insect_butterfly": {
+      "name": "Butterfly",
+      "fact_1": "Butterflies start life as tiny caterpillars before transforming inside a chrysalis into winged beauties!",
+      "fact_2": "Butterflies taste flower petals with special sensors on their feet.",
+      "activity": "Butterfly Flutter: Hook your thumbs together and spread your fingers to flutter your hands like butterfly wings!"
+    },
+    "insect_honeybee": {
+      "name": "Honeybee",
+      "fact_1": "Honeybees visit thousands of flowers to collect nectar and make golden sweet honey in hexagonal wax combs!",
+      "fact_2": "By carrying pollen from flower to flower, bees help apple, mango, and vegetable plants grow fruit.",
+      "activity": "Busy Bee Buzz: Wiggle your fingers like tiny wings and hum a happy 'Bzzzz-bzzzz' from flower to flower!"
+    },
+    "insect_ant": {
+      "name": "Ant",
+      "fact_1": "Ants are super strong—a tiny ant can lift and carry leaves and crumbs up to 20 times its own body weight!",
+      "fact_2": "Ants live in big underground cities called colonies and work together as a team.",
+      "activity": "Ant March: March in a neat straight line with your friends like hard-working little ants!"
+    },
+    "insect_dragonfly": {
+      "name": "Dragonfly",
+      "fact_1": "Dragonflies have four shimmering transparent wings that let them hover in mid-air and even fly backward!",
+      "fact_2": "Their big compound eyes allow them to see in almost every direction at once.",
+      "activity": "Hover Helicopter: Hold both arms out like shimmering dragonfly wings and freeze in a steady hover!"
+    },
+    "insect_grasshopper": {
+      "name": "Grasshopper",
+      "fact_1": "Grasshoppers have long, spring-loaded hind legs that launch them high into the air like little catapults!",
+      "fact_2": "They make cheerful summer music by rubbing their back legs against their wings.",
+      "activity": "Meadow Leap: Crouch down low like a grasshopper in the grass and jump up on the count of three!"
+    },
+    "insect_ladybug": {
+      "name": "Ladybug",
+      "fact_1": "Ladybugs look like shiny red domes with neat black polka dots—and underneath their red shell are hidden wings!",
+      "fact_2": "Gardeners love ladybugs because they protect flowers and vegetables from tiny pests.",
+      "activity": "Spot Count: Pretend to count seven little black spots on the back of your hand like a lucky red ladybug!"
+    },
+    "insect_spider": {
+      "name": "Spider",
+      "fact_1": "Spiders are arachnids with eight legs, and they spin intricate, silky geometric webs that sparkle with morning dew!",
+      "fact_2": "Spider silk is stronger than steel thread of the same thickness.",
+      "activity": "Itsy Bitsy Climb: Touch your left thumb to right pinky, then right thumb to left pinky to climb up like a little spider!"
+    },
+    "insect_snail": {
+      "name": "Snail",
+      "fact_1": "A snail carries its spiral shell house right on its back wherever it goes and can tuck inside when it wants to rest!",
+      "fact_2": "Snails glide smoothly on a single muscular foot and have tiny eyes at the tips of their tentacles.",
+      "activity": "Slow Snail Glide: Move across the floor in super-slow motion while carrying an imaginary spiral house on your back!"
+    },
+    "reptile_frog": {
+      "name": "Frog",
+      "fact_1": "Frogs are amphibians that hatch in water as swimming tadpoles and grow legs to hop onto land!",
+      "fact_2": "Tree frogs have sticky round pads on their toes to climb smooth green leaves.",
+      "activity": "Lily Pad Hop: Squat down on an imaginary green lily pad, say 'Ribbit!', and hop to the next pad!"
+    },
+    "reptile_crocodile": {
+      "name": "Crocodile",
+      "fact_1": "Crocodiles have tough, scaly armor plates along their backs that warm up like solar panels in the sun!",
+      "fact_2": "When a crocodile rests on the riverbank with its mouth open, it is actually cooling itself down.",
+      "activity": "Snap & Smile: Stretch both arms straight in front and open and close them gently like a resting crocodile basking in the sun!"
+    },
+    "reptile_snake": {
+      "name": "Snake",
+      "fact_1": "Snakes have no legs at all, yet they glide smoothly across the ground and up trees using special belly scales!",
+      "fact_2": "Snakes flick their forked tongues in and out to smell the air around them.",
+      "activity": "Slither Wave: Curve your hand in a smooth S-wave and make a gentle 'Ssssss' sound!"
+    },
+    "reptile_lizard": {
+      "name": "Lizard",
+      "fact_1": "Lizards are cold-blooded reptiles that love doing little push-ups on warm sunny rocks in the morning!",
+      "fact_2": "Many lizards can safely regrow their tail if it ever gets caught.",
+      "activity": "Sunny Rock Push-Up: Do two gentle push-ups on the floor like a lizard warming up in the morning sun!"
+    },
+    "reptile_chameleon": {
+      "name": "Chameleon",
+      "fact_1": "Chameleons can change the color of their skin to match their mood, temperature, and leafy surroundings!",
+      "fact_2": "A chameleon's two eyes can look in two completely different directions at the same time.",
+      "activity": "Color Change Pose: Freeze completely still next to something green or blue and pretend to blend right in like a chameleon!"
+    },
+    "reptile_tortoise": {
+      "name": "Tortoise",
+      "fact_1": "A tortoise walks on land with sturdy, elephant-like feet and carries a high, domed protective shell!",
+      "fact_2": "Tortoises walk slowly and peacefully, and they can live for more than 100 years!",
+      "activity": "Steady Tortoise Walk: Remember 'Slow and steady wins the race'—take four calm, patient tortoise steps!"
+    }
+  },
+  "objects": {
+    "everyday_ball": {
+      "name": "Ball",
+      "color": "Multi-colored (Red, Blue, Yellow, Green)",
+      "description": "A round, bouncy play ball is great for kicking, catching, and rolling with friends outdoors!"
+    },
+    "everyday_book": {
+      "name": "Book",
+      "color": "Blue / Colorful",
+      "description": "Books are filled with stories, pictures, and knowledge that take our imagination on wonderful adventures!"
+    },
+    "everyday_pencil": {
+      "name": "Pencil",
+      "color": "Yellow",
+      "description": "We hold a pencil to write letters, numbers, and draw creative pictures on paper."
+    },
+    "everyday_chair": {
+      "name": "Chair",
+      "color": "Natural Wood",
+      "description": "A sturdy chair has four legs and a backrest so we can sit comfortably while reading or eating."
+    },
+    "everyday_table": {
+      "name": "Table",
+      "color": "Warm Wood",
+      "description": "A table has a flat top where families gather to eat meals, study, and build puzzles."
+    },
+    "everyday_clock": {
+      "name": "Clock",
+      "color": "White / Blue",
+      "description": "A clock has numbers from 1 to 12 and moving hands that tell us the time of day!"
+    },
+    "everyday_umbrella": {
+      "name": "Umbrella",
+      "color": "Rainbow / Red",
+      "description": "An umbrella opens like a canopy overhead to keep us dry in the rain and shaded from hot sun."
+    },
+    "everyday_shoes": {
+      "name": "Shoes",
+      "color": "Blue / White",
+      "description": "We wear comfortable shoes on our feet to protect them when walking, running, and playing outside."
+    },
+    "everyday_bag": {
+      "name": "Bag",
+      "color": "Red / Blue",
+      "description": "A school backpack bag has shoulder straps to carry our books, pencils, and lunchbox neatly."
+    },
+    "everyday_bottle": {
+      "name": "Bottle",
+      "color": "Sky Blue",
+      "description": "A reusable water bottle keeps clean drinking water ready so we stay hydrated all day!"
+    },
+    "everyday_cup": {
+      "name": "Cup",
+      "color": "Yellow",
+      "description": "A cup has a curved handle so we can hold it safely to drink warm milk or water."
+    },
+    "everyday_spoon": {
+      "name": "Spoon",
+      "color": "Silver",
+      "description": "We use a clean spoon to scoop and eat soup, rice, yogurt, and cereal."
+    },
+    "everyday_toothbrush": {
+      "name": "Toothbrush",
+      "color": "Green / White",
+      "description": "A toothbrush has soft bristles that clean our teeth every morning and night for a bright smile!"
+    },
+    "everyday_bed": {
+      "name": "Bed",
+      "color": "Cozy Blue / White",
+      "description": "A cozy bed has a soft mattress, pillow, and blanket where we sleep and recharge every night."
+    },
+    "nature_rainbow": {
+      "name": "Rainbow",
+      "color": "7 Spectrum Colors (VIBGYOR)",
+      "description": "A rainbow appears in the sky when sunlight shines through raindrops, showing seven glowing colors!"
+    },
+    "nature_sun": {
+      "name": "Sun",
+      "color": "Golden Yellow",
+      "description": "The Sun is a bright star at the center of our solar system that gives Earth warm daylight and helps plants grow!"
+    },
+    "nature_moon": {
+      "name": "Moon",
+      "color": "Silver / White",
+      "description": "The Moon shines softly in the night sky and changes shape from a thin crescent to a bright full circle!"
+    },
+    "nature_stars": {
+      "name": "Stars",
+      "color": "Twinkling Gold / White",
+      "description": "Stars are distant suns twinkling across the night sky in beautiful patterns called constellations."
+    },
+    "nature_cloud": {
+      "name": "Cloud",
+      "color": "Fluffy White",
+      "description": "Clouds float in the sky and are made of tiny water droplets that bring refreshing rain to the Earth."
+    },
+    "nature_tree": {
+      "name": "Tree",
+      "color": "Green Canopy, Brown Trunk",
+      "description": "Trees have deep roots, a sturdy trunk, and green leaves that make fresh oxygen for us to breathe!"
+    },
+    "nature_flower": {
+      "name": "Flower",
+      "color": "Pink / Yellow",
+      "description": "Flowers bloom with colorful petals and sweet fragrance, inviting bees and butterflies to visit."
+    },
+    "nature_mountain": {
+      "name": "Mountain",
+      "color": "Rocky Gray / Snow White",
+      "description": "Mountains are giant landforms that rise high into the sky, often crowned with white snow at the peak!"
+    },
+    "nature_river": {
+      "name": "River",
+      "color": "Clear Blue",
+      "description": "A river is a flowing ribbon of fresh water that travels from mountains down through valleys to the sea."
+    },
+    "nature_waterfall": {
+      "name": "Waterfall",
+      "color": "Sparkling White / Blue",
+      "description": "A waterfall happens where a river tumbles over a high rocky cliff into a misty pool below!"
+    },
+    "nature_ocean": {
+      "name": "Ocean",
+      "color": "Deep Turquoise Blue",
+      "description": "The ocean is a vast body of salty water that covers most of our planet and is home to whales, dolphins, and coral reefs!"
+    }
+  }
+}

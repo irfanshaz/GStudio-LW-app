@@ -1,0 +1,11 @@
+1
+00:00:00,300 --> 00:00:04,800
+Welcome to space! At the center of our Solar System shines the Sun, holding eight planets in orbit.
+
+2
+00:00:05,300 --> 00:00:09,800
+Our home is Planet Earth, the third planet from the Sun, covered in blue oceans and green land!
+
+3
+00:00:10,300 --> 00:00:14,800
+From rocky Mars to ringed Saturn and giant Jupiter, eight amazing planets travel around our Sun!

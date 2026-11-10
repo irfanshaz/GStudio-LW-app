@@ -1,0 +1,92 @@
+{
+  "version": "2.0.0-batch.05",
+  "batch": "Batch05",
+  "total_lessons": 5,
+  "items": [
+    {
+      "id": "lesson_good_habits_brushing",
+      "title": "Good Habits — Brushing Teeth",
+      "duration_seconds": 15.0,
+      "video_filename": "videos/good_habits/brushing_teeth_lesson.mp4",
+      "video_format": "MP4 (H.264 High Profile Level 3.1 / AAC)",
+      "resolution": "1280x720",
+      "fps": 30,
+      "thumbnail_filename": "thumbnails/brushing_teeth_thumb.webp",
+      "narration_audio_filename": "audio/narration/brushing_teeth_lesson_en.mp3",
+      "subtitles": {
+        "en": "videos/good_habits/brushing_teeth_lesson.srt",
+        "te": "videos/good_habits/brushing_teeth_lesson.te.srt",
+        "hi": "videos/good_habits/brushing_teeth_lesson.hi.srt"
+      },
+      "status": "complete_validated"
+    },
+    {
+      "id": "lesson_good_habits_washing_hands",
+      "title": "Good Habits — Washing Hands",
+      "duration_seconds": 15.0,
+      "video_filename": "videos/good_habits/washing_hands_lesson.mp4",
+      "video_format": "MP4 (H.264 High Profile Level 3.1 / AAC)",
+      "resolution": "1280x720",
+      "fps": 30,
+      "thumbnail_filename": "thumbnails/washing_hands_thumb.webp",
+      "narration_audio_filename": "audio/narration/washing_hands_lesson_en.mp3",
+      "subtitles": {
+        "en": "videos/good_habits/washing_hands_lesson.srt",
+        "te": "videos/good_habits/washing_hands_lesson.te.srt",
+        "hi": "videos/good_habits/washing_hands_lesson.hi.srt"
+      },
+      "status": "complete_validated"
+    },
+    {
+      "id": "lesson_weather_and_seasons",
+      "title": "Weather and Seasons",
+      "duration_seconds": 15.0,
+      "video_filename": "videos/science/weather_and_seasons_lesson.mp4",
+      "video_format": "MP4 (H.264 High Profile Level 3.1 / AAC)",
+      "resolution": "1280x720",
+      "fps": 30,
+      "thumbnail_filename": "thumbnails/weather_and_seasons_thumb.webp",
+      "narration_audio_filename": "audio/narration/weather_and_seasons_lesson_en.mp3",
+      "subtitles": {
+        "en": "videos/science/weather_and_seasons_lesson.srt",
+        "te": "videos/science/weather_and_seasons_lesson.te.srt",
+        "hi": "videos/science/weather_and_seasons_lesson.hi.srt"
+      },
+      "status": "complete_validated"
+    },
+    {
+      "id": "lesson_day_and_night",
+      "title": "Day and Night",
+      "duration_seconds": 15.0,
+      "video_filename": "videos/science/day_and_night_lesson.mp4",
+      "video_format": "MP4 (H.264 High Profile Level 3.1 / AAC)",
+      "resolution": "1280x720",
+      "fps": 30,
+      "thumbnail_filename": "thumbnails/day_and_night_thumb.webp",
+      "narration_audio_filename": "audio/narration/day_and_night_lesson_en.mp3",
+      "subtitles": {
+        "en": "videos/science/day_and_night_lesson.srt",
+        "te": "videos/science/day_and_night_lesson.te.srt",
+        "hi": "videos/science/day_and_night_lesson.hi.srt"
+      },
+      "status": "complete_validated"
+    },
+    {
+      "id": "lesson_solar_system",
+      "title": "Our Solar System — Introduction",
+      "duration_seconds": 15.0,
+      "video_filename": "videos/science/solar_system_intro_lesson.mp4",
+      "video_format": "MP4 (H.264 High Profile Level 3.1 / AAC)",
+      "resolution": "1280x720",
+      "fps": 30,
+      "thumbnail_filename": "thumbnails/solar_system_intro_thumb.webp",
+      "narration_audio_filename": "audio/narration/solar_system_intro_lesson_en.mp3",
+      "subtitles": {
+        "en": "videos/science/solar_system_intro_lesson.srt",
+        "te": "videos/science/solar_system_intro_lesson.te.srt",
+        "hi": "videos/science/solar_system_intro_lesson.hi.srt"
+      },
+      "status": "complete_validated"
+    }
+  ]
+}

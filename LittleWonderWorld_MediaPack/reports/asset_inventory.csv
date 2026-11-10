@@ -1,0 +1,64 @@
+Asset ID,Category,File Path,Format,Dimensions / Duration,File Size (KB),Source Method,Licensing,QA Status
+aquatic_dolphin,animals/aquatic,animals/aquatic/dolphin.webp,WebP,1024x1024,64.5,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+insect_butterfly,animals/insects,animals/insects/butterfly.webp,WebP,1024x1024,132.9,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+reptile_frog,animals/reptiles,animals/reptiles/frog.webp,WebP,1024x1024,116.6,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_ball,objects/everyday,objects/everyday/ball.webp,WebP,1024x1024,26.8,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+nature_rainbow,objects/nature,objects/nature/rainbow.webp,WebP,1024x1024,179.9,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+lesson_good_habits_brushing,videos/good_habits,videos/good_habits/brushing_teeth_lesson.mp4,MP4 (H.264/AAC),1280x720 (15.0s),1174.1,FFmpeg H.264/AAC Pipeline,Royalty-Free Production Asset,PASSED
+thumb_lesson_good_habits_brushing,thumbnails,thumbnails/brushing_teeth_thumb.webp,WebP,1280x720,25.5,Gemini & Pillow 16:9 Crop,Royalty-Free Production Asset,PASSED
+audio_lesson_good_habits_brushing,audio/narration,audio/narration/brushing_teeth_lesson_en.mp3,MP3 (128kbps),15.0s,235.6,Acoustic Pentatonic Synthesis,Royalty-Free Production Asset,PASSED
+lesson_good_habits_washing_hands,videos/good_habits,videos/good_habits/washing_hands_lesson.mp4,MP4 (H.264/AAC),1280x720 (15.0s),1488.4,FFmpeg H.264/AAC Pipeline,Royalty-Free Production Asset,PASSED
+thumb_lesson_good_habits_washing_hands,thumbnails,thumbnails/washing_hands_thumb.webp,WebP,1280x720,38.7,Gemini & Pillow 16:9 Crop,Royalty-Free Production Asset,PASSED
+audio_lesson_good_habits_washing_hands,audio/narration,audio/narration/washing_hands_lesson_en.mp3,MP3 (128kbps),15.0s,235.6,Acoustic Pentatonic Synthesis,Royalty-Free Production Asset,PASSED
+lesson_weather_and_seasons,videos/science,videos/science/weather_and_seasons_lesson.mp4,MP4 (H.264/AAC),1280x720 (15.0s),1626.0,FFmpeg H.264/AAC Pipeline,Royalty-Free Production Asset,PASSED
+thumb_lesson_weather_and_seasons,thumbnails,thumbnails/weather_and_seasons_thumb.webp,WebP,1280x720,88.9,Gemini & Pillow 16:9 Crop,Royalty-Free Production Asset,PASSED
+audio_lesson_weather_and_seasons,audio/narration,audio/narration/weather_and_seasons_lesson_en.mp3,MP3 (128kbps),15.0s,235.6,Acoustic Pentatonic Synthesis,Royalty-Free Production Asset,PASSED
+lesson_day_and_night,videos/science,videos/science/day_and_night_lesson.mp4,MP4 (H.264/AAC),1280x720 (15.0s),1438.1,FFmpeg H.264/AAC Pipeline,Royalty-Free Production Asset,PASSED
+thumb_lesson_day_and_night,thumbnails,thumbnails/day_and_night_thumb.webp,WebP,1280x720,88.9,Gemini & Pillow 16:9 Crop,Royalty-Free Production Asset,PASSED
+audio_lesson_day_and_night,audio/narration,audio/narration/day_and_night_lesson_en.mp3,MP3 (128kbps),15.0s,235.6,Acoustic Pentatonic Synthesis,Royalty-Free Production Asset,PASSED
+lesson_solar_system,videos/science,videos/science/solar_system_intro_lesson.mp4,MP4 (H.264/AAC),1280x720 (15.0s),1012.5,FFmpeg H.264/AAC Pipeline,Royalty-Free Production Asset,PASSED
+thumb_lesson_solar_system,thumbnails,thumbnails/solar_system_intro_thumb.webp,WebP,1280x720,88.9,Gemini & Pillow 16:9 Crop,Royalty-Free Production Asset,PASSED
+audio_lesson_solar_system,audio/narration,audio/narration/solar_system_intro_lesson_en.mp3,MP3 (128kbps),15.0s,235.6,Acoustic Pentatonic Synthesis,Royalty-Free Production Asset,PASSED
+aquatic_whale,animals/aquatic,animals/aquatic/whale.webp,WebP,1024x1024,34.4,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+aquatic_shark,animals/aquatic,animals/aquatic/shark.webp,WebP,1024x1024,78.2,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+aquatic_octopus,animals/aquatic,animals/aquatic/octopus.webp,WebP,1024x1024,152.6,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+aquatic_sea_turtle,animals/aquatic,animals/aquatic/sea_turtle.webp,WebP,1024x1024,96.2,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+aquatic_crab,animals/aquatic,animals/aquatic/crab.webp,WebP,1024x1024,85.3,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+aquatic_jellyfish,animals/aquatic,animals/aquatic/jellyfish.webp,WebP,1024x1024,67.7,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+aquatic_seahorse,animals/aquatic,animals/aquatic/seahorse.webp,WebP,1024x1024,50.2,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+aquatic_starfish,animals/aquatic,animals/aquatic/starfish.webp,WebP,1024x1024,113.0,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+insect_honeybee,animals/insects,animals/insects/honeybee.webp,WebP,1024x1024,79.7,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+insect_ant,animals/insects,animals/insects/ant.webp,WebP,1024x1024,76.4,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+insect_dragonfly,animals/insects,animals/insects/dragonfly.webp,WebP,1024x1024,74.2,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+insect_grasshopper,animals/insects,animals/insects/grasshopper.webp,WebP,1024x1024,50.4,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+insect_ladybug,animals/insects,animals/insects/ladybug.webp,WebP,1024x1024,71.3,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+insect_spider,animals/insects,animals/insects/spider.webp,WebP,1024x1024,111.3,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+insect_snail,animals/insects,animals/insects/snail.webp,WebP,1024x1024,89.4,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+reptile_crocodile,animals/reptiles,animals/reptiles/crocodile.webp,WebP,1024x1024,150.2,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+reptile_snake,animals/reptiles,animals/reptiles/snake.webp,WebP,1024x1024,212.1,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+reptile_lizard,animals/reptiles,animals/reptiles/lizard.webp,WebP,1024x1024,156.9,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+reptile_chameleon,animals/reptiles,animals/reptiles/chameleon.webp,WebP,1024x1024,111.5,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+reptile_tortoise,animals/reptiles,animals/reptiles/tortoise.webp,WebP,1024x1024,174.3,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_book,objects/everyday,objects/everyday/book.webp,WebP,1024x1024,58.5,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_pencil,objects/everyday,objects/everyday/pencil.webp,WebP,1024x1024,10.8,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_chair,objects/everyday,objects/everyday/chair.webp,WebP,1024x1024,13.2,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_table,objects/everyday,objects/everyday/table.webp,WebP,1024x1024,16.3,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_clock,objects/everyday,objects/everyday/clock.webp,WebP,1024x1024,25.4,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_umbrella,objects/everyday,objects/everyday/umbrella.webp,WebP,1024x1024,19.4,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_shoes,objects/everyday,objects/everyday/shoes.webp,WebP,1024x1024,54.8,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_bag,objects/everyday,objects/everyday/bag.webp,WebP,1024x1024,63.8,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_bottle,objects/everyday,objects/everyday/bottle.webp,WebP,1024x1024,7.7,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_cup,objects/everyday,objects/everyday/cup.webp,WebP,1024x1024,9.0,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_spoon,objects/everyday,objects/everyday/spoon.webp,WebP,1024x1024,11.4,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_toothbrush,objects/everyday,objects/everyday/toothbrush.webp,WebP,1024x1024,9.3,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+everyday_bed,objects/everyday,objects/everyday/bed.webp,WebP,1024x1024,18.2,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+nature_sun,objects/nature,objects/nature/sun.webp,WebP,1024x1024,7.8,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+nature_moon,objects/nature,objects/nature/moon.webp,WebP,1024x1024,28.4,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+nature_stars,objects/nature,objects/nature/stars.webp,WebP,1024x1024,121.7,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+nature_cloud,objects/nature,objects/nature/cloud.webp,WebP,1024x1024,15.4,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+nature_tree,objects/nature,objects/nature/tree.webp,WebP,1024x1024,205.2,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+nature_flower,objects/nature,objects/nature/flower.webp,WebP,1024x1024,41.8,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+nature_mountain,objects/nature,objects/nature/mountain.webp,WebP,1024x1024,206.1,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+nature_river,objects/nature,objects/nature/river.webp,WebP,1024x1024,222.4,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+nature_waterfall,objects/nature,objects/nature/waterfall.webp,WebP,1024x1024,261.6,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED
+nature_ocean,objects/nature,objects/nature/ocean.webp,WebP,1024x1024,129.1,Google Gemini Synthesis,Royalty-Free Production Asset,PASSED

@@ -1,0 +1,272 @@
+{
+  "language_code": "te",
+  "language_name": "Telugu",
+  "batch": "Batch05",
+  "animals": {
+    "aquatic_dolphin": {
+      "name": "డాల్ఫిన్ (Dolphin)",
+      "fact_1": "డాల్ఫిన్ చాలా తెలివైన సముద్ర జీవి మరియు అలలపై ఆనందంగా ఎగురుతుంది!",
+      "fact_2": "Dolphins talk to each other under the sea using clicks and whistles and love leaping over waves.",
+      "activity": "Dolphin Wave Leap: Put your hands together in front and make a smooth jumping wave motion through the air!"
+    },
+    "aquatic_whale": {
+      "name": "తిమింగలం (Thimingalam)",
+      "fact_1": "నీలి తిమింగలం ప్రపంచంలోనే అత్యంత భారీ పరిమాణం కలిగిన జీవి!",
+      "fact_2": "Whales sing deep, gentle underwater songs that travel for miles through the ocean.",
+      "activity": "Whale Spout Breath: Take a deep breath in and blow a gentle 'Whoosh' up toward the ceiling like a whale's water spout!"
+    },
+    "aquatic_shark": {
+      "name": "సొరచేప (Sorachepa)",
+      "fact_1": "సొరచేప సముద్రంలో చాలా వేగంగా ఈదే శక్తివంతమైన చేప!",
+      "fact_2": "A shark's triangular dorsal fin glides through the water to keep it balanced.",
+      "activity": "Fin Glide: Place one hand on top of your head like a shark fin and swim smoothly in a circle!"
+    },
+    "aquatic_octopus": {
+      "name": "ఆక్టోపస్ (Octopus)",
+      "fact_1": "ఆక్టోపస్‌కు ఎనిమిది చేతులు (Tentacles) ఉంటాయి!",
+      "fact_2": "Octopuses are masters of camouflage and can change their skin color in the blink of an eye.",
+      "activity": "Eight Wavy Arms: Wiggle all your fingers and arms like a graceful octopus swaying in the sea!"
+    },
+    "aquatic_sea_turtle": {
+      "name": "సముద్ర తాబేలు (Samudra Taabelu)",
+      "fact_1": "సముద్ర తాబేలు గట్టి చిప్పను కలిగి ఉండి నీటిలో ప్రశాంతంగా ఈదుతుంది!",
+      "fact_2": "Mother sea turtles return to the exact same sandy beach where they were born to lay their eggs.",
+      "activity": "Turtle Flipper Swim: Sweep both arms slowly back and forth like a sea turtle gliding over coral reefs!"
+    },
+    "aquatic_crab": {
+      "name": "పీత (Peetha)",
+      "fact_1": "పీత సముద్రపు ఒడ్డున ఇసుకలో పక్కకు నడుస్తూ వెళ్తుంది!",
+      "fact_2": "Because of the way their leg joints bend, crabs love walking sideways across the sandy beach.",
+      "activity": "Sideways Crab Walk: Pinch your thumbs and fingers like crab claws and take three steps sideways!"
+    },
+    "aquatic_jellyfish": {
+      "name": "జెల్లీఫిష్ (Jellyfish)",
+      "fact_1": "జెల్లీఫిష్ గొడుగు ఆకారంలో ఉండి నీటిలో తేలుతూ కదులుతుంది!",
+      "fact_2": "Jellyfish have drifted through Earth's oceans for hundreds of millions of years.",
+      "activity": "Umbrella Float: Open and close your hands softly like an umbrella pulsing gently in the ocean!"
+    },
+    "aquatic_seahorse": {
+      "name": "సముద్రపు గుర్రం (Seahorse)",
+      "fact_1": "సీహార్స్ తల గుర్రం వలే ఉండి తోకతో సముద్రపు మొక్కలను పట్టుకుంటుంది!",
+      "fact_2": "Unlike most animals, it is the father seahorse who carries the babies in a safe pouch until they hatch.",
+      "activity": "Curly Tail Hold: Curl one finger around your other wrist like a seahorse holding onto a piece of seagrass!"
+    },
+    "aquatic_starfish": {
+      "name": "స్టార్ ఫిష్ / నక్షత్ర చేప (Starfish)",
+      "fact_1": "స్టార్ ఫిష్ నక్షత్రం ఆకారంలో ఐదు చేతులతో సముద్రపు అడుగున ఉంటుంది!",
+      "fact_2": "Underneath its arms, a starfish has hundreds of tiny tube feet that help it crawl and hold onto rocks.",
+      "activity": "Five-Point Star Pose: Stand with your legs apart and arms stretched wide so your whole body looks like a starfish!"
+    },
+    "insect_butterfly": {
+      "name": "సీతాకోకచిలుక (Seethakokachiluka)",
+      "fact_1": "సీతాకోకచిలుక రంగురంగుల రెక్కలతో పూల నుండి తేనెను సేకరిస్తుంది!",
+      "fact_2": "Butterflies taste flower petals with special sensors on their feet.",
+      "activity": "Butterfly Flutter: Hook your thumbs together and spread your fingers to flutter your hands like butterfly wings!"
+    },
+    "insect_honeybee": {
+      "name": "తేనెటీగ (Theneteega)",
+      "fact_1": "తేనెటీగలు పూల నుండి మకరందాన్ని సేకరించి తియ్యని తేనెను తయారు చేస్తాయి!",
+      "fact_2": "By carrying pollen from flower to flower, bees help apple, mango, and vegetable plants grow fruit.",
+      "activity": "Busy Bee Buzz: Wiggle your fingers like tiny wings and hum a happy 'Bzzzz-bzzzz' from flower to flower!"
+    },
+    "insect_ant": {
+      "name": "చీమ (Cheema)",
+      "fact_1": "చీమ చాలా చిన్నదైనా తనకంటే ఎక్కువ బరువును మోస్తూ క్రమశిక్షణతో నడుస్తుంది!",
+      "fact_2": "Ants live in big underground cities called colonies and work together as a team.",
+      "activity": "Ant March: March in a neat straight line with your friends like hard-working little ants!"
+    },
+    "insect_dragonfly": {
+      "name": "తూనీగ (Thooneega)",
+      "fact_1": "తూనీగ నాలుగు మెరిసే రెక్కలతో గాలిలో వేగంగా ఎగురుతుంది!",
+      "fact_2": "Their big compound eyes allow them to see in almost every direction at once.",
+      "activity": "Hover Helicopter: Hold both arms out like shimmering dragonfly wings and freeze in a steady hover!"
+    },
+    "insect_grasshopper": {
+      "name": "మిడత (Midatha)",
+      "fact_1": "మిడత పచ్చని గడ్డిలో ఉంటూ తన వెనుక కాళ్లతో చాలా ఎత్తుకు గెంతుతుంది!",
+      "fact_2": "They make cheerful summer music by rubbing their back legs against their wings.",
+      "activity": "Meadow Leap: Crouch down low like a grasshopper in the grass and jump up on the count of three!"
+    },
+    "insect_ladybug": {
+      "name": "లేడీబగ్ / ఆరుద్ర పురుగు (Ladybug)",
+      "fact_1": "లేడీబగ్ ఎర్రని శరీరంపై నల్లని చుక్కలతో మొక్కలను కాపాడుతుంది!",
+      "fact_2": "Gardeners love ladybugs because they protect flowers and vegetables from tiny pests.",
+      "activity": "Spot Count: Pretend to count seven little black spots on the back of your hand like a lucky red ladybug!"
+    },
+    "insect_spider": {
+      "name": "సాలెపురుగు (Saalepurugu)",
+      "fact_1": "సాలెపురుగుకు ఎనిమిది కాళ్లు ఉంటాయి మరియు అందమైన గూడు అల్లుతుంది!",
+      "fact_2": "Spider silk is stronger than steel thread of the same thickness.",
+      "activity": "Itsy Bitsy Climb: Touch your left thumb to right pinky, then right thumb to left pinky to climb up like a little spider!"
+    },
+    "insect_snail": {
+      "name": "నత్త (Nattha)",
+      "fact_1": "నత్త తన వీపుపై గవ్వలాంటి ఇంటిని మోస్తూ చాలా నెమ్మదిగా కదులుతుంది!",
+      "fact_2": "Snails glide smoothly on a single muscular foot and have tiny eyes at the tips of their tentacles.",
+      "activity": "Slow Snail Glide: Move across the floor in super-slow motion while carrying an imaginary spiral house on your back!"
+    },
+    "reptile_frog": {
+      "name": "కప్ప (Kappa)",
+      "fact_1": "కప్ప నీటిలోనూ, నేలపైనా జీవించగలదు మరియు వర్షాకాలంలో 'బెకబెక' అంటుంది!",
+      "fact_2": "Tree frogs have sticky round pads on their toes to climb smooth green leaves.",
+      "activity": "Lily Pad Hop: Squat down on an imaginary green lily pad, say 'Ribbit!', and hop to the next pad!"
+    },
+    "reptile_crocodile": {
+      "name": "మొసలి (Mosali)",
+      "fact_1": "మొసలి నదులలో ఈదుతుంది మరియు గట్టి పొలుసుల చర్మాన్ని కలిగి ఉంటుంది!",
+      "fact_2": "When a crocodile rests on the riverbank with its mouth open, it is actually cooling itself down.",
+      "activity": "Snap & Smile: Stretch both arms straight in front and open and close them gently like a resting crocodile basking in the sun!"
+    },
+    "reptile_snake": {
+      "name": "పాము (Paamu)",
+      "fact_1": "పాముకు కాళ్లు ఉండవు, అది మెలికలు తిరుగుతూ నేలపై పాకుతుంది!",
+      "fact_2": "Snakes flick their forked tongues in and out to smell the air around them.",
+      "activity": "Slither Wave: Curve your hand in a smooth S-wave and make a gentle 'Ssssss' sound!"
+    },
+    "reptile_lizard": {
+      "name": "బల్లి / తొండ (Balli)",
+      "fact_1": "బల్లి గోడలపై మరియు చెట్లపై చురుకుగా పాకుతూ పురుగులను తింటుంది!",
+      "fact_2": "Many lizards can safely regrow their tail if it ever gets caught.",
+      "activity": "Sunny Rock Push-Up: Do two gentle push-ups on the floor like a lizard warming up in the morning sun!"
+    },
+    "reptile_chameleon": {
+      "name": "ఊసరవెల్లి (Oosaravelli)",
+      "fact_1": "ఊసరవెల్లి తన చుట్టూ ఉన్న పరిసరాలకు తగ్గట్టుగా రంగులను మార్చుకుంటుంది!",
+      "fact_2": "A chameleon's two eyes can look in two completely different directions at the same time.",
+      "activity": "Color Change Pose: Freeze completely still next to something green or blue and pretend to blend right in like a chameleon!"
+    },
+    "reptile_tortoise": {
+      "name": "తాబేలు (Taabelu)",
+      "fact_1": "తాబేలు నెమ్మదిగా నడిచినా ఎంతో పట్టుదలతో ఉంటుంది మరియు ఎక్కువ కాలం జీవిస్తుంది!",
+      "fact_2": "Tortoises walk slowly and peacefully, and they can live for more than 100 years!",
+      "activity": "Steady Tortoise Walk: Remember 'Slow and steady wins the race'—take four calm, patient tortoise steps!"
+    }
+  },
+  "objects": {
+    "everyday_ball": {
+      "name": "బంతి (Banthi)",
+      "color": "Multi-colored (Red, Blue, Yellow, Green)",
+      "description": "A round, bouncy play ball is great for kicking, catching, and rolling with friends outdoors!"
+    },
+    "everyday_book": {
+      "name": "పుస్తకం (Pusthakam)",
+      "color": "Blue / Colorful",
+      "description": "Books are filled with stories, pictures, and knowledge that take our imagination on wonderful adventures!"
+    },
+    "everyday_pencil": {
+      "name": "పెన్సిల్ (Pencil)",
+      "color": "Yellow",
+      "description": "We hold a pencil to write letters, numbers, and draw creative pictures on paper."
+    },
+    "everyday_chair": {
+      "name": "కుర్చీ (Kurchee)",
+      "color": "Natural Wood",
+      "description": "A sturdy chair has four legs and a backrest so we can sit comfortably while reading or eating."
+    },
+    "everyday_table": {
+      "name": "బల్ల / టేబుల్ (Table)",
+      "color": "Warm Wood",
+      "description": "A table has a flat top where families gather to eat meals, study, and build puzzles."
+    },
+    "everyday_clock": {
+      "name": "గడియారం (Gadiyaaram)",
+      "color": "White / Blue",
+      "description": "A clock has numbers from 1 to 12 and moving hands that tell us the time of day!"
+    },
+    "everyday_umbrella": {
+      "name": "గొడుగు (Godugu)",
+      "color": "Rainbow / Red",
+      "description": "An umbrella opens like a canopy overhead to keep us dry in the rain and shaded from hot sun."
+    },
+    "everyday_shoes": {
+      "name": "బూట్లు / చెప్పులు (Shoes)",
+      "color": "Blue / White",
+      "description": "We wear comfortable shoes on our feet to protect them when walking, running, and playing outside."
+    },
+    "everyday_bag": {
+      "name": "సంచి / బ్యాగు (Bag)",
+      "color": "Red / Blue",
+      "description": "A school backpack bag has shoulder straps to carry our books, pencils, and lunchbox neatly."
+    },
+    "everyday_bottle": {
+      "name": "నీళ్ల సీసా (Bottle)",
+      "color": "Sky Blue",
+      "description": "A reusable water bottle keeps clean drinking water ready so we stay hydrated all day!"
+    },
+    "everyday_cup": {
+      "name": "కప్పు (Cup)",
+      "color": "Yellow",
+      "description": "A cup has a curved handle so we can hold it safely to drink warm milk or water."
+    },
+    "everyday_spoon": {
+      "name": "చెంచా (Chenchaa)",
+      "color": "Silver",
+      "description": "We use a clean spoon to scoop and eat soup, rice, yogurt, and cereal."
+    },
+    "everyday_toothbrush": {
+      "name": "టూత్ బ్రష్ (Toothbrush)",
+      "color": "Green / White",
+      "description": "A toothbrush has soft bristles that clean our teeth every morning and night for a bright smile!"
+    },
+    "everyday_bed": {
+      "name": "మంచం / పడక (Mancham)",
+      "color": "Cozy Blue / White",
+      "description": "A cozy bed has a soft mattress, pillow, and blanket where we sleep and recharge every night."
+    },
+    "nature_rainbow": {
+      "name": "ఇంద్రధనస్సు (Indradhanassu)",
+      "color": "7 Spectrum Colors (VIBGYOR)",
+      "description": "A rainbow appears in the sky when sunlight shines through raindrops, showing seven glowing colors!"
+    },
+    "nature_sun": {
+      "name": "సూర్యుడు (Sooryudu)",
+      "color": "Golden Yellow",
+      "description": "The Sun is a bright star at the center of our solar system that gives Earth warm daylight and helps plants grow!"
+    },
+    "nature_moon": {
+      "name": "చంద్రుడు (Chandrudu)",
+      "color": "Silver / White",
+      "description": "The Moon shines softly in the night sky and changes shape from a thin crescent to a bright full circle!"
+    },
+    "nature_stars": {
+      "name": "నక్షత్రాలు (Nakshathraalu)",
+      "color": "Twinkling Gold / White",
+      "description": "Stars are distant suns twinkling across the night sky in beautiful patterns called constellations."
+    },
+    "nature_cloud": {
+      "name": "మేఘం (Megham)",
+      "color": "Fluffy White",
+      "description": "Clouds float in the sky and are made of tiny water droplets that bring refreshing rain to the Earth."
+    },
+    "nature_tree": {
+      "name": "చెట్టు (Chettu)",
+      "color": "Green Canopy, Brown Trunk",
+      "description": "Trees have deep roots, a sturdy trunk, and green leaves that make fresh oxygen for us to breathe!"
+    },
+    "nature_flower": {
+      "name": "పువ్వు (Puvvu)",
+      "color": "Pink / Yellow",
+      "description": "Flowers bloom with colorful petals and sweet fragrance, inviting bees and butterflies to visit."
+    },
+    "nature_mountain": {
+      "name": "పర్వతం / కొండ (Parvatham)",
+      "color": "Rocky Gray / Snow White",
+      "description": "Mountains are giant landforms that rise high into the sky, often crowned with white snow at the peak!"
+    },
+    "nature_river": {
+      "name": "నది (Nadi)",
+      "color": "Clear Blue",
+      "description": "A river is a flowing ribbon of fresh water that travels from mountains down through valleys to the sea."
+    },
+    "nature_waterfall": {
+      "name": "జలపాతం (Jalapaatham)",
+      "color": "Sparkling White / Blue",
+      "description": "A waterfall happens where a river tumbles over a high rocky cliff into a misty pool below!"
+    },
+    "nature_ocean": {
+      "name": "మహాసముద్రం (Mahaasamudram)",
+      "color": "Deep Turquoise Blue",
+      "description": "The ocean is a vast body of salty water that covers most of our planet and is home to whales, dolphins, and coral reefs!"
+    }
+  }
+}

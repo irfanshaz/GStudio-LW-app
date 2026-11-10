@@ -1,0 +1,759 @@
+{
+  "media_pack_name": "Little Wonder World 2.0 — Batch05",
+  "pack_version": "2.0.0-batch.05",
+  "batch_number": 5,
+  "creation_date": "2026-11-04",
+  "target_application": "Little Wonder World Android App (Offline)",
+  "supported_languages": [
+    "en",
+    "te",
+    "hi"
+  ],
+  "total_packaged_files": 94,
+  "assets": [
+    {
+      "path": "INTEGRATION_INSTRUCTIONS.md",
+      "file_type": "text/markdown",
+      "file_size_bytes": 911,
+      "file_size_kb": 0.89,
+      "sha256": "81a8814bbbe430e97fb8f54ecd2c12f72ace2962139001ae3d66937dd0796817",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "LICENSES.csv",
+      "file_type": "text/csv",
+      "file_size_bytes": 9844,
+      "file_size_kb": 9.61,
+      "sha256": "30307342bd217962aa7ab31ba91c352fcde1137a542894ffbfbf79a3238d51fc",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "QA_REPORT.md",
+      "file_type": "text/markdown",
+      "file_size_bytes": 1035,
+      "file_size_kb": 1.01,
+      "sha256": "788b0e1646e963863f98e6a4a2785eeab2a890609d87ae85e5cbbee0bbcab8da",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "README.md",
+      "file_type": "text/markdown",
+      "file_size_bytes": 555,
+      "file_size_kb": 0.54,
+      "sha256": "c46d2e016f87745a5615c7cfd4a6ea7860992b78e89951102eaa485ae88a747c",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/aquatic/crab.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 76192,
+      "file_size_kb": 74.41,
+      "sha256": "25f0934744e82a224b113f20e0d536a6a1555f8842643e004ba7d964aca4b4f3",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/aquatic/dolphin.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 26566,
+      "file_size_kb": 25.94,
+      "sha256": "64b9a81846660c765bc09d08d1c2c29cbaad79269dcb0067a04757d16b7898e4",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/aquatic/jellyfish.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 58974,
+      "file_size_kb": 57.59,
+      "sha256": "de6d737a70b542cb8246c3884f2c40b3e16ba477ad3b01ecf1491055a85a4a68",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/aquatic/octopus.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 142028,
+      "file_size_kb": 138.7,
+      "sha256": "29c9064e732737d473674f31d5d5ed981c066ae6780323a75bb4b4a00142fc5e",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/aquatic/sea_turtle.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 87072,
+      "file_size_kb": 85.03,
+      "sha256": "f16724a79372b2497a6aa7cdc1c48bd46708c049cdf9f3a6f6fd149eab617944",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/aquatic/seahorse.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 44968,
+      "file_size_kb": 43.91,
+      "sha256": "119a14bd71a7c0b888e0ee7c87ec9ff0db3a28eabd6f5028a9c202e73f7708c1",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/aquatic/shark.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 71476,
+      "file_size_kb": 69.8,
+      "sha256": "67466becc0102799b17299c0d7bfef47b59d1b09b5d73aced462489b9694f135",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/aquatic/starfish.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 102888,
+      "file_size_kb": 100.48,
+      "sha256": "fb8127be5241476a96addce3129ff61331ae405181d8c82492f4a861b33eb1ed",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/aquatic/whale.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 29282,
+      "file_size_kb": 28.6,
+      "sha256": "1ba7188c63de138dd79b7a13b78a771509e2b8a8b2e4f75b7956308f9e4a5d31",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/insects/ant.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 69140,
+      "file_size_kb": 67.52,
+      "sha256": "90dab9748a979a02c6fc6abae2d266d644730b483e4986b0034db99595f1b7c4",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/insects/butterfly.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 73996,
+      "file_size_kb": 72.26,
+      "sha256": "7d2058935da0c06350e11f0f426cac87aa3122f92c4eba8612fc166e9f1c164e",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/insects/dragonfly.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 69352,
+      "file_size_kb": 67.73,
+      "sha256": "df52f2666a797631d0cdb38769c044def3a94d9ce1857c9d844d5b1b0700a5b1",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/insects/grasshopper.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 47030,
+      "file_size_kb": 45.93,
+      "sha256": "442c3941a504f0f1eadd2e76b4baeb30dede382549c83041934c74d8d5a4d5f4",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/insects/honeybee.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 73192,
+      "file_size_kb": 71.48,
+      "sha256": "b0c11e3ad703eb34823f5f0a25ae12878fabfad05d88cfb7c560da7533e8b69b",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/insects/ladybug.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 64376,
+      "file_size_kb": 62.87,
+      "sha256": "b76ddd0a76fdd921debd5b6df1ac74e826a159702a483e2dd57a5c0e5ce38ddf",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/insects/snail.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 83204,
+      "file_size_kb": 81.25,
+      "sha256": "fc5240ece14efdc00d1556ada2228a31454b343c722883146e72791ea8742b47",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/insects/spider.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 102984,
+      "file_size_kb": 100.57,
+      "sha256": "12a8fa299363c4b082febfa278fe81075852d1102217436e28be2dfa81277a85",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/reptiles/chameleon.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 104246,
+      "file_size_kb": 101.8,
+      "sha256": "dbf2ffaf6e4222c6afd4c3f5f641e3554c1df6a1effe163914bd4a2d65674f7b",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/reptiles/crocodile.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 139656,
+      "file_size_kb": 136.38,
+      "sha256": "caf5869faf1ae4feb7037c3444c68c0e920371f39b43fac6a1b5fbec38bba339",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/reptiles/frog.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 57764,
+      "file_size_kb": 56.41,
+      "sha256": "80343ffddc2028b5521a5d4026ae2ddc7a469ce34051b396cf349463a470e2a1",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/reptiles/lizard.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 147862,
+      "file_size_kb": 144.4,
+      "sha256": "e71674158f26d4d79186daf1246d05a4de3ec0ae82bb91f509aa6ce40dd5e414",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/reptiles/snake.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 201444,
+      "file_size_kb": 196.72,
+      "sha256": "aee20a41e5e2735ef349e9296a296b560ec2e6c088f78c15a829964106d818f0",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "animals/reptiles/tortoise.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 164102,
+      "file_size_kb": 160.26,
+      "sha256": "e07e8d8104e85760e075226cc017b38486e6429e3eb1fb03c7203399fd6a8444",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "audio/narration/brushing_teeth_lesson_en.mp3",
+      "file_type": "audio/mpeg",
+      "file_size_bytes": 241206,
+      "file_size_kb": 235.55,
+      "sha256": "f24d2112c615db56e400b6e1d8e6ba699462304fb8438babddec80bafffce706",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "audio/narration/day_and_night_lesson_en.mp3",
+      "file_type": "audio/mpeg",
+      "file_size_bytes": 241206,
+      "file_size_kb": 235.55,
+      "sha256": "7bc10a1eda268df838d274c2e5f764fff55c3fdb9c2011d5670da8b56c10349d",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "audio/narration/solar_system_intro_lesson_en.mp3",
+      "file_type": "audio/mpeg",
+      "file_size_bytes": 241206,
+      "file_size_kb": 235.55,
+      "sha256": "4e89ce115fbb017f9a6b3d390d77f741868747a3d5090f3f075cbb4fa900c58b",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "audio/narration/washing_hands_lesson_en.mp3",
+      "file_type": "audio/mpeg",
+      "file_size_bytes": 241206,
+      "file_size_kb": 235.55,
+      "sha256": "5a8dbebe4d90957c9a866ea459a8f011ab82a805e193e9cfd44b4249d50290a4",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "audio/narration/weather_and_seasons_lesson_en.mp3",
+      "file_type": "audio/mpeg",
+      "file_size_bytes": 241206,
+      "file_size_kb": 235.55,
+      "sha256": "eb662286b73424681210e593ac016034583ef1fdc55055278fde30723e40000b",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/animals.json",
+      "file_type": "application/json",
+      "file_size_bytes": 31031,
+      "file_size_kb": 30.3,
+      "sha256": "8b149455cbbed2499d1057730043031d83767733346bf26e285d40d16cc24359",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/lessons.json",
+      "file_type": "application/json",
+      "file_size_bytes": 3711,
+      "file_size_kb": 3.62,
+      "sha256": "980dab15468e35179a35dc274cb54e52f7a2da4aafb858c4dd905fe9687897e0",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/objects.json",
+      "file_type": "application/json",
+      "file_size_bytes": 10533,
+      "file_size_kb": 10.29,
+      "sha256": "9dc5c6c7ecac42e31649bae44132ea8d4fff7cbd90bec290f770abd4ded5b320",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/translations_en.json",
+      "file_type": "application/json",
+      "file_size_bytes": 14651,
+      "file_size_kb": 14.31,
+      "sha256": "2f8a49c966f5c970c7b0f9e1c11dd337d1651015f1dd5f0805fb66531e45d167",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/translations_hi.json",
+      "file_type": "application/json",
+      "file_size_bytes": 17234,
+      "file_size_kb": 16.83,
+      "sha256": "b1557dd5cac235a6cf65663179888d57c7207e5a6eb6d2bf13b6cf4f4a019690",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "metadata/translations_te.json",
+      "file_type": "application/json",
+      "file_size_bytes": 17612,
+      "file_size_kb": 17.2,
+      "sha256": "ecee6400ffc432649b659c94c7b73155834b8f840419bfef6968b1bc19ed1e6f",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/bag.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 59408,
+      "file_size_kb": 58.02,
+      "sha256": "9f6337bcd4fe8b9b43e5dd48ea0c5f1bef0d75895e232e6e4747b502c0e98167",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/ball.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 14128,
+      "file_size_kb": 13.8,
+      "sha256": "38179fa08ec196391fb15300b1995f0c6a8dc8c50e220c5ed862a14b705f26cb",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/bed.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 16178,
+      "file_size_kb": 15.8,
+      "sha256": "1f31d927e11d9bfab7f723542ab629050920bccdb61100786ff05aaaa7202b91",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/book.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 53504,
+      "file_size_kb": 52.25,
+      "sha256": "a09852611ec9834f56371ab38084a629e38ea6d5756249bdbae265f923367579",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/bottle.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 7226,
+      "file_size_kb": 7.06,
+      "sha256": "6e6f7b0b6c9db35607c12d8d4adcc5bfb792f80832bb4f0f0cd4c82c37e44b03",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/chair.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 11544,
+      "file_size_kb": 11.27,
+      "sha256": "c13b25e01d2c7086c2df3d24b2ed329be6e90552dc7bcbeb0bcbedf5218a6d5b",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/clock.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 23794,
+      "file_size_kb": 23.24,
+      "sha256": "e44d592c764161082b3f5b940d20f68d94e28cf4a5b5963403be5485f32596ce",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/cup.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 8284,
+      "file_size_kb": 8.09,
+      "sha256": "c0ad3c0f317efce77ee1f9a6a657ad21a9c8267adeaf76c3ddcbe150ced410d8",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/pencil.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 10000,
+      "file_size_kb": 9.77,
+      "sha256": "1d752d72698f80f893e3a4d65253c16a3ae54ee9597881aa6c03c5140b5d3421",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/shoes.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 50718,
+      "file_size_kb": 49.53,
+      "sha256": "dea8e617f0c949aae9c25a5623af66c079e63631ac015692ecbdff428d4c477c",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/spoon.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 10840,
+      "file_size_kb": 10.59,
+      "sha256": "26a5bc4ecbbba16343e31e5ac3477f6284d3b57fd2bd3c5aca701a6028452d0a",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/table.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 14634,
+      "file_size_kb": 14.29,
+      "sha256": "9112e92ff77db6e1f20835233e9fb723da599ad9792fa154ea7e4b6faeb54ebc",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/toothbrush.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 8770,
+      "file_size_kb": 8.56,
+      "sha256": "8115d841e876bba5a90530f8d2bf427eb0c04aa5f623af41b3ac3823a7789baf",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/everyday/umbrella.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 17432,
+      "file_size_kb": 17.02,
+      "sha256": "460378918f3f75a18fca9e4cba97df240ffbececff3df786cb710e1a87194d62",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/nature/cloud.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 13572,
+      "file_size_kb": 13.25,
+      "sha256": "3b8403218a7acefc37aa9ef04ab926199d3b51cc6e001951a2148d1fa2cae928",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/nature/flower.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 38180,
+      "file_size_kb": 37.29,
+      "sha256": "5bfd44f4d2ad3d37748c7ca739a6ea15cf495c9dc87e98d5f30d79cab219ad71",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/nature/moon.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 25670,
+      "file_size_kb": 25.07,
+      "sha256": "3273dacdaca236a25b81cb0b8dd481e80a6a79fb4c97afbb11efe783c0a49430",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/nature/mountain.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 198478,
+      "file_size_kb": 193.83,
+      "sha256": "58dcdaa2bfe567b79720a4e24bc2b4bac8ab4f8281e6fdbb82b5d3b63181782f",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/nature/ocean.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 119024,
+      "file_size_kb": 116.23,
+      "sha256": "136b1916a5a9588201c0e1e2117232dd2040a8f1d9e5c8fbc4da5c86d73bd204",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/nature/rainbow.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 94092,
+      "file_size_kb": 91.89,
+      "sha256": "9cb334eef98aae6810327701f857481e2a40be26b4372299391130293d7d2230",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/nature/river.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 212780,
+      "file_size_kb": 207.79,
+      "sha256": "9d9ad3550aa0884a8e675d27559d111a89b6696f8dc9546ad223a0c4b72ea623",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/nature/stars.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 104884,
+      "file_size_kb": 102.43,
+      "sha256": "067a97311e348712b3b041cf00ee677661b570a81b85e97ae7470d82b0248e36",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/nature/sun.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 7642,
+      "file_size_kb": 7.46,
+      "sha256": "c1fb78315cbe210ef757b36b7c1d364a4fd8fde8587832779d246e2ba3c6f9d9",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/nature/tree.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 196940,
+      "file_size_kb": 192.32,
+      "sha256": "aca003ad2e9d719fde5e573586095dad56020282026dfe172f151451d35828d2",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "objects/nature/waterfall.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 249704,
+      "file_size_kb": 243.85,
+      "sha256": "7812f568ddd1a5cb6558e647bec88ccd28c1e46a750f50e1f9f527cbc48b5069",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "prompts/image_prompts.md",
+      "file_type": "text/markdown",
+      "file_size_bytes": 17994,
+      "file_size_kb": 17.57,
+      "sha256": "46f4a837c30b140da86a7b95afd86e20292c3de4bc44a6a92579ea31b087c319",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "prompts/veo_prompts.md",
+      "file_type": "text/markdown",
+      "file_size_bytes": 11878,
+      "file_size_kb": 11.6,
+      "sha256": "a2085062997e011c85b6c3683d11f539c74037540614678159ece2268f0561fa",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "reports/asset_inventory.csv",
+      "file_type": "text/csv",
+      "file_size_bytes": 9629,
+      "file_size_kb": 9.4,
+      "sha256": "a49591f630638876bf643fed5872596a3173f523bf3c4374e71cc3774b92ef53",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "reports/missing_assets.csv",
+      "file_type": "text/csv",
+      "file_size_bytes": 18255,
+      "file_size_kb": 17.83,
+      "sha256": "c8c343bc83b7a97278631b81c99338650d51f12978b62f5e43bc828d7db2c7ad",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "reports/optimization_report.csv",
+      "file_type": "text/csv",
+      "file_size_bytes": 4388,
+      "file_size_kb": 4.29,
+      "sha256": "f1d3dbbb70234156a012ae0ec9beeb61e0563f5a47fedcdf9bc21ed5eb305525",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "thumbnails/brushing_teeth_thumb.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 14874,
+      "file_size_kb": 14.53,
+      "sha256": "a144febaf78097f83d04819bbdc3fd265b857db9e95072b130c0342a9c46c912",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "thumbnails/day_and_night_thumb.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 47200,
+      "file_size_kb": 46.09,
+      "sha256": "54de70e070631b233b23c0e7af49b71a166c8a56f0102bc02c509451de66404b",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "thumbnails/solar_system_intro_thumb.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 47200,
+      "file_size_kb": 46.09,
+      "sha256": "54de70e070631b233b23c0e7af49b71a166c8a56f0102bc02c509451de66404b",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "thumbnails/washing_hands_thumb.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 16882,
+      "file_size_kb": 16.49,
+      "sha256": "6b6ebe08ab9261cd817c4ff327c78d4a8a83d683a4c0d9ebac40d154fc167747",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "thumbnails/weather_and_seasons_thumb.webp",
+      "file_type": "image/webp",
+      "file_size_bytes": 47200,
+      "file_size_kb": 46.09,
+      "sha256": "54de70e070631b233b23c0e7af49b71a166c8a56f0102bc02c509451de66404b",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/good_habits/brushing_teeth_lesson.hi.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 532,
+      "file_size_kb": 0.52,
+      "sha256": "1ffd06d09c4b85e5233f4ba36db535e363c4fe7245e6cfe65b331ac352e1c2bd",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/good_habits/brushing_teeth_lesson.mp4",
+      "file_type": "video/mp4",
+      "file_size_bytes": 424804,
+      "file_size_kb": 414.85,
+      "sha256": "0c9a709fd484736d5de80bc5db856ea87cb7c26f9bc36ea52a02895cb96a1a34",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/good_habits/brushing_teeth_lesson.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 367,
+      "file_size_kb": 0.36,
+      "sha256": "fba55d19735a1632dee345888a6ff19b31dae3fe109aa4d23a5e4b511c2ac621",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/good_habits/brushing_teeth_lesson.te.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 583,
+      "file_size_kb": 0.57,
+      "sha256": "ae101b1b44b77c0258b58c86eb27c189997857c792999366e2827a983111fbce",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/good_habits/washing_hands_lesson.hi.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 530,
+      "file_size_kb": 0.52,
+      "sha256": "6da33d3250da20a2ee6ce301b80719ba70fd985cbd061719e4df1d7d2a065aae",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/good_habits/washing_hands_lesson.mp4",
+      "file_type": "video/mp4",
+      "file_size_bytes": 483588,
+      "file_size_kb": 472.25,
+      "sha256": "5a041e2621ffb23e0945faa8fe89620f96dd26a2f5b8c4666b78c56c991845cd",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/good_habits/washing_hands_lesson.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 361,
+      "file_size_kb": 0.35,
+      "sha256": "c63335c20ae989dd05ae01c5d2570e41c6ccfcc6dd94a9826513c9331dfeff2e",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/good_habits/washing_hands_lesson.te.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 587,
+      "file_size_kb": 0.57,
+      "sha256": "c7b9f176b76be9ee768dae385acfc44d1a440595ecad7ef00f429747a713565a",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/day_and_night_lesson.hi.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 587,
+      "file_size_kb": 0.57,
+      "sha256": "aa2a81fe2dd883875e69b487b54678b5bd4bfa6d6aa86e53fe0e96bd726385d9",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/day_and_night_lesson.mp4",
+      "file_type": "video/mp4",
+      "file_size_bytes": 477087,
+      "file_size_kb": 465.91,
+      "sha256": "e2dd729cb2c0e92eecc3054e3f2fa6518af3f4abdf93d3e191a95d17238add3a",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/day_and_night_lesson.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 376,
+      "file_size_kb": 0.37,
+      "sha256": "f3b038fe1dbac389290d5d1e52b11d7120ead45c3e8b3f7988d8330bcffe8969",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/day_and_night_lesson.te.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 548,
+      "file_size_kb": 0.54,
+      "sha256": "8c70baa5d8244863821a918e057a034f747386454546e31a4c9b8df2fa25af7a",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/solar_system_intro_lesson.hi.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 628,
+      "file_size_kb": 0.61,
+      "sha256": "dc2ba0feeeb5062b55033928b252ccfe281ea551a79298cefee495324e985dd0",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/solar_system_intro_lesson.mp4",
+      "file_type": "video/mp4",
+      "file_size_bytes": 394245,
+      "file_size_kb": 385.0,
+      "sha256": "40a40ddc5d3f7d694f9a6158704b72e71ce7f1f55e70a2d784b3373f1afa3119",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/solar_system_intro_lesson.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 391,
+      "file_size_kb": 0.38,
+      "sha256": "2f2266aa8595daabec6ec50f70472819cc1cbf94325868d5a1f86af4914e6e28",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/solar_system_intro_lesson.te.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 598,
+      "file_size_kb": 0.58,
+      "sha256": "8f94a60c90781e32057c2a6581bfd0e715a18a398c5b22b8faeddc02f9bc7468",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/weather_and_seasons_lesson.hi.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 581,
+      "file_size_kb": 0.57,
+      "sha256": "2737775327ecaa0347694b02978b9f3cb6dcee30019f0f40b236383a62450fe9",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/weather_and_seasons_lesson.mp4",
+      "file_type": "video/mp4",
+      "file_size_bytes": 510981,
+      "file_size_kb": 499.0,
+      "sha256": "1639186b7db83a72699bc77029b7db5977ff6ed34c8874e5e3277d059dd4268a",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/weather_and_seasons_lesson.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 407,
+      "file_size_kb": 0.4,
+      "sha256": "ec746c46d9b0189b3d704b15ddc52698f0040f297c22b6d77fd369b0fbffdb2c",
+      "qa_status": "validated_passed"
+    },
+    {
+      "path": "videos/science/weather_and_seasons_lesson.te.srt",
+      "file_type": "text/markdown",
+      "file_size_bytes": 585,
+      "file_size_kb": 0.57,
+      "sha256": "1ab4c7d2cb9029d9ddcadda853c755ed79cfd4223c3081a6b04cb6123887a155",
+      "qa_status": "validated_passed"
+    }
+  ]
+}

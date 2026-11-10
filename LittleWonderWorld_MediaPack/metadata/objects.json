@@ -1,0 +1,282 @@
+{
+  "version": "2.0.0-batch.05",
+  "batch": "Batch05",
+  "total_objects": 25,
+  "items": [
+    {
+      "id": "everyday_ball",
+      "name": "Ball",
+      "category": "everyday",
+      "color": "Multi-colored (Red, Blue, Yellow, Green)",
+      "usage_fact": "A round, bouncy play ball is great for kicking, catching, and rolling with friends outdoors!",
+      "image_filename": "objects/everyday/ball.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_book",
+      "name": "Book",
+      "category": "everyday",
+      "color": "Blue / Colorful",
+      "usage_fact": "Books are filled with stories, pictures, and knowledge that take our imagination on wonderful adventures!",
+      "image_filename": "objects/everyday/book.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_pencil",
+      "name": "Pencil",
+      "category": "everyday",
+      "color": "Yellow",
+      "usage_fact": "We hold a pencil to write letters, numbers, and draw creative pictures on paper.",
+      "image_filename": "objects/everyday/pencil.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_chair",
+      "name": "Chair",
+      "category": "everyday",
+      "color": "Natural Wood",
+      "usage_fact": "A sturdy chair has four legs and a backrest so we can sit comfortably while reading or eating.",
+      "image_filename": "objects/everyday/chair.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_table",
+      "name": "Table",
+      "category": "everyday",
+      "color": "Warm Wood",
+      "usage_fact": "A table has a flat top where families gather to eat meals, study, and build puzzles.",
+      "image_filename": "objects/everyday/table.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_clock",
+      "name": "Clock",
+      "category": "everyday",
+      "color": "White / Blue",
+      "usage_fact": "A clock has numbers from 1 to 12 and moving hands that tell us the time of day!",
+      "image_filename": "objects/everyday/clock.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_umbrella",
+      "name": "Umbrella",
+      "category": "everyday",
+      "color": "Rainbow / Red",
+      "usage_fact": "An umbrella opens like a canopy overhead to keep us dry in the rain and shaded from hot sun.",
+      "image_filename": "objects/everyday/umbrella.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_shoes",
+      "name": "Shoes",
+      "category": "everyday",
+      "color": "Blue / White",
+      "usage_fact": "We wear comfortable shoes on our feet to protect them when walking, running, and playing outside.",
+      "image_filename": "objects/everyday/shoes.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_bag",
+      "name": "Bag",
+      "category": "everyday",
+      "color": "Red / Blue",
+      "usage_fact": "A school backpack bag has shoulder straps to carry our books, pencils, and lunchbox neatly.",
+      "image_filename": "objects/everyday/bag.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_bottle",
+      "name": "Bottle",
+      "category": "everyday",
+      "color": "Sky Blue",
+      "usage_fact": "A reusable water bottle keeps clean drinking water ready so we stay hydrated all day!",
+      "image_filename": "objects/everyday/bottle.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_cup",
+      "name": "Cup",
+      "category": "everyday",
+      "color": "Yellow",
+      "usage_fact": "A cup has a curved handle so we can hold it safely to drink warm milk or water.",
+      "image_filename": "objects/everyday/cup.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_spoon",
+      "name": "Spoon",
+      "category": "everyday",
+      "color": "Silver",
+      "usage_fact": "We use a clean spoon to scoop and eat soup, rice, yogurt, and cereal.",
+      "image_filename": "objects/everyday/spoon.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_toothbrush",
+      "name": "Toothbrush",
+      "category": "everyday",
+      "color": "Green / White",
+      "usage_fact": "A toothbrush has soft bristles that clean our teeth every morning and night for a bright smile!",
+      "image_filename": "objects/everyday/toothbrush.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "everyday_bed",
+      "name": "Bed",
+      "category": "everyday",
+      "color": "Cozy Blue / White",
+      "usage_fact": "A cozy bed has a soft mattress, pillow, and blanket where we sleep and recharge every night.",
+      "image_filename": "objects/everyday/bed.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "nature_rainbow",
+      "name": "Rainbow",
+      "category": "nature",
+      "color": "7 Spectrum Colors (VIBGYOR)",
+      "usage_fact": "A rainbow appears in the sky when sunlight shines through raindrops, showing seven glowing colors!",
+      "image_filename": "objects/nature/rainbow.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "nature_sun",
+      "name": "Sun",
+      "category": "nature",
+      "color": "Golden Yellow",
+      "usage_fact": "The Sun is a bright star at the center of our solar system that gives Earth warm daylight and helps plants grow!",
+      "image_filename": "objects/nature/sun.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "nature_moon",
+      "name": "Moon",
+      "category": "nature",
+      "color": "Silver / White",
+      "usage_fact": "The Moon shines softly in the night sky and changes shape from a thin crescent to a bright full circle!",
+      "image_filename": "objects/nature/moon.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "nature_stars",
+      "name": "Stars",
+      "category": "nature",
+      "color": "Twinkling Gold / White",
+      "usage_fact": "Stars are distant suns twinkling across the night sky in beautiful patterns called constellations.",
+      "image_filename": "objects/nature/stars.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "nature_cloud",
+      "name": "Cloud",
+      "category": "nature",
+      "color": "Fluffy White",
+      "usage_fact": "Clouds float in the sky and are made of tiny water droplets that bring refreshing rain to the Earth.",
+      "image_filename": "objects/nature/cloud.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "nature_tree",
+      "name": "Tree",
+      "category": "nature",
+      "color": "Green Canopy, Brown Trunk",
+      "usage_fact": "Trees have deep roots, a sturdy trunk, and green leaves that make fresh oxygen for us to breathe!",
+      "image_filename": "objects/nature/tree.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "nature_flower",
+      "name": "Flower",
+      "category": "nature",
+      "color": "Pink / Yellow",
+      "usage_fact": "Flowers bloom with colorful petals and sweet fragrance, inviting bees and butterflies to visit.",
+      "image_filename": "objects/nature/flower.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "nature_mountain",
+      "name": "Mountain",
+      "category": "nature",
+      "color": "Rocky Gray / Snow White",
+      "usage_fact": "Mountains are giant landforms that rise high into the sky, often crowned with white snow at the peak!",
+      "image_filename": "objects/nature/mountain.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "nature_river",
+      "name": "River",
+      "category": "nature",
+      "color": "Clear Blue",
+      "usage_fact": "A river is a flowing ribbon of fresh water that travels from mountains down through valleys to the sea.",
+      "image_filename": "objects/nature/river.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "nature_waterfall",
+      "name": "Waterfall",
+      "category": "nature",
+      "color": "Sparkling White / Blue",
+      "usage_fact": "A waterfall happens where a river tumbles over a high rocky cliff into a misty pool below!",
+      "image_filename": "objects/nature/waterfall.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    },
+    {
+      "id": "nature_ocean",
+      "name": "Ocean",
+      "category": "nature",
+      "color": "Deep Turquoise Blue",
+      "usage_fact": "The ocean is a vast body of salty water that covers most of our planet and is home to whales, dolphins, and coral reefs!",
+      "image_filename": "objects/nature/ocean.webp",
+      "image_format": "WebP",
+      "image_dimensions": "1024x1024",
+      "status": "complete_ai_generated_gemini"
+    }
+  ]
+}
