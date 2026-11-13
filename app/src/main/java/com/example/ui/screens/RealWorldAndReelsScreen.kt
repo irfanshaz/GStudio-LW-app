@@ -22,6 +22,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -75,6 +77,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -125,7 +128,7 @@ fun RealWorldAndReelsScreen(
     reducedMotion: Boolean
 ) {
     val items = remember(category) { RealWorldMediaRegistry.getItemsByCategory(category) }
-    val gridState = rememberLazyGridState()
+    val gridState = androidx.compose.runtime.key(category) { rememberLazyGridState() }
     val overridesMap = remember(mediaOverrides) { mediaOverrides.associateBy { it.mediaId } }
 
     DisposableEffect(Unit) {
@@ -187,7 +190,7 @@ fun RealWorldAndReelsScreen(
                     listOf(
                         RealMediaCategory.ANIMAL to "Animals",
                         RealMediaCategory.OBJECT to "Objects",
-                        RealMediaCategory.FILM_LESSON to "Films",
+                        RealMediaCategory.FILM_LESSON to "Lessons",
                         RealMediaCategory.ALL to "All"
                     ).forEach { (cat, label) ->
                         Button(
@@ -223,12 +226,9 @@ fun RealWorldAndReelsScreen(
                     RealWorldScrollCard(
                         item = item,
                         overrideEntity = override,
-                        onHearSoundAndFact = {
-                            viewModel.audio.playAnimalOrObjectSignature(
-                                baseFreqHz = item.soundFreqHz,
-                                label = item.title,
-                                spokenFact = item.funFacts.firstOrNull() ?: item.subtitle
-                            )
+                        onHearFact = { viewModel.audio.speakInstruction(item.spokenDescription()) },
+                        onHearRecording = item.bundledSoundRes?.let { recording ->
+                            { viewModel.audio.playDiscoveryRecording(recording) }
                         },
                         onWatchReel = {
                             viewModel.updateRealWorldMode(
@@ -242,6 +242,7 @@ fun RealWorldAndReelsScreen(
             }
         } else {
             // WONDER REELS MODE: TikTok/Reels-style vertical swipe video & living motion feed
+            androidx.compose.runtime.key(category, initialReelIndex) {
             WonderReelsVerticalFeed(
                 items = items,
                 initialIndex = initialReelIndex.coerceIn(0, (items.size - 1).coerceAtLeast(0)),
@@ -249,6 +250,7 @@ fun RealWorldAndReelsScreen(
                 reducedMotion = reducedMotion,
                 viewModel = viewModel
             )
+            }
         }
     }
 }
@@ -257,22 +259,23 @@ fun RealWorldAndReelsScreen(
 private fun RealWorldScrollCard(
     item: RealWorldMediaItem,
     overrideEntity: CustomMediaOverrideEntity?,
-    onHearSoundAndFact: () -> Unit,
+    onHearFact: () -> Unit,
+    onHearRecording: (() -> Unit)?,
     onWatchReel: () -> Unit
 ) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(232.dp)
+            .heightIn(min = 232.dp)
             .clip(RoundedCornerShape(22.dp))
-            .clickable { onHearSoundAndFact() }
+            .clickable(onClick = onHearFact)
             .testTag("media_card_${item.id}"),
         color = PlaySurfaceWhite,
         border = BorderStroke(2.5.dp, item.primaryColor),
         shape = RoundedCornerShape(22.dp),
         shadowElevation = 4.dp
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier.fillMaxWidth()) {
             // Top Visual Thumbnail (Bundled AI Art, User Custom Image, or Vivid Habitat Banner)
             Box(
                 modifier = Modifier
@@ -297,7 +300,7 @@ private fun RealWorldScrollCard(
                     Image(
                         painter = painterResource(id = item.bundledDrawableRes),
                         contentDescription = item.title,
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.Fit,
                         modifier = Modifier.fillMaxSize()
                     )
                 } else {
@@ -325,16 +328,16 @@ private fun RealWorldScrollCard(
             // Card Body & Action Buttons
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(10.dp),
-                verticalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Column {
                     Text(
                         text = "${item.emoji} ${item.title}",
                         style = MaterialTheme.typography.titleMedium,
                         color = DeepSlateInk,
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
@@ -351,7 +354,7 @@ private fun RealWorldScrollCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
-                        onClick = onHearSoundAndFact,
+                        onClick = onHearRecording ?: onHearFact,
                         colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp),
                         shape = RoundedCornerShape(12.dp),
@@ -359,9 +362,9 @@ private fun RealWorldScrollCard(
                             .weight(1f)
                             .height(48.dp)
                     ) {
-                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Hear Sound", tint = DeepSlateInk, modifier = Modifier.size(16.dp))
+                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null, tint = DeepSlateInk, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(4.dp))
-                        Text("Sound", color = DeepSlateInk, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Text(if (onHearRecording != null) "Sound" else "Listen", color = DeepSlateInk, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
 
                     Button(
@@ -376,7 +379,7 @@ private fun RealWorldScrollCard(
                     ) {
                         Icon(Icons.Default.PlayArrow, contentDescription = "Watch Reel", tint = PlaySurfaceWhite, modifier = Modifier.size(16.dp))
                         Spacer(Modifier.width(4.dp))
-                        Text("Reel", color = PlaySurfaceWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Text(if (item.hasVideo(overrideEntity)) "Watch" else "Explore", color = PlaySurfaceWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -413,23 +416,16 @@ private fun WonderReelsVerticalFeed(
         viewModel.audio.stopAllAudio()
         val currentItem = items.getOrNull(pagerState.settledPage) ?: return@LaunchedEffect
         if (currentItem.hasVideo(overridesMap[currentItem.id])) return@LaunchedEffect
-        viewModel.audio.playAnimalOrObjectSignature(
-            baseFreqHz = currentItem.soundFreqHz,
-            label = currentItem.title,
-            spokenFact = currentItem.funFacts.firstOrNull() ?: currentItem.subtitle
-        )
+        viewModel.audio.speakInstruction(currentItem.spokenDescription())
     }
 
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .testTag("wonder_reels_pager_container"),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
+    BoxWithConstraints(Modifier.fillMaxSize().testTag("wonder_reels_pager_container")) {
+        val compact = maxWidth < 520.dp
+        Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         // Main Reel Stage (VerticalPager)
         Box(
             modifier = Modifier
-                .weight(0.76f)
+                .weight(1f)
                 .fillMaxHeight()
                 .clip(RoundedCornerShape(26.dp))
                 .background(Color(0xFF090D16))
@@ -451,142 +447,85 @@ private fun WonderReelsVerticalFeed(
             }
         }
 
-        // Right-side TikTok/Reels Tactile Control Rail for Preschoolers
-        val activeItem = items.getOrNull(pagerState.settledPage) ?: items.first()
-        var currentFactIdx by remember(activeItem.id) { mutableIntStateOf(0) }
-
-        Surface(
-            modifier = Modifier
-                .weight(0.24f)
-                .fillMaxHeight(),
-            color = Color(0xFF1E293B),
-            shape = RoundedCornerShape(24.dp),
-            border = BorderStroke(2.dp, activeItem.primaryColor)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            val active = items.getOrNull(pagerState.settledPage) ?: items.first()
+            val activeOverride = overridesMap[active.id]
+            val hasVideo = active.hasVideo(activeOverride)
+            Surface(
+                modifier = Modifier.width(if (compact) 64.dp else 128.dp).fillMaxHeight(),
+                color = Color(0xFF1E293B),
+                shape = RoundedCornerShape(20.dp),
+                border = BorderStroke(2.dp, active.primaryColor)
             ) {
-                // Reel Position Counter
-                Surface(
-                    color = activeItem.primaryColor.copy(alpha = 0.25f),
-                    shape = RoundedCornerShape(14.dp)
+                Column(
+                    modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Reel ${pagerState.settledPage + 1} of ${items.size}",
+                        text = "${pagerState.settledPage + 1}/${items.size}",
                         color = PlaySurfaceWhite,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                        fontSize = 13.sp
                     )
-                }
-
-                // Accessible Swipe Up / Previous Reel Button
-                Button(
-                    onClick = {
-                        if (pagerState.settledPage > 0) {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(pagerState.settledPage - 1)
-                            }
-                        }
-                    },
-                    enabled = pagerState.settledPage > 0,
-                    colors = ButtonDefaults.buttonColors(containerColor = ActionContinueBlue),
-                    shape = RoundedCornerShape(18.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .testTag("reel_prev_button")
-                ) {
-                    Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Previous Reel")
-                    Spacer(Modifier.width(4.dp))
-                    Text("Prev Reel", fontWeight = FontWeight.Bold)
-                }
-
-                // MP4 narration is already part of the video.
-                if (!activeItem.hasVideo(overridesMap[activeItem.id])) {
-                Button(
-                    onClick = {
-                        viewModel.audio.playAnimalOrObjectSignature(
-                            baseFreqHz = activeItem.soundFreqHz,
-                            label = activeItem.title,
-                            spokenFact = activeItem.soundDescription
-                        )
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
-                    shape = RoundedCornerShape(18.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .testTag("reel_hear_sound_button")
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Hear Sound", tint = DeepSlateInk)
-                    Spacer(Modifier.width(6.dp))
-                    Text("Hear Sound", color = DeepSlateInk, fontWeight = FontWeight.Bold)
-                }
-
-                // Next Fun Fact Button
-                Button(
-                    onClick = {
-                        val facts = activeItem.funFacts
-                        if (facts.isNotEmpty()) {
-                            currentFactIdx = (currentFactIdx + 1) % facts.size
-                            viewModel.audio.speakInstruction(facts[currentFactIdx])
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = ActionPlayGreen),
-                    shape = RoundedCornerShape(18.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .testTag("reel_next_fact_button")
-                ) {
-                    Icon(Icons.Default.Replay, contentDescription = "Tell Me More", tint = PlaySurfaceWhite)
-                    Spacer(Modifier.width(6.dp))
-                    Text("Fun Fact", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold)
-                }
-
-                }
-                // Toggle Subtitles Button
-                Button(
-                    onClick = { subtitlesVisible = !subtitlesVisible },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (subtitlesVisible) Color(0xFF475569) else Color(0xFF334155)
-                    ),
-                    shape = RoundedCornerShape(18.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                ) {
-                    Icon(Icons.Default.Subtitles, contentDescription = "Subtitles", tint = PlaySurfaceWhite)
-                    Spacer(Modifier.width(6.dp))
-                    Text(if (subtitlesVisible) "Captions ON" else "Captions OFF", color = PlaySurfaceWhite, fontSize = 13.sp)
-                }
-
-                // Accessible Swipe Down / Next Reel Button
-                Button(
-                    onClick = {
+                    ReelControl(
+                        Icons.Default.KeyboardArrowUp, "Previous", compact, ActionContinueBlue,
+                        Modifier.testTag("reel_prev_button"), enabled = pagerState.settledPage > 0
+                    ) {
+                        coroutineScope.launch { pagerState.animateScrollToPage(pagerState.settledPage - 1) }
+                    }
+                    ReelControl(
+                        Icons.Default.KeyboardArrowDown, "Next", compact, ActionContinueBlue,
+                        Modifier.testTag("reel_next_button")
+                    ) {
                         val next = (pagerState.settledPage + 1) % items.size
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(next)
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = ActionContinueBlue),
-                    shape = RoundedCornerShape(18.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .testTag("reel_next_button")
-                ) {
-                    Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Next Reel")
-                    Spacer(Modifier.width(4.dp))
-                    Text("Next Reel", fontWeight = FontWeight.Bold)
+                        coroutineScope.launch { pagerState.animateScrollToPage(next) }
+                    }
+                    val recording = active.bundledSoundRes
+                    if (recording != null && !activeOverride.hasCustomVideo()) {
+                        ReelControl(
+                            Icons.AutoMirrored.Filled.VolumeUp, "Sound", compact, ActionListenAmber,
+                            Modifier.testTag("reel_hear_sound_button"), ink = DeepSlateInk
+                        ) { viewModel.audio.playDiscoveryRecording(recording) }
+                    }
+                    if (!hasVideo) {
+                        ReelControl(
+                            Icons.Default.Replay, "Hear fact", compact, ActionPlayGreen,
+                            Modifier.testTag("reel_next_fact_button")
+                        ) { viewModel.audio.speakInstruction(active.spokenDescription()) }
+                    }
+                    if (!hasVideo || (active.bundledCaptionsRes != null && !activeOverride.hasCustomVideo())) {
+                        ReelControl(
+                            Icons.Default.Subtitles, if (subtitlesVisible) "Hide captions" else "Show captions",
+                            compact, Color(0xFF475569)
+                        ) { subtitlesVisible = !subtitlesVisible }
+                    }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ReelControl(
+    icon: ImageVector,
+    label: String,
+    compact: Boolean,
+    color: Color,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    ink: Color = PlaySurfaceWhite,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(containerColor = color, contentColor = ink),
+        contentPadding = PaddingValues(horizontal = 4.dp),
+        modifier = modifier.fillMaxWidth().height(48.dp)
+    ) {
+        Icon(icon, contentDescription = if (compact) label else null, modifier = Modifier.size(20.dp))
+        if (!compact) {
+            Spacer(Modifier.width(4.dp))
+            Text(label, maxLines = 2, overflow = TextOverflow.Ellipsis, fontSize = 12.sp)
         }
     }
 }
@@ -646,7 +585,7 @@ private fun SingleWonderReelStage(
     )
     val zoomScale by transition.animateFloat(
         initialValue = 1.0f,
-        targetValue = if (reducedMotion) 1.02f else 1.12f,
+        targetValue = if (reducedMotion) 1f else 1.12f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 6000, easing = LinearEasing),
             repeatMode = RepeatMode.Reverse
@@ -669,7 +608,7 @@ private fun SingleWonderReelStage(
                         VideoView(ctx).apply {
                             setOnPreparedListener { mp ->
                                 player = mp
-                                mp.isLooping = overrideVideo != null
+                                mp.isLooping = overrideVideo != null || item.category == RealMediaCategory.ANIMAL
                                 val volume = if (narrationEnabled) 1f else 0f
                                 mp.setVolume(volume, volume)
                                 if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) start()
@@ -709,7 +648,7 @@ private fun SingleWonderReelStage(
                 Image(
                     painter = painterResource(id = item.bundledDrawableRes),
                     contentDescription = item.title,
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .fillMaxSize()
                         .graphicsLayer {
@@ -836,7 +775,13 @@ private fun SingleWonderReelStage(
 }
 
 private fun RealWorldMediaItem.hasVideo(override: CustomMediaOverrideEntity?) =
-    bundledVideoRes != null || override?.localVideoPath?.let { File(it).isFile } == true
+    bundledVideoRes != null || override.hasCustomVideo()
+
+private fun CustomMediaOverrideEntity?.hasCustomVideo() =
+    this?.localVideoPath?.let { File(it).isFile } == true
+
+private fun RealWorldMediaItem.spokenDescription() =
+    "$title. ${funFacts.firstOrNull() ?: subtitle}"
 
 internal data class ReelCaption(val startMs: Int, val endMs: Int, val text: String)
 

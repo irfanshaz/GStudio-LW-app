@@ -1,0 +1,11 @@
+1
+00:00:00,300 --> 00:00:04,800
+Let's count together from 1 to 10! One, two, three—count the delicious fruits!
+
+2
+00:00:05,300 --> 00:00:09,800
+Keep counting higher! Four, five, six, seven—you are doing a wonderful job!
+
+3
+00:00:10,300 --> 00:00:14,800
+Eight, nine, and TEN! We counted all the way from 1 to 10!

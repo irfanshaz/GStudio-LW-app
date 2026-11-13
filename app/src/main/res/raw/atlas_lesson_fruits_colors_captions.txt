@@ -1,0 +1,11 @@
+1
+00:00:00,300 --> 00:00:04,800
+Let's learn fruits and colors! This crunchy Apple is bright red.
+
+2
+00:00:05,300 --> 00:00:09,800
+Look at the Banana! A ripe banana is bright sunny yellow.
+
+3
+00:00:10,300 --> 00:00:14,800
+Here is the Mango! The King of Fruits shines in golden yellow.

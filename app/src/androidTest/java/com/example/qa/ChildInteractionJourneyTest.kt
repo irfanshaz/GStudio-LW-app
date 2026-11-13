@@ -14,10 +14,13 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.lifecycle.ViewModelProvider
 import com.example.MainActivity
+import com.example.data.RealWorldMediaRegistry
 import com.example.data.WonderCatalogRegistry
+import com.example.model.RealMediaCategory
 import com.example.viewmodel.WonderScreen
 import com.example.viewmodel.WonderViewModel
 import org.junit.Assert.assertEquals
@@ -146,8 +149,16 @@ class ChildInteractionJourneyTest {
     }
 
     @Test fun bundledAnimalLessonShowsTimedCaptionAfterPlaybackStarts() {
-        open(WonderScreen.RealWorldHub(category = com.example.model.RealMediaCategory.FILM_LESSON))
-        click("watch_reel_lesson_wild_and_domestic_animals_pilot")
+        val category = RealMediaCategory.FILM_LESSON
+        val lessonId = "lesson_wild_and_domestic_animals_pilot"
+        val lessonIndex = RealWorldMediaRegistry.getItemsByCategory(category).indexOfFirst { it.id == lessonId }
+        assertTrue(lessonIndex >= 0)
+        open(WonderScreen.RealWorldHub(category = category))
+        compose.onNodeWithTag("real_world_scroll_grid").performScrollToIndex(lessonIndex)
+        compose.mainClock.advanceTimeBy(96)
+        val watch = compose.onNodeWithTag("watch_reel_$lessonId")
+        watch.performScrollTo().assertIsDisplayed().performClick()
+        compose.mainClock.advanceTimeBy(96)
         compose.onNodeWithTag("reel_video_surface").assertIsDisplayed()
         compose.waitUntil(20_000) {
             compose.mainClock.advanceTimeBy(240)

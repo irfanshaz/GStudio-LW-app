@@ -278,6 +278,7 @@ data class RealWorldMediaItem(
     val bundledVideoAssetPath: String? = null,
     @androidx.annotation.RawRes val bundledVideoRes: Int? = null,
     @androidx.annotation.RawRes val bundledCaptionsRes: Int? = null,
+    @androidx.annotation.RawRes val bundledSoundRes: Int? = null,
     val subtitles: List<String> = emptyList(),
     val manifest: MediaManifestEntry
 )

@@ -1,0 +1,11 @@
+1
+00:00:00,300 --> 00:00:04,800
+Look outside at the weather! After a refreshing rain shower, sunlight paints a 7-color Rainbow!
+
+2
+00:00:05,300 --> 00:00:09,800
+In Spring, green leaves sprout and butterflies visit blooming flowers; in Summer, days are long and sunny.
+
+3
+00:00:10,300 --> 00:00:14,800
+Each season brings special gifts—monsoon rain fills the rivers, and winter brings cozy sweater weather!

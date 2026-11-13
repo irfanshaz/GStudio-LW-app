@@ -36,7 +36,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Movie
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Toys
@@ -430,6 +430,7 @@ fun HomeScreen(
 
                     // Quick Action Buttons: Toy Box, Surprise Play, Real World & Reels, Parent Corner
                     Row(
+                        modifier = Modifier.weight(3f),
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -437,28 +438,28 @@ fun HomeScreen(
                             onClick = { viewModel.navigateTo(WonderScreen.ToyBox) },
                             colors = ButtonDefaults.buttonColors(containerColor = ActionListenAmber),
                             shape = RoundedCornerShape(16.dp),
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                            contentPadding = PaddingValues(horizontal = 4.dp),
                             modifier = Modifier
-                                .height(48.dp)
+                                .weight(1f).height(48.dp)
                                 .testTag("home_toy_box_button")
                         ) {
                             Icon(Icons.Default.Toys, contentDescription = "Toy Box", tint = DeepSlateInk, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(4.dp))
-                            Text("Toy Box", color = DeepSlateInk, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Text("Toy Box", maxLines = 1, overflow = TextOverflow.Ellipsis, color = DeepSlateInk, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                         }
 
                         Button(
                             onClick = { viewModel.launchSurprisePlay() },
                             colors = ButtonDefaults.buttonColors(containerColor = ActionPlayGreen),
                             shape = RoundedCornerShape(16.dp),
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                            contentPadding = PaddingValues(horizontal = 4.dp),
                             modifier = Modifier
-                                .height(48.dp)
+                                .weight(1f).height(48.dp)
                                 .testTag("home_surprise_play_button")
                         ) {
                             Icon(Icons.Default.AutoAwesome, contentDescription = "Surprise Play", tint = PlaySurfaceWhite, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(4.dp))
-                            Text("Surprise Play", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Text("Surprise", maxLines = 1, overflow = TextOverflow.Ellipsis, color = PlaySurfaceWhite, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                         }
 
                         Button(
@@ -472,19 +473,19 @@ fun HomeScreen(
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = ActionContinueBlue),
                             shape = RoundedCornerShape(16.dp),
-                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
+                            contentPadding = PaddingValues(horizontal = 4.dp),
                             modifier = Modifier
-                                .height(48.dp)
+                                .weight(1f).height(48.dp)
                                 .testTag("home_real_world_button")
                         ) {
-                            Icon(Icons.Default.Movie, contentDescription = "Real World & Wonder Reels", tint = PlaySurfaceWhite, modifier = Modifier.size(18.dp))
+                            Icon(Icons.Default.GridView, contentDescription = "Real World Cards", tint = PlaySurfaceWhite, modifier = Modifier.size(18.dp))
                             Spacer(Modifier.width(4.dp))
-                            Text("Real World", color = PlaySurfaceWhite, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                            Text("Real World", maxLines = 1, overflow = TextOverflow.Ellipsis, color = PlaySurfaceWhite, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                         }
 
                         Surface(
                             modifier = Modifier
-                                .height(48.dp)
+                                .weight(1f).height(48.dp)
                                 .clip(RoundedCornerShape(16.dp))
                                 .clickable { viewModel.navigateTo(WonderScreen.ParentCorner(unlocked = false)) }
                                 .testTag("home_parent_corner_button"),
@@ -495,12 +496,13 @@ fun HomeScreen(
                             Row(
                                 modifier = Modifier
                                     .fillMaxHeight()
-                                    .padding(horizontal = 10.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                                    .padding(horizontal = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
                             ) {
                                 Icon(Icons.Default.Lock, contentDescription = "Parent Corner", tint = DeepSlateInk, modifier = Modifier.size(16.dp))
                                 Spacer(Modifier.width(4.dp))
-                                Text("Parents", color = DeepSlateInk, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                Text("Parents", maxLines = 1, overflow = TextOverflow.Ellipsis, color = DeepSlateInk, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                             }
                         }
                     }

@@ -1,0 +1,11 @@
+1
+00:00:00,300 --> 00:00:04,800
+Always watch the traffic signal! Red says Stop, Yellow says Wait, and Green says Go safely.
+
+2
+00:00:05,300 --> 00:00:09,800
+Only cross the street at the black-and-white Zebra Crossing while holding a grown-up's hand.
+
+3
+00:00:10,300 --> 00:00:14,800
+Never play on the road, always wear your bicycle helmet, and stay safe every day!

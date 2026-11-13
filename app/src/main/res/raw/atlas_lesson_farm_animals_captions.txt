@@ -1,0 +1,11 @@
+1
+00:00:00,300 --> 00:00:04,800
+Welcome to the farm! Look at the gentle Cow in the green pasture.
+
+2
+00:00:05,300 --> 00:00:09,800
+Here is the loyal Dog! Dogs help farmers and love to play.
+
+3
+00:00:10,300 --> 00:00:14,800
+And here is the Cat! Farm cats are curious, calm, and soft.

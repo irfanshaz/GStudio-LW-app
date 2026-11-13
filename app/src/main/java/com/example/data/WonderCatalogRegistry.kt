@@ -1877,28 +1877,28 @@ object WonderCatalogRegistry {
     private fun createFlashcardDeckItems(deckIndex: Int): List<GameItemOption> {
         return when (deckIndex) {
             0 -> listOf( // Deck 1: Vehicles & Sirens
-                GameItemOption("fc1_fire", "Fire Engine", "🚒", "Vehicles & Sirens", "Firefighters ride the red fire engine to help town friends!", primaryColorHex = 0xFFEF4444, drawableRes = R.drawable.img_object_fire_engine_1794160812725),
+                GameItemOption("fc1_fire", "Fire Engine", "🚒", "Vehicles & Sirens", "Firefighters ride the red fire engine to help town friends!", primaryColorHex = 0xFFEF4444, drawableRes = R.drawable.atlas_vehicle_fire_engine),
                 GameItemOption("fc1_train", "Steam Train", "🚂", "Vehicles & Sirens", "Choo-choo! The steam train crosses bridges and valleys.", primaryColorHex = 0xFF3B82F6, drawableRes = R.drawable.img_object_steam_train_1794160812641),
-                GameItemOption("fc1_amb", "Ambulance", "🚑", "Vehicles & Sirens", "Paramedics ride the ambulance to care for people.", primaryColorHex = 0xFF10B981),
+                GameItemOption("fc1_amb", "Ambulance", "🚑", "Vehicles & Sirens", "Paramedics ride the ambulance to care for people.", primaryColorHex = 0xFF10B981, drawableRes = R.drawable.atlas_vehicle_ambulance),
                 GameItemOption("fc1_boat", "Sailboat", "⛵", "Vehicles & Sirens", "Gentle breezes push sailboats across the blue bay.", primaryColorHex = 0xFF06B6D4),
-                GameItemOption("fc1_plane", "Airplane", "✈️", "Vehicles & Sirens", "Strong wings lift the airplane high above the clouds.", primaryColorHex = 0xFF8B5CF6),
-                GameItemOption("fc1_tractor", "Farm Tractor", "🚜", "Vehicles & Sirens", "Big tires help the green tractor plow the farm fields.", primaryColorHex = 0xFF059669)
+                GameItemOption("fc1_plane", "Airplane", "✈️", "Vehicles & Sirens", "Strong wings lift the airplane high above the clouds.", primaryColorHex = 0xFF8B5CF6, drawableRes = R.drawable.atlas_vehicle_aeroplane),
+                GameItemOption("fc1_tractor", "Farm Tractor", "🚜", "Vehicles & Sirens", "Big tires help the green tractor plow the farm fields.", primaryColorHex = 0xFF059669, drawableRes = R.drawable.atlas_vehicle_tractor)
             )
             1 -> listOf( // Deck 2: Orchard Fruits
-                GameItemOption("fc2_apple", "Crisp Red Apple", "🍎", "Orchard Fruits", "Apples grow on orchard trees and crunch when you bite!", primaryColorHex = 0xFFEF4444),
-                GameItemOption("fc2_banana", "Yellow Banana", "🍌", "Orchard Fruits", "Bananas come in their own easy-to-peel yellow jacket!", primaryColorHex = 0xFFEAB308),
-                GameItemOption("fc2_straw", "Sweet Strawberry", "🍓", "Orchard Fruits", "Strawberries wear their tiny seeds on the outside!", primaryColorHex = 0xFFEC4899),
-                GameItemOption("fc2_mango", "Golden Mango", "🥭", "Orchard Fruits", "Mangoes are sweet, juicy tropical stone fruits!", primaryColorHex = 0xFFF59E0B),
-                GameItemOption("fc2_orange", "Citrus Orange", "🍊", "Orchard Fruits", "Oranges are packed with sunshine and Vitamin C!", primaryColorHex = 0xFFF97316),
-                GameItemOption("fc2_grapes", "Purple Grapes", "🍇", "Orchard Fruits", "Grapes grow in bunches on leafy sunny vines!", primaryColorHex = 0xFF8B5CF6)
+                GameItemOption("fc2_apple", "Crisp Red Apple", "🍎", "Orchard Fruits", "Apples grow on orchard trees and crunch when you bite!", primaryColorHex = 0xFFEF4444, drawableRes = R.drawable.atlas_fruit_apple),
+                GameItemOption("fc2_banana", "Yellow Banana", "🍌", "Orchard Fruits", "Bananas come in their own easy-to-peel yellow jacket!", primaryColorHex = 0xFFEAB308, drawableRes = R.drawable.atlas_fruit_banana),
+                GameItemOption("fc2_straw", "Sweet Strawberry", "🍓", "Orchard Fruits", "Strawberries wear their tiny seeds on the outside!", primaryColorHex = 0xFFEC4899, drawableRes = R.drawable.atlas_fruit_strawberry),
+                GameItemOption("fc2_mango", "Golden Mango", "🥭", "Orchard Fruits", "Mangoes are sweet, juicy tropical stone fruits!", primaryColorHex = 0xFFF59E0B, drawableRes = R.drawable.atlas_fruit_mango),
+                GameItemOption("fc2_orange", "Citrus Orange", "🍊", "Orchard Fruits", "Oranges are packed with sunshine and Vitamin C!", primaryColorHex = 0xFFF97316, drawableRes = R.drawable.atlas_fruit_orange),
+                GameItemOption("fc2_grapes", "Purple Grapes", "🍇", "Orchard Fruits", "Grapes grow in bunches on leafy sunny vines!", primaryColorHex = 0xFF8B5CF6, drawableRes = R.drawable.atlas_fruit_grapes)
             )
             2 -> listOf( // Deck 3: Garden Vegetables
-                GameItemOption("fc3_carrot", "Crunchy Carrot", "🥕", "Garden Vegetables", "Carrots are orange roots that grow underground with green tops!", primaryColorHex = 0xFFF97316),
+                GameItemOption("fc3_carrot", "Crunchy Carrot", "🥕", "Garden Vegetables", "Carrots are orange roots that grow underground with green tops!", primaryColorHex = 0xFFF97316, drawableRes = R.drawable.atlas_veg_carrot),
                 GameItemOption("fc3_broccoli", "Green Broccoli", "🥦", "Garden Vegetables", "Broccoli florets look just like tiny green forest trees!", primaryColorHex = 0xFF10B981),
-                GameItemOption("fc3_tomato", "Garden Tomato", "🍅", "Garden Vegetables", "Plump red tomatoes ripen on sunny garden vines!", primaryColorHex = 0xFFEF4444),
+                GameItemOption("fc3_tomato", "Garden Tomato", "🍅", "Garden Vegetables", "Plump red tomatoes ripen on sunny garden vines!", primaryColorHex = 0xFFEF4444, drawableRes = R.drawable.atlas_veg_tomato),
                 GameItemOption("fc3_corn", "Sweet Corn", "🌽", "Garden Vegetables", "Golden corn kernels grow in rows inside green husks!", primaryColorHex = 0xFFEAB308),
-                GameItemOption("fc3_peas", "Green Garden Peas", "🫛", "Garden Vegetables", "Round green peas cozy up together inside a pod!", primaryColorHex = 0xFF059669),
-                GameItemOption("fc3_pumpkin", "Orange Pumpkin", "🎃", "Garden Vegetables", "Pumpkins grow on trailing vines in the autumn patch!", primaryColorHex = 0xFFD97706)
+                GameItemOption("fc3_peas", "Green Garden Peas", "🫛", "Garden Vegetables", "Round green peas cozy up together inside a pod!", primaryColorHex = 0xFF059669, drawableRes = R.drawable.atlas_veg_peas),
+                GameItemOption("fc3_pumpkin", "Orange Pumpkin", "🎃", "Garden Vegetables", "Pumpkins grow on trailing vines in the autumn patch!", primaryColorHex = 0xFFD97706, drawableRes = R.drawable.atlas_veg_pumpkin)
             )
             3 -> listOf( // Deck 4: Everyday Foods
                 GameItemOption("fc4_bread", "Whole-Grain Bread", "🍞", "Everyday Foods", "Warm baked bread is delicious for morning toast and sandwiches!", primaryColorHex = 0xFFD97706),
@@ -1925,8 +1925,8 @@ object WonderCatalogRegistry {
                 GameItemOption("fc6_gpa", "Kind Grandpa", "👴", "Family Words", "Grandpa shows us garden birds and wooden puzzles!", primaryColorHex = 0xFF06B6D4)
             )
             6 -> listOf( // Deck 7: Around the Home
-                GameItemOption("fc7_bed", "Cozy Bed", "🛏️", "Around the Home", "We rest our head on a soft pillow in our cozy bed!", primaryColorHex = 0xFF6366F1),
-                GameItemOption("fc7_chair", "Reading Chair", "🪑", "Around the Home", "We sit comfortably on a wooden chair at the table!", primaryColorHex = 0xFFD97706),
+                GameItemOption("fc7_bed", "Cozy Bed", "🛏️", "Around the Home", "We rest our head on a soft pillow in our cozy bed!", primaryColorHex = 0xFF6366F1, drawableRes = R.drawable.atlas_everyday_bed),
+                GameItemOption("fc7_chair", "Reading Chair", "🪑", "Around the Home", "We sit comfortably on a wooden chair at the table!", primaryColorHex = 0xFFD97706, drawableRes = R.drawable.atlas_everyday_chair),
                 GameItemOption("fc7_lamp", "Warm Table Lamp", "💡", "Around the Home", "Switching on the lamp shines a warm reading light!", primaryColorHex = 0xFFEAB308),
                 GameItemOption("fc7_win", "Sunny Window", "🪟", "Around the Home", "We look through the window to see trees and birds outside!", primaryColorHex = 0xFF06B6D4),
                 GameItemOption("fc7_door", "Front Door", "🚪", "Around the Home", "The front door welcomes family home!", primaryColorHex = 0xFFEF4444),
@@ -1941,10 +1941,10 @@ object WonderCatalogRegistry {
                 GameItemOption("fc8_smile", "Happy Smile", "😁", "My Body Parts", "We brush our teeth so our smile stays bright and strong!", primaryColorHex = 0xFFEC4899)
             )
             8 -> listOf( // Deck 9: Weather & Sky
-                GameItemOption("fc9_sun", "Golden Sun", "☀️", "Weather & Sky", "The warm sun lights up the day and helps plants grow!", primaryColorHex = 0xFFF59E0B),
+                GameItemOption("fc9_sun", "Golden Sun", "☀️", "Weather & Sky", "The warm sun lights up the day and helps plants grow!", primaryColorHex = 0xFFF59E0B, drawableRes = R.drawable.atlas_nature_sun),
                 GameItemOption("fc9_rain", "Rain Cloud", "🌧️", "Weather & Sky", "Pitter-patter raindrops water the thirsty meadow!", primaryColorHex = 0xFF3B82F6),
-                GameItemOption("fc9_bow", "Sky Rainbow", "🌈", "Weather & Sky", "Sunlight shining through raindrops paints a rainbow!", primaryColorHex = 0xFFEC4899),
-                GameItemOption("fc9_cloud", "Fluffy Cloud", "☁️", "Weather & Sky", "White clouds float like cotton across the blue sky!", primaryColorHex = 0xFF06B6D4),
+                GameItemOption("fc9_bow", "Sky Rainbow", "🌈", "Weather & Sky", "Sunlight shining through raindrops paints a rainbow!", primaryColorHex = 0xFFEC4899, drawableRes = R.drawable.atlas_nature_rainbow),
+                GameItemOption("fc9_cloud", "Fluffy Cloud", "☁️", "Weather & Sky", "White clouds float like cotton across the blue sky!", primaryColorHex = 0xFF06B6D4, drawableRes = R.drawable.atlas_nature_cloud),
                 GameItemOption("fc9_snow", "Winter Snowflake", "❄️", "Weather & Sky", "Every crystal snowflake has six delicate points!", primaryColorHex = 0xFF6366F1),
                 GameItemOption("fc9_wind", "Gentle Breeze", "🍃", "Weather & Sky", "Moving air makes kites fly and leaves dance!", primaryColorHex = 0xFF10B981)
             )
@@ -1965,9 +1965,9 @@ object WonderCatalogRegistry {
                 GameItemOption("fc11_kind", "Caring & Kind", "🤗", "Feelings & Emotions", "Sharing a hug or kind word helps everyone feel loved!", primaryColorHex = 0xFFEC4899)
             )
             11 -> listOf( // Deck 12: Colors & Shapes
-                GameItemOption("fc12_circle", "Red Circle", "🔴", "Colors & Shapes", "A circle is completely round with no corners at all!", primaryColorHex = 0xFFEF4444),
-                GameItemOption("fc12_square", "Blue Square", "🟦", "Colors & Shapes", "A square has four equal straight sides and four corners!", primaryColorHex = 0xFF2563EB),
-                GameItemOption("fc12_star", "Yellow Star", "⭐", "Colors & Shapes", "A golden star shines with five bright points!", primaryColorHex = 0xFFEAB308),
+                GameItemOption("fc12_circle", "Red Circle", "🔴", "Colors & Shapes", "A circle is completely round with no corners at all!", primaryColorHex = 0xFFEF4444, drawableRes = R.drawable.atlas_shape_circle),
+                GameItemOption("fc12_square", "Blue Square", "🟦", "Colors & Shapes", "A square has four equal straight sides and four corners!", primaryColorHex = 0xFF2563EB, drawableRes = R.drawable.atlas_shape_square),
+                GameItemOption("fc12_star", "Yellow Star", "⭐", "Colors & Shapes", "A golden star shines with five bright points!", primaryColorHex = 0xFFEAB308, drawableRes = R.drawable.atlas_shape_star),
                 GameItemOption("fc12_heart", "Green Heart", "💚", "Colors & Shapes", "A heart has two smooth top curves and a point at the bottom!", primaryColorHex = 0xFF10B981),
                 GameItemOption("fc12_tri", "Orange Triangle", "🔺", "Colors & Shapes", "A triangle has three straight sides and three corners!", primaryColorHex = 0xFFF97316),
                 GameItemOption("fc12_dia", "Purple Diamond", "🟣", "Colors & Shapes", "A diamond shape looks just like a soaring sky kite!", primaryColorHex = 0xFF8B5CF6)
@@ -1989,20 +1989,20 @@ object WonderCatalogRegistry {
                 GameItemOption("fc14_open", "Open Box / Closed Box", "🎁", "Fun Opposites", "We OPEN the lid to peek inside and CLOSE it to tidy up!", primaryColorHex = 0xFF10B981)
             )
             14 -> listOf( // Deck 15: Feathered Birds
-                GameItemOption("fc15_owl", "Woodland Owl", "🦉", "Feathered Birds", "Owls fly softly on velvety feathers at dusk!", primaryColorHex = 0xFF8B5CF6),
+                GameItemOption("fc15_owl", "Woodland Owl", "🦉", "Feathered Birds", "Owls fly softly on velvety feathers at dusk!", primaryColorHex = 0xFF8B5CF6, drawableRes = R.drawable.atlas_bird_owl),
                 GameItemOption("fc15_eagle", "Golden Eagle", "🦅", "Feathered Birds", "Eagles soar high above mountain peaks on wide wings!", primaryColorHex = 0xFFD97706),
                 GameItemOption("fc15_penguin", "Emperor Penguin", "🐧", "Feathered Birds", "Penguins waddle on snow and swim swiftly in the sea!", primaryColorHex = 0xFF0284C7),
-                GameItemOption("fc15_parrot", "Rainbow Parrot", "🦜", "Feathered Birds", "Tropical parrots have bright feathers and curved beaks!", primaryColorHex = 0xFFEF4444),
-                GameItemOption("fc15_flamingo", "Pink Flamingo", "🦩", "Feathered Birds", "Flamingos balance gracefully on one long leg in lagoons!", primaryColorHex = 0xFFEC4899),
+                GameItemOption("fc15_parrot", "Rainbow Parrot", "🦜", "Feathered Birds", "Tropical parrots have bright feathers and curved beaks!", primaryColorHex = 0xFFEF4444, drawableRes = R.drawable.atlas_bird_parrot),
+                GameItemOption("fc15_flamingo", "Pink Flamingo", "🦩", "Feathered Birds", "Flamingos balance gracefully on one long leg in lagoons!", primaryColorHex = 0xFFEC4899, drawableRes = R.drawable.atlas_bird_flamingo),
                 GameItemOption("fc15_swan", "White Pond Swan", "🦢", "Feathered Birds", "Swans glide smoothly across quiet mirror ponds!", primaryColorHex = 0xFF06B6D4)
             )
             else -> listOf( // Deck 16: Friendly Farm Animals
-                GameItemOption("fc16_cow", "Meadow Cow", "🐄", "Friendly Farm Animals", "Moooo! Friendly cows graze on sweet green clover!", primaryColorHex = 0xFF10B981),
-                GameItemOption("fc16_horse", "Galloping Horse", "🐴", "Friendly Farm Animals", "Neigh! Horses trot happily around the wooden paddock!", primaryColorHex = 0xFFD97706),
-                GameItemOption("fc16_sheep", "Woolly Sheep", "🐑", "Friendly Farm Animals", "Baa-baa! Fluffy sheep wear soft warm wool coats!", primaryColorHex = 0xFF3B82F6),
+                GameItemOption("fc16_cow", "Meadow Cow", "🐄", "Friendly Farm Animals", "Moooo! Friendly cows graze on sweet green clover!", primaryColorHex = 0xFF10B981, drawableRes = R.drawable.atlas_domestic_cow),
+                GameItemOption("fc16_horse", "Galloping Horse", "🐴", "Friendly Farm Animals", "Neigh! Horses trot happily around the wooden paddock!", primaryColorHex = 0xFFD97706, drawableRes = R.drawable.atlas_domestic_horse),
+                GameItemOption("fc16_sheep", "Woolly Sheep", "🐑", "Friendly Farm Animals", "Baa-baa! Fluffy sheep wear soft warm wool coats!", primaryColorHex = 0xFF3B82F6, drawableRes = R.drawable.atlas_domestic_sheep),
                 GameItemOption("fc16_duck", "Yellow Duckling", "🦆", "Friendly Farm Animals", "Quack-quack! Ducks paddle with orange webbed feet!", primaryColorHex = 0xFFEAB308),
-                GameItemOption("fc16_goat", "Mountain Goat", "🐐", "Friendly Farm Animals", "Meh-eh! Curious goats love climbing rocky hills!", primaryColorHex = 0xFF64748B),
-                GameItemOption("fc16_rooster", "Morning Rooster", "🐓", "Friendly Farm Animals", "Cock-a-doodle-doo! The rooster greets the sunrise!", primaryColorHex = 0xFFEF4444)
+                GameItemOption("fc16_goat", "Mountain Goat", "🐐", "Friendly Farm Animals", "Meh-eh! Curious goats love climbing rocky hills!", primaryColorHex = 0xFF64748B, drawableRes = R.drawable.atlas_domestic_goat),
+                GameItemOption("fc16_rooster", "Morning Rooster", "🐓", "Friendly Farm Animals", "Cock-a-doodle-doo! The rooster greets the sunrise!", primaryColorHex = 0xFFEF4444, drawableRes = R.drawable.atlas_bird_rooster)
             )
         }
     }

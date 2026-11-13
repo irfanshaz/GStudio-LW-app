@@ -1,0 +1,11 @@
+1
+00:00:00,300 --> 00:00:04,800
+Every animal baby has a special name! A baby Cow is called a Calf.
+
+2
+00:00:05,300 --> 00:00:09,800
+A baby Dog is called a Puppy! Puppies wag their tiny tails with joy.
+
+3
+00:00:10,300 --> 00:00:14,800
+A baby Cat is called a Kitten, and a baby Lion or Tiger is called a Cub!

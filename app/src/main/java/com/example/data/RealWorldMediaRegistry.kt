@@ -45,7 +45,7 @@ object RealWorldMediaRegistry {
     fun buildManifestSummary(customOverridesCount: Int): ManifestSummaryReport {
         val aiFrames = allMediaItems.count { it.bundledDrawableRes != null }
         return ManifestSummaryReport(
-            expectedAnimals = 64,
+            expectedAnimals = allMediaItems.count { it.category == RealMediaCategory.ANIMAL },
             expectedObjects = allMediaItems.count { it.category == RealMediaCategory.OBJECT },
             expectedLessonsAndFilms = allMediaItems.count { it.category == RealMediaCategory.FILM_LESSON },
             bundledVerifiedCount = allMediaItems.count { it.bundledDrawableRes != null || it.bundledVideoRes != null },
@@ -502,6 +502,6 @@ object RealWorldMediaRegistry {
             )
         }
 
-        return Batch01Media.mergeWith(items)
+        return CompletePackMedia.mergeWith(Batch01Media.mergeWith(items))
     }
 }

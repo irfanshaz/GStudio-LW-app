@@ -1,0 +1,11 @@
+1
+00:00:00,300 --> 00:00:04,800
+Welcome to the wild safari! Look how tall the gentle Giraffe stands.
+
+2
+00:00:05,300 --> 00:00:09,800
+Here is the African Elephant! It trumpets and cools off with its big ears.
+
+3
+00:00:10,300 --> 00:00:14,800
+And look at the Tiger! Every tiger has unique orange and black stripes.

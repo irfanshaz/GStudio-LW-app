@@ -5,6 +5,7 @@ import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
 import android.media.SoundPool
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
@@ -51,6 +52,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
     private var isTtsReady = false
     private var speechSequenceJob: Job? = null
     private var voiceStreamId: Int = 0
+    private var discoveryPlayer: MediaPlayer? = null
     private var duckRestoreJob: Job? = null
 
     // Monotonic token to discard stale speech when a child pops several balloons rapidly
@@ -704,6 +706,25 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         playSample(sfxWaterSplashId, volume = 0.50f, rate = rate)
     }
 
+    fun playDiscoveryRecording(@androidx.annotation.RawRes resourceId: Int) {
+        stopSpeechOnly()
+        if (!sfxEnabled) return
+        val player = runCatching { MediaPlayer.create(appContext, resourceId) }.getOrNull() ?: return
+        discoveryPlayer = player
+        player.setOnCompletionListener { if (discoveryPlayer === it) stopDiscoveryRecording() }
+        player.setOnErrorListener { failed, _, _ ->
+            if (discoveryPlayer === failed) stopDiscoveryRecording()
+            true
+        }
+        runCatching { player.start() }.onFailure { stopDiscoveryRecording() }
+    }
+
+    private fun stopDiscoveryRecording() {
+        val player = discoveryPlayer
+        discoveryPlayer = null
+        player?.release()
+    }
+
     /**
      * Plays a warm marimba chime and then speaks the animal/object discovery line
      * with gentle wonder and room to look.
@@ -736,6 +757,7 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
      */
     fun stopSpeechOnly() {
         runCatching {
+            stopDiscoveryRecording()
             latestSpeechToken.incrementAndGet()
             speechSequenceJob?.cancel()
             duckRestoreJob?.cancel()

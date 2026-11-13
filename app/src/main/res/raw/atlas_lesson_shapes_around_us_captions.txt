@@ -1,0 +1,11 @@
+1
+00:00:00,300 --> 00:00:04,800
+Shapes are everywhere! A red Circle is round with zero corners.
+
+2
+00:00:05,300 --> 00:00:09,800
+Count the corners of the green Triangle: one, two, three!
+
+3
+00:00:10,300 --> 00:00:14,800
+From six-sided hexagons to loving hearts, shapes build our world!

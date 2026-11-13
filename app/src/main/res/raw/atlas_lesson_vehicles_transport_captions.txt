@@ -1,0 +1,11 @@
+1
+00:00:00,300 --> 00:00:04,800
+Let's explore vehicles! Buses and cars travel on roads with rubber wheels.
+
+2
+00:00:05,300 --> 00:00:09,800
+Here is the red family Car! Always buckle your seatbelt before the ride begins.
+
+3
+00:00:10,300 --> 00:00:14,800
+And look at the blue Train! Trains glide on railway tracks across towns and valleys.
