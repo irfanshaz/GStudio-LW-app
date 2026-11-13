@@ -149,8 +149,15 @@ class ChildInteractionJourneyTest {
     }
 
     @Test fun bundledAnimalLessonShowsTimedCaptionAfterPlaybackStarts() {
+        assertBundledLessonPlays("lesson_wild_and_domestic_animals_pilot", "Look at the Elephant!")
+    }
+
+    @Test fun bundledBrushingLessonShowsTimedCaptionAfterPlaybackStarts() {
+        assertBundledLessonPlays("lesson_10", "Healthy habits make us shine!")
+    }
+
+    private fun assertBundledLessonPlays(lessonId: String, expectedCaption: String) {
         val category = RealMediaCategory.FILM_LESSON
-        val lessonId = "lesson_wild_and_domestic_animals_pilot"
         val lessonIndex = RealWorldMediaRegistry.getItemsByCategory(category).indexOfFirst { it.id == lessonId }
         assertTrue(lessonIndex >= 0)
         open(WonderScreen.RealWorldHub(category = category))
@@ -162,7 +169,7 @@ class ChildInteractionJourneyTest {
         compose.onNodeWithTag("reel_video_surface").assertIsDisplayed()
         compose.waitUntil(20_000) {
             compose.mainClock.advanceTimeBy(240)
-            compose.onAllNodes(androidx.compose.ui.test.hasText("Look at the Elephant!", substring = true))
+            compose.onAllNodes(androidx.compose.ui.test.hasText(expectedCaption, substring = true))
                 .fetchSemanticsNodes().isNotEmpty()
         }
     }
