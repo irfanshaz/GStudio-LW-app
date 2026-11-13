@@ -99,11 +99,11 @@ class ExampleRobolectricTest {
         assertTrue(tracingParams.tracingToleranceDp > sortingParams.tracingToleranceDp)
 
         val manifestSummary = RealWorldMediaRegistry.buildManifestSummary(customOverridesCount = 2)
-        assertEquals(64, manifestSummary.expectedAnimals)
-        assertEquals(78, manifestSummary.expectedObjects)
-        assertEquals(23, manifestSummary.expectedLessonsAndFilms)
-        assertEquals(23, manifestSummary.bundledVerifiedCount)
-        assertEquals(23, manifestSummary.aiGeneratedStartingFramesCount)
+        assertEquals(80, manifestSummary.expectedAnimals)
+        assertEquals(123, manifestSummary.expectedObjects)
+        assertEquals(34, manifestSummary.expectedLessonsAndFilms)
+        assertEquals(156, manifestSummary.bundledVerifiedCount)
+        assertEquals(156, manifestSummary.aiGeneratedStartingFramesCount)
         assertEquals(2, manifestSummary.userCustomOverridesCount)
 
         assertEquals(4, LearningBuddy.entries.size)

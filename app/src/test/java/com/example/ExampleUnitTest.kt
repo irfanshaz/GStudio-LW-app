@@ -272,14 +272,19 @@ class ExampleUnitTest {
         val objects = RealWorldMediaRegistry.getItemsByCategory(RealMediaCategory.OBJECT)
         val lessonsAndFilms = RealWorldMediaRegistry.getItemsByCategory(RealMediaCategory.FILM_LESSON)
 
-        assertEquals(64, animals.size)
-        assertEquals(78, objects.size)
-        assertEquals(23, lessonsAndFilms.size)
+        assertEquals(80, animals.size)
+        assertEquals(123, objects.size)
+        assertEquals(34, lessonsAndFilms.size)
 
         val allItems = RealWorldMediaRegistry.allMediaItems
-        assertEquals(165, allItems.size)
-        assertEquals(165, allItems.map { it.id }.toSet().size)
+        assertEquals(237, allItems.size)
+        assertEquals(237, allItems.map { it.id }.toSet().size)
         assertTrue(allItems.all { it.manifest.checksumSha256Prefix.isNotBlank() && it.funFacts.isNotEmpty() })
+        // Pack entries coexist with legacy cards so saved IDs and parent imports survive.
+        assertEquals(64, animals.count { it.manifest.exactPathOrResource.startsWith("res/drawable-nodpi/atlas_") })
+        assertEquals(71, objects.count { it.manifest.exactPathOrResource.startsWith("res/drawable-nodpi/atlas_") })
+        assertEquals(16, lessonsAndFilms.count { it.bundledVideoRes != null && it.bundledCaptionsRes != null })
+
     }
 
     @Test
