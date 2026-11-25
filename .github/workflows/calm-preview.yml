@@ -25,6 +25,25 @@ jobs:
         run: keytool -genkeypair -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -dname "CN=Wonder Preview,O=Android,C=US" -keyalg RSA -validity 10000
       - name: Compile and run regression tests
         run: gradle testDebugUnitTest assembleDebug assembleDebugAndroidTest -PcalmPreview=true --no-daemon
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Exercise calm play on Android
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          target: google_apis
+          profile: pixel_2
+          disable-animations: true
+          emulator-boot-timeout: 300
+          emulator-options: -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect
+          script: gradle connectedDebugAndroidTest -PcalmPreview=true -Pandroid.testInstrumentationRunnerArguments.class=com.example.qa.CalmPlayJourneyTest --no-daemon
+      - name: Collect screenshots
+        if: always()
+        run: adb exec-out run-as com.aistudio.littlewonderworld.wvkqzp.calm tar -cf - files/calm-evidence > calm-evidence.tar || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -33,3 +52,6 @@ jobs:
             app/build/outputs/apk/debug/
             app/build/reports/tests/
             app/build/test-results/
+            app/build/reports/androidTests/
+            app/build/outputs/androidTest-results/
+            calm-evidence.tar

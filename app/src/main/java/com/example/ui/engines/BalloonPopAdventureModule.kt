@@ -1914,7 +1914,7 @@ fun BalloonPopAdventureComposable(
 
             // A. 60 FPS Scenic World Background, Winding Adventure Road & Burst Particles
             Canvas(modifier = Modifier.fillMaxSize()) {
-                with(BalloonWorldCanvasRenderer) {
+                if (followRoadStream || showBalloonTools) with(BalloonWorldCanvasRenderer) {
                     renderWorldBackground(
                         world = currentWorld,
                         followRoad = followRoadStream,

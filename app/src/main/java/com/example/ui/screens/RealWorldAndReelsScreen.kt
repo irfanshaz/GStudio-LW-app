@@ -127,6 +127,7 @@ fun RealWorldAndReelsScreen(
     mediaOverrides: List<CustomMediaOverrideEntity>,
     reducedMotion: Boolean
 ) {
+    var playMode by remember(category, isReelsMode) { mutableStateOf(if (isReelsMode) "watch" else "choose") }
     val items = remember(category) { RealWorldMediaRegistry.getItemsByCategory(category) }
     val gridState = androidx.compose.runtime.key(category) { rememberLazyGridState() }
     val overridesMap = remember(mediaOverrides) { mediaOverrides.associateBy { it.mediaId } }
@@ -151,6 +152,8 @@ fun RealWorldAndReelsScreen(
                 style = MaterialTheme.typography.titleLarge)
         }
         if (browseOptions) CalmParentSheet("Media options", { browseOptions = false }) {
+            CalmAction("Choose how to play") { browseOptions = false; playMode = "choose" }
+            CalmAction("Detailed collection") { browseOptions = false; playMode = "library" }
             listOf(false to "Picture cards", true to "Videos").forEach { (reels, label) ->
                 CalmAction(label) { browseOptions = false; viewModel.updateRealWorldMode(category, reels, 0) }
             }
@@ -163,7 +166,24 @@ fun RealWorldAndReelsScreen(
 
         Spacer(Modifier.height(10.dp))
 
-        if (!isReelsMode) {
+        if (playMode == "choose") {
+            Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                CalmAction("Look at pictures", "discovery_look") { playMode = "cards" }
+                CalmAction("Find the picture", "discovery_find") { playMode = "quiz" }
+                CalmAction("Watch videos", "discovery_watch") { viewModel.updateRealWorldMode(category, true, 0) }
+            }
+            return@Column
+        }
+        if (playMode == "cards") {
+            CalmFlashcards(items, overridesMap, viewModel)
+            return@Column
+        }
+        if (playMode == "quiz") {
+            CalmPictureChoices(items, overridesMap, viewModel)
+            return@Column
+        }
+        if (!isReelsMode || playMode == "library") {
             // SCROLL CARDS MODE: Kids can scroll smoothly through Animal or Object cards
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(220.dp),
