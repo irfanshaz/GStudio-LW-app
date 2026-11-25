@@ -37,6 +37,7 @@ sealed interface WonderScreen {
     data object Onboarding : WonderScreen
     data object Garden : WonderScreen
     data object Home : WonderScreen
+    data object AllLands : WonderScreen
     data object ToyBox : WonderScreen
     data class LandWorlds(val landId: LandId) : WonderScreen
     data class WorldActivities(val world: WorldSpec, val pageIndex: Int = 0) : WonderScreen

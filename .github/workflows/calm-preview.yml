@@ -22,6 +22,8 @@ jobs:
         with:
           gradle-version: '9.3.1'
           cache-read-only: false
+      - name: Verify catalog and media preservation
+        run: bash scripts/verify-calm-preservation.sh
       - name: Prepare preview signing key
         run: keytool -genkeypair -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -dname "CN=Wonder Preview,O=Android,C=US" -keyalg RSA -validity 10000
       - name: Compile and run regression tests

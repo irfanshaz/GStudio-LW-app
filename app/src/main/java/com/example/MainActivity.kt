@@ -114,6 +114,9 @@ fun LittleWonderWorldApp(
                 reducedMotion = settings.reducedMotion
             )
 
+            is WonderScreen.AllLands -> com.example.ui.screens.DetailedHomeScreen(
+                viewModel, ageBand, buddy, progressList, settings.reducedMotion
+            )
             is WonderScreen.ToyBox -> ToyBoxScreen(
                 viewModel = viewModel,
                 progressList = progressList,

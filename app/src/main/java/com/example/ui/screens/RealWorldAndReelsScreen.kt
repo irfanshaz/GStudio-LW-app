@@ -590,7 +590,7 @@ private fun SingleWonderReelStage(
                         VideoView(ctx).apply {
                             setOnPreparedListener { mp ->
                                 player = mp
-                                mp.isLooping = overrideVideo != null || item.category == RealMediaCategory.ANIMAL
+                                mp.isLooping = true
                                 val volume = if (narrationEnabled) 1f else 0f
                                 mp.setVolume(volume, volume)
                                 if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) start()
@@ -653,16 +653,9 @@ private fun SingleWonderReelStage(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = item.emoji,
-                        fontSize = 128.sp,
-                        modifier = Modifier.graphicsLayer {
-                            val offsetX = if (reducedMotion) 0f else sin(phase) * 34f
-                            val offsetY = if (reducedMotion) 0f else cos(phase * 2f) * 18f
-                            translationX = offsetX
-                            translationY = offsetY
-                            scaleX = zoomScale
-                            scaleY = zoomScale
-                        }
+                        text = item.title,
+                        fontSize = 30.sp,
+                        modifier = Modifier.padding(24.dp)
                     )
                 }
             }

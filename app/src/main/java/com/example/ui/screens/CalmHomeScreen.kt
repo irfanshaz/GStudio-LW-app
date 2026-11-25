@@ -27,8 +27,9 @@ import com.example.viewmodel.WonderViewModel
 fun HomeScreen(viewModel: WonderViewModel, ageBand: AgeBand, buddy: LearningBuddy,
     progressList: List<ActivityProgressEntity>, reducedMotion: Boolean) {
     var catalog by remember { mutableStateOf(false) }
+    var options by remember { mutableStateOf(false) }
     if (catalog) {
-        DetailedHomeScreen(viewModel, ageBand, buddy, progressList, reducedMotion)
+        LegacyHomeScreen(viewModel, ageBand, buddy, progressList, reducedMotion)
         return
     }
     BoxWithConstraints(Modifier.fillMaxSize().background(SoftCreamCard).testTag("home_screen")) {
@@ -38,7 +39,7 @@ fun HomeScreen(viewModel: WonderViewModel, ageBand: AgeBand, buddy: LearningBudd
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text("Let's play", style = MaterialTheme.typography.headlineMedium,
                     color = DeepSlateInk, modifier = Modifier.weight(1f))
-                ParentHoldTarget("home_parent_hold") { viewModel.navigateTo(WonderScreen.ParentCorner(unlocked = true)) }
+                ParentHoldTarget("home_parent_hold") { options = true }
             }
             val labels = listOf("My toys", "Pictures & videos", "Story adventure", "All activities")
             val pictures = listOf(R.drawable.atlas_everyday_ball, R.drawable.pack01_elephant, R.drawable.atlas_everyday_book, R.drawable.pack01_star)
@@ -52,7 +53,7 @@ fun HomeScreen(viewModel: WonderViewModel, ageBand: AgeBand, buddy: LearningBudd
                                 0 -> viewModel.navigateTo(WonderScreen.ToyBox)
                                 1 -> viewModel.navigateTo(WonderScreen.RealWorldHub())
                                 2 -> viewModel.startGarden()
-                                else -> catalog = true
+                                else -> viewModel.navigateTo(WonderScreen.AllLands)
                             }
                         }, modifier = Modifier.weight(1f).heightIn(min = 140.dp)
                             .testTag("calm_home_tile_$i"), shape = RoundedCornerShape(28.dp),
@@ -69,4 +70,11 @@ fun HomeScreen(viewModel: WonderViewModel, ageBand: AgeBand, buddy: LearningBudd
             }
         }
     }
+    if (options) CalmParentSheet("Home options", { options = false }) {
+        CalmAction("Parent Corner") { options = false; viewModel.navigateTo(WonderScreen.ParentCorner(unlocked = true)) }
+        CalmAction("Surprise play") { options = false; viewModel.launchSurprisePlay() }
+        CalmAction("Hear my learning buddy") { viewModel.audio.speakInstruction(buddy.greeting) }
+        CalmAction("Classic home and progress view") { options = false; catalog = true }
+    }
+
 }

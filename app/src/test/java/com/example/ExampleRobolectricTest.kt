@@ -246,8 +246,8 @@ class ExampleRobolectricTest {
         }
         composeTestRule.waitForIdle()
 
-        val cardsBounds = composeTestRule.onNodeWithTag("discovery_look", useUnmergedTree = true).SemanticsNodeInteractionBounds()
-        val reelsBounds = composeTestRule.onNodeWithTag("discovery_watch", useUnmergedTree = true).SemanticsNodeInteractionBounds()
+        val cardsBounds = composeTestRule.onNodeWithTag("discovery_look", useUnmergedTree = true).performScrollTo().SemanticsNodeInteractionBounds()
+        val reelsBounds = composeTestRule.onNodeWithTag("discovery_watch", useUnmergedTree = true).performScrollTo().SemanticsNodeInteractionBounds()
         assertTrue("Expected mode_scroll_cards_button width > 40px, got ${cardsBounds.first}", cardsBounds.first > 40f)
         assertTrue("Expected mode_wonder_reels_button width > 40px, got ${reelsBounds.first}", reelsBounds.first > 40f)
     }
