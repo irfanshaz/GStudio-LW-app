@@ -128,8 +128,11 @@ fun AnimalSafariSoundsEngine(
         val rotated = allItems.drop(roundIdx % allItems.size) + allItems.take(roundIdx % allItems.size)
         rotated.take(count).shuffled()
     }
+    LaunchedEffect(activity.id, roundIdx, replayKey) {
+        viewModel.audio.speakInstruction("Where is ${target.label}?")
+    }
     var promptMessage by remember(roundIdx, replayKey, activity.id) {
-        mutableStateOf("Listen and tap: ${target.label} (${target.categoryOrTarget})")
+        mutableStateOf("Where is ${target.label}?")
     }
 
     Column(
@@ -177,10 +180,11 @@ fun AnimalSafariSoundsEngine(
                 .fillMaxWidth()
                 .weight(1f)
                 .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             choices.forEachIndexed { idx, option ->
                 val isTarget = option.id == target.id
+                val picture = option.drawableRes ?: com.example.data.RealWorldMediaRegistry.allMediaItems.firstOrNull { it.emoji == option.emoji }?.bundledDrawableRes
                 val glow = isTarget && adaptive.showVisualScaffoldGlow
 
                 Surface(
@@ -215,11 +219,11 @@ fun AnimalSafariSoundsEngine(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        if (option.drawableRes != null) {
+                        if (picture != null) {
                             Image(
-                                painter = painterResource(id = option.drawableRes),
+                                painter = painterResource(id = picture),
                                 contentDescription = option.label,
-                                contentScale = ContentScale.Crop,
+                                contentScale = ContentScale.Fit,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .weight(1f)
@@ -1453,7 +1457,7 @@ fun NumbersMathCounterEngine(
                 val showPlusSignAfter = activity.id == "w08_math_5" && i == leftGroupCount
                 Surface(
                     modifier = Modifier
-                        .size(if (targetCount >= 7) 68.dp else 80.dp)
+                        .size(90.dp)
                         .clip(CircleShape)
                         .clickable {
                             if (!counted) {
@@ -1502,7 +1506,7 @@ fun NumbersMathCounterEngine(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(72.dp),
+                .height(90.dp),
             horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             options.forEach { num ->
@@ -1541,7 +1545,7 @@ fun NumbersMathCounterEngine(
  * - Includes an explicit `Read Again` action that resets to Page 1 and reads aloud without duplicate stars.
  */
 @Composable
-fun StorybookReaderEngine(
+fun LegacyStorybookReaderEngine(
     activity: ActivityConfig,
     replayKey: Int,
     viewModel: WonderViewModel

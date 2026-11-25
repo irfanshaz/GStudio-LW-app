@@ -359,7 +359,7 @@ fun OnboardingScreen(
  * - Right 6 Learning Lands Grid: All 6 Learning Lands with progress stars and instant navigation
  */
 @Composable
-fun HomeScreen(
+fun DetailedHomeScreen(
     viewModel: WonderViewModel,
     ageBand: AgeBand,
     buddy: LearningBuddy,

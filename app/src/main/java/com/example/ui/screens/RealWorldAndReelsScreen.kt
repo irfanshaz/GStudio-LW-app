@@ -144,67 +144,21 @@ fun RealWorldAndReelsScreen(
             .padding(horizontal = 12.dp, vertical = 8.dp)
             .testTag("real_world_screen")
     ) {
-        // Top Header with Category Filter (Animals vs. Objects vs. Films) + Mode Switcher (Scroll Cards vs. Wonder Reels)
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = if (isReelsMode) Color(0xFF1E293B) else PlaySurfaceWhite,
-            shape = RoundedCornerShape(20.dp),
-            shadowElevation = 4.dp
-        ) {
-            Column(
-                Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp)
-            ) {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    IconButton(
-                        onClick = { viewModel.navigateBack() },
-                        modifier = Modifier.size(48.dp).testTag("real_world_back_button")
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = if (isReelsMode) PlaySurfaceWhite else DeepSlateInk)
-                    }
-                    IconButton(
-                        onClick = { viewModel.navigateHome() },
-                        modifier = Modifier.size(48.dp).testTag("real_world_home_button")
-                    ) {
-                        Icon(Icons.Default.Home, "Home", tint = if (isReelsMode) PlaySurfaceWhite else DeepSlateInk)
-                    }
-                    listOf(false to "Cards", true to "Reels").forEach { (reels, label) ->
-                        Button(
-                            onClick = { viewModel.updateRealWorldMode(category, reels, 0) },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if (isReelsMode == reels) ActionContinueBlue else SoftCreamCard,
-                                contentColor = if (isReelsMode == reels) PlaySurfaceWhite else DeepSlateInk
-                            ),
-                            contentPadding = PaddingValues(horizontal = 6.dp),
-                            modifier = Modifier.weight(1f).height(48.dp).testTag(
-                                if (reels) "mode_wonder_reels_button" else "mode_scroll_cards_button"
-                            )
-                        ) { Text(label, maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                    }
-                }
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    listOf(
-                        RealMediaCategory.ANIMAL to "Animals",
-                        RealMediaCategory.OBJECT to "Objects",
-                        RealMediaCategory.FILM_LESSON to "Lessons",
-                        RealMediaCategory.ALL to "All"
-                    ).forEach { (cat, label) ->
-                        Button(
-                            onClick = { viewModel.updateRealWorldMode(cat, isReelsMode, 0) },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = if (category == cat) ActionContinueBlue else SoftCreamCard,
-                                contentColor = if (category == cat) PlaySurfaceWhite else DeepSlateInk
-                            ),
-                            contentPadding = PaddingValues(horizontal = 4.dp),
-                            modifier = Modifier.weight(1f).height(48.dp).testTag("real_world_cat_${cat.id}")
-                        ) { Text(label, maxLines = 1, overflow = TextOverflow.Ellipsis) }
-                    }
-                }
+        var browseOptions by remember { mutableStateOf(false) }
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            ParentHoldTarget("media_parent_hold") { browseOptions = true }
+            Text(if (isReelsMode) "Watch" else "Discover", color = if (isReelsMode) PlaySurfaceWhite else DeepSlateInk,
+                style = MaterialTheme.typography.titleLarge)
+        }
+        if (browseOptions) CalmParentSheet("Media options", { browseOptions = false }) {
+            listOf(false to "Picture cards", true to "Videos").forEach { (reels, label) ->
+                CalmAction(label) { browseOptions = false; viewModel.updateRealWorldMode(category, reels, 0) }
             }
+            listOf(RealMediaCategory.ANIMAL to "Animals", RealMediaCategory.OBJECT to "Objects",
+                RealMediaCategory.FILM_LESSON to "Lessons", RealMediaCategory.ALL to "Everything").forEach { (cat, label) ->
+                CalmAction(label) { browseOptions = false; viewModel.updateRealWorldMode(cat, isReelsMode, 0) }
+            }
+            CalmAction("Home", "real_world_home_button") { viewModel.navigateHome() }
         }
 
         Spacer(Modifier.height(10.dp))
@@ -409,6 +363,7 @@ private fun WonderReelsVerticalFeed(
     )
     val coroutineScope = rememberCoroutineScope()
     var subtitlesVisible by remember { mutableStateOf(true) }
+    var accessibleControls by remember { mutableStateOf(false) }
     val settings by viewModel.settingsState.collectAsState()
 
     // Auto-speak and trigger sound signature whenever the child settles on a new Reel
@@ -432,7 +387,8 @@ private fun WonderReelsVerticalFeed(
         ) {
             VerticalPager(
                 state = pagerState,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                beyondViewportPageCount = 1
             ) { pageIndex ->
                 val item = items[pageIndex]
                 val override = overridesMap[item.id]
@@ -445,13 +401,17 @@ private fun WonderReelsVerticalFeed(
                     narrationEnabled = settings.narrationEnabled
                 )
             }
+            Box(Modifier.align(Alignment.TopEnd)) {
+                ParentHoldTarget("reel_accessibility_hold") { accessibleControls = !accessibleControls }
+            }
         }
 
+            if (accessibleControls) {
             val active = items.getOrNull(pagerState.settledPage) ?: items.first()
             val activeOverride = overridesMap[active.id]
             val hasVideo = active.hasVideo(activeOverride)
             Surface(
-                modifier = Modifier.width(if (compact) 64.dp else 128.dp).fillMaxHeight(),
+                modifier = Modifier.width(140.dp).fillMaxHeight(),
                 color = Color(0xFF1E293B),
                 shape = RoundedCornerShape(20.dp),
                 border = BorderStroke(2.dp, active.primaryColor)
@@ -502,6 +462,8 @@ private fun WonderReelsVerticalFeed(
             }
         }
     }
+    }
+
 }
 
 @Composable
@@ -520,7 +482,7 @@ private fun ReelControl(
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(containerColor = color, contentColor = ink),
         contentPadding = PaddingValues(horizontal = 4.dp),
-        modifier = modifier.fillMaxWidth().height(48.dp)
+        modifier = modifier.fillMaxWidth().height(90.dp)
     ) {
         Icon(icon, contentDescription = if (compact) label else null, modifier = Modifier.size(20.dp))
         if (!compact) {

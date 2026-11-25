@@ -8,6 +8,7 @@ plugins {
   alias(libs.plugins.google.services)
 }
 
+val calmPreview = providers.gradleProperty("calmPreview").orNull == "true"
 val gardenPreview = providers.gradleProperty("gardenPreview").orNull == "true"
 
 android {
@@ -57,8 +58,11 @@ android {
         applicationIdSuffix = ".garden"
         manifestPlaceholders["wonderAppLabel"] = "Wonder World Garden"
       }
-      // Do not remove or modify this signingConfig assignment. It is necessary for Android apps in
-      // AI Studio.
+      if (calmPreview) {
+        applicationIdSuffix = ".calm"
+        manifestPlaceholders["wonderAppLabel"] = "Wonder Calm Preview"
+      }
+      // Existing signing assignments are preserved.
       signingConfig = signingConfigs.getByName("debugConfig")
     }
   }

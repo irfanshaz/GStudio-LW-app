@@ -1278,7 +1278,7 @@ fun BalloonPopAdventureComposable(
     var currentWorld by remember(activity.id, replayKey) { mutableStateOf(initialPair.first) }
     var currentMode by remember(activity.id, replayKey) { mutableStateOf(initialPair.second) }
     var currentLanguage by remember(activity.id) { mutableStateOf(BalloonNarrationLanguage.ENGLISH) }
-    var followRoadStream by remember(activity.id, replayKey) { mutableStateOf(initialPair.first.hasWindingRoad) }
+    var followRoadStream by remember(activity.id, replayKey) { mutableStateOf(false) }
     var showWorldSelectorOverlay by remember(activity.id, replayKey) { mutableStateOf(false) }
 
     // Multi-Level Progression State:
@@ -1346,7 +1346,8 @@ fun BalloonPopAdventureComposable(
         mutableIntStateOf(0)
     }
 
-    val visibleCount = minOf((adaptive.effectiveChoiceCount + 2).coerceIn(5, 6), payloads.size.coerceAtLeast(1))
+    val visibleCount = minOf(if (androidx.compose.ui.platform.LocalConfiguration.current.screenWidthDp < 500) 2 else 3, payloads.size.coerceAtLeast(1))
+    var showBalloonTools by remember { mutableStateOf(false) }
     var poppedCount by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var roadStep by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var nextInstanceId by remember(activity.id, replayKey, sessionResetKey, currentStage) { mutableIntStateOf(100) }
@@ -1621,6 +1622,14 @@ fun BalloonPopAdventureComposable(
             .testTag("engine_balloon_pop"),
         verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text(if (currentStage == BalloonStageType.DISCOVERY_EXPLORE) "Pop and explore" else
+                BalloonSpawner.buildVoiceChallengePrompt(targetPayload, currentLanguage),
+                color = DeepSlateInk, fontSize = 22.sp, modifier = Modifier.weight(1f))
+            com.example.ui.screens.ParentHoldTarget("balloon_options_hold") { showBalloonTools = !showBalloonTools }
+        }
+        // Complete learning controls remain available behind the adult hold.
+        if (showBalloonTools) {
         // 1. Picture-First Compact Control Strip (Giant Icons, Minimal Words)
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -1890,6 +1899,7 @@ fun BalloonPopAdventureComposable(
             }
         }
 
+        }
         // 2. Giant Scenic Interactive World & Balloon Play Surface (92% of screen)
         BoxWithConstraints(
             modifier = Modifier
@@ -1985,8 +1995,7 @@ fun BalloonPopAdventureComposable(
                     } else {
                         1.0f
                     }
-                    val effectiveScale = (balloon.scale * adaptiveManager.balloonSizeMultiplier * pulseFactor)
-                        .coerceIn(0.35f, 1.38f)
+                    val effectiveScale = (balloon.scale * pulseFactor).coerceIn(0.35f, 1.08f)
 
                     val boxWidthDp = if (isTargetMatch) 104.dp else 98.dp
                     val boxHeightDp = if (isTargetMatch) 142.dp else 134.dp
@@ -2000,8 +2009,17 @@ fun BalloonPopAdventureComposable(
                         0f
                     }
 
-                    val centerX = balloon.xRatio * canvasWidthPx + wobbleOffsetPx
-                    val centerY = balloon.yRatio * canvasHeightPx
+                    // Full scaled bounds plus 24dp dead space; floating never crosses slots.
+                    val positions = CalmBalloonLayout.centers(
+                        canvasWidthPx, canvasHeightPx, visibleCount,
+                        with(density) { 104.dp.toPx() } * 1.08f,
+                        with(density) { 142.dp.toPx() } * 1.08f,
+                        with(density) { 24.dp.toPx() }
+                    )
+                    val centerX = positions[slot].first
+                    val room = ((canvasHeightPx - boxHeightPx * 1.08f) / 2f).coerceAtLeast(0f)
+                    val bob = if (reducedMotion) 0f else sin(totalElapsedSec * 1.2f + slot) * minOf(room, with(density) { 5.dp.toPx() })
+                    val centerY = positions[slot].second + bob
 
                     Box(
                         modifier = Modifier
@@ -2327,7 +2345,7 @@ fun BalloonPopAdventureComposable(
                 val hopBounce = if (reducedMotion || !activeRevealIsAnimalSurprise) {
                     0f
                 } else {
-                    abs(sin(totalElapsedSec * 8f)) * 14f
+                    sin((activeRevealTimerSec / 2.2f).coerceIn(0f, 1f) * PI.toFloat()) * 4f
                 }
                 Surface(
                     color = PlaySurfaceWhite.copy(alpha = 0.96f),
@@ -2346,7 +2364,14 @@ fun BalloonPopAdventureComposable(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(14.dp)
                     ) {
-                        Text(text = revealed.revealIllustrationEmoji, fontSize = 48.sp)
+                        val art = com.example.data.RealWorldMediaRegistry.allMediaItems.firstOrNull {
+                            it.emoji == revealed.revealIllustrationEmoji || it.emoji == revealed.emoji
+                        }?.bundledDrawableRes
+                        if (art != null) androidx.compose.foundation.Image(
+                            painter = androidx.compose.ui.res.painterResource(art),
+                            contentDescription = revealed.getDisplayTitle(currentLanguage),
+                            modifier = Modifier.size(90.dp), contentScale = androidx.compose.ui.layout.ContentScale.Fit
+                        ) else Text(text = revealed.symbolOrBadge.ifBlank { revealed.revealTitleEn }, fontSize = 30.sp)
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
                                 text = revealed.getDisplayTitle(currentLanguage),
