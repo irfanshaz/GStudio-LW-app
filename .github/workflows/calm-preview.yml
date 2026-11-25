@@ -64,3 +64,5 @@ jobs:
             app/build/reports/androidTests/
             app/build/outputs/androidTest-results/
             calm-evidence.tar
+            calm-instrumentation.txt
+            calm-logcat.txt
