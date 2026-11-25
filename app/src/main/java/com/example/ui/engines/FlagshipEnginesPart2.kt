@@ -3,6 +3,7 @@ package com.example.ui.engines
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -39,6 +40,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.Job
@@ -56,6 +58,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -128,8 +131,11 @@ fun AnimalSafariSoundsEngine(
         val rotated = allItems.drop(roundIdx % allItems.size) + allItems.take(roundIdx % allItems.size)
         rotated.take(count).shuffled()
     }
+    LaunchedEffect(activity.id, roundIdx, replayKey) {
+        viewModel.audio.speakInstruction("Where is ${target.label}?")
+    }
     var promptMessage by remember(roundIdx, replayKey, activity.id) {
-        mutableStateOf("Listen and tap: ${target.label} (${target.categoryOrTarget})")
+        mutableStateOf("Where is ${target.label}?")
     }
 
     Column(
@@ -177,10 +183,11 @@ fun AnimalSafariSoundsEngine(
                 .fillMaxWidth()
                 .weight(1f)
                 .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             choices.forEachIndexed { idx, option ->
                 val isTarget = option.id == target.id
+                val picture = option.drawableRes ?: com.example.data.RealWorldMediaRegistry.allMediaItems.firstOrNull { it.emoji == option.emoji }?.bundledDrawableRes
                 val glow = isTarget && adaptive.showVisualScaffoldGlow
 
                 Surface(
@@ -215,11 +222,11 @@ fun AnimalSafariSoundsEngine(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        if (option.drawableRes != null) {
+                        if (picture != null) {
                             Image(
-                                painter = painterResource(id = option.drawableRes),
+                                painter = painterResource(id = picture),
                                 contentDescription = option.label,
-                                contentScale = ContentScale.Crop,
+                                contentScale = ContentScale.Fit,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .weight(1f)
@@ -352,6 +359,8 @@ fun ColoringCanvasEngine(
         }
     }
 
+    val toolsState: androidx.compose.runtime.MutableState<Boolean> = com.example.ui.screens.LocalActivityTools.current ?: remember { mutableStateOf(false) }
+    var artTools by toolsState
     val currentPoints = remember { mutableStateListOf<Offset>() }
 
     Row(
@@ -360,25 +369,27 @@ fun ColoringCanvasEngine(
             .testTag("engine_coloring_canvas"),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        if (artTools) androidx.compose.ui.window.Dialog(onDismissRequest = { artTools = false }) {
+        Surface(shape = RoundedCornerShape(28.dp), color = SoftCreamCard) {
         // Left: Compact Color Palette & Tool Column (Fits phone landscape 100% with >= 48dp Save Art button)
         Column(
             modifier = Modifier
-                .width(172.dp)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceBetween,
+                .fillMaxWidth().verticalScroll(rememberScrollState()).padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // 8 Colors in a compact 4x2 grid
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                for (r in 0..1) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        for (c in 0..3) {
-                            val swatchIdx = r * 4 + c
+            com.example.ui.screens.CalmAction("Back to drawing", "coloring_tools_close") { artTools = false }
+            // Large separated color choices.
+            Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                for (r in 0..3) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+                        for (c in 0..1) {
+                            val swatchIdx = r * 2 + c
                             val hex = paletteColors[swatchIdx]
                             val selected = !isEraser && activeColorHex == hex
                             Box(
                                 modifier = Modifier
-                                    .size(34.dp)
+                                    .size(90.dp)
                                     .clip(CircleShape)
                                     .background(Color(hex))
                                     .border(
@@ -399,7 +410,7 @@ fun ColoringCanvasEngine(
 
             // Brush Sizes (S, M, L) + Eraser in a single horizontal strip
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -407,7 +418,7 @@ fun ColoringCanvasEngine(
                     val isSelected = !isEraser && activeBrushWidth == w
                     Surface(
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(90.dp)
                             .clip(CircleShape)
                             .clickable {
                                 isEraser = false
@@ -430,7 +441,7 @@ fun ColoringCanvasEngine(
 
                 Surface(
                     modifier = Modifier
-                        .height(36.dp)
+                        .height(90.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .clickable { isEraser = !isEraser }
                         .testTag("coloring_eraser_button"),
@@ -517,7 +528,7 @@ fun ColoringCanvasEngine(
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
+                    .height(90.dp)
                     .testTag("coloring_save_button")
             ) {
                 Icon(Icons.Default.Save, contentDescription = "Save Art", modifier = Modifier.size(18.dp), tint = PlaySurfaceWhite)
@@ -526,6 +537,8 @@ fun ColoringCanvasEngine(
             }
         }
 
+        }
+        }
         // Right: Full-Screen Drawing & Coloring Canvas with Subject Line-Art Guides
         Box(
             modifier = Modifier
@@ -592,6 +605,10 @@ fun ColoringCanvasEngine(
                 }
                 .testTag("drawing_surface_canvas")
         ) {
+            Button(onClick = { artTools = true },
+                modifier = Modifier.align(Alignment.TopEnd).then(Modifier.zIndex(2f)).size(90.dp).testTag("coloring_tools_open")) {
+                Text("Colors")
+            }
             val distinctColorsCount = strokes.filter { it.colorHex != 0xFFFFFBEBL }.map { it.colorHex }.distinct().size
             Text(
                 text = "${activity.emoji} ${activity.traceWordHint} • Strokes: ${strokes.size} • Colors: $distinctColorsCount",
@@ -722,6 +739,9 @@ fun MusicInstrumentsEngine(
     replayKey: Int,
     viewModel: WonderViewModel
 ) {
+    val musicTools = com.example.ui.screens.LocalActivityTools.current
+    val showMusicTools = musicTools?.value == true
+    val toddler = viewModel.settingsState.collectAsState().value.ageBandId == "2-3"
     val defaultMode = remember(activity.id) {
         when (activity.id) {
             "w11_music_2" -> 1 // Sparkling Xylophone
@@ -792,7 +812,7 @@ fun MusicInstrumentsEngine(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            if (showMusicTools) Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                 listOf(
                     0 to "🎹 Piano",
                     1 to "🎼 Xylophone",
@@ -801,14 +821,14 @@ fun MusicInstrumentsEngine(
                 ).forEach { (idx, label) ->
                     val selected = instrumentMode == idx || (idx == defaultMode && instrumentMode == defaultMode)
                     Button(
-                        onClick = { instrumentMode = idx },
+                        onClick = { instrumentMode = idx; musicTools?.value = false },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (selected) ActionContinueBlue else SoftCreamCard,
                             contentColor = if (selected) PlaySurfaceWhite else DeepSlateInk
                         ),
                         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
                         shape = RoundedCornerShape(14.dp),
-                        modifier = Modifier.height(42.dp)
+                        modifier = Modifier.height(90.dp)
                     ) {
                         Text(label, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
@@ -829,7 +849,7 @@ fun MusicInstrumentsEngine(
                 )
             }
 
-            Button(
+            if (instrumentMode == 3 || showMusicTools) Button(
                 onClick = {
                     demoJob?.cancel()
                     viewModel.audio.stopAllAudio()
@@ -848,7 +868,7 @@ fun MusicInstrumentsEngine(
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier
-                    .height(42.dp)
+                    .height(90.dp)
                     .testTag("music_play_echo_button")
             ) {
                 Text("🎵 Play Echo Tune", color = DeepSlateInk, fontSize = 12.sp, fontWeight = FontWeight.Bold)
@@ -946,7 +966,7 @@ fun MusicInstrumentsEngine(
                             .padding(vertical = 6.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        soundOptions.forEachIndexed { idx, opt ->
+                        (if (toddler) listOf(targetSound, soundOptions[(quizIdx + 1) % soundOptions.size]) else soundOptions).forEachIndexed { idx, opt ->
                             Surface(
                                 modifier = Modifier
                                     .weight(1f)
@@ -994,8 +1014,8 @@ fun MusicInstrumentsEngine(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        .weight(1f).horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     scaleNotes.forEachIndexed { idx, (noteName, freq, color) ->
@@ -1003,7 +1023,7 @@ fun MusicInstrumentsEngine(
                         val isNextEchoTarget = instrumentMode == 3 && currentEchoPattern.getOrNull(echoStep) == noteName
                         Surface(
                             modifier = Modifier
-                                .weight(1f)
+                                .width(90.dp)
                                 .fillMaxHeight(heightFraction)
                                 .clip(RoundedCornerShape(20.dp))
                                 .clickable {
@@ -1120,7 +1140,7 @@ fun MemoryMatchEngine(
             color = DeepSlateInk
         )
 
-        val cols = if (deck.size <= 6) 3 else 4
+        val cols = if (androidx.compose.ui.platform.LocalConfiguration.current.screenWidthDp < 500) 2 else if (deck.size <= 6) 3 else 4
         val rows = (deck.size + cols - 1) / cols
         Column(
             modifier = Modifier
@@ -1453,7 +1473,7 @@ fun NumbersMathCounterEngine(
                 val showPlusSignAfter = activity.id == "w08_math_5" && i == leftGroupCount
                 Surface(
                     modifier = Modifier
-                        .size(if (targetCount >= 7) 68.dp else 80.dp)
+                        .size(90.dp)
                         .clip(CircleShape)
                         .clickable {
                             if (!counted) {
@@ -1502,7 +1522,7 @@ fun NumbersMathCounterEngine(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(72.dp),
+                .height(90.dp),
             horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             options.forEach { num ->
@@ -1541,7 +1561,7 @@ fun NumbersMathCounterEngine(
  * - Includes an explicit `Read Again` action that resets to Page 1 and reads aloud without duplicate stars.
  */
 @Composable
-fun StorybookReaderEngine(
+fun LegacyStorybookReaderEngine(
     activity: ActivityConfig,
     replayKey: Int,
     viewModel: WonderViewModel

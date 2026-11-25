@@ -1,6 +1,7 @@
 package com.example
 
 import android.os.Bundle
+import android.content.pm.ActivityInfo
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -38,6 +39,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        androidx.core.view.WindowCompat.getInsetsController(window, window.decorView).apply {
+            systemBarsBehavior = androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            hide(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+        }
         setContent {
             LittleWonderWorldTheme {
                 LittleWonderWorldApp()
@@ -51,6 +56,25 @@ fun LittleWonderWorldApp(
     viewModel: WonderViewModel = viewModel()
 ) {
     val activeScreen by viewModel.activeScreen.collectAsStateWithLifecycle()
+    val hostActivity = androidx.compose.ui.platform.LocalContext.current as? android.app.Activity
+    // Older spatial engines were authored for landscape. Preserve their usable layout until
+    // they have dedicated portrait compositions; the new calm screens support both orientations.
+    val needsLandscape = when (val screen = activeScreen) {
+        is WonderScreen.ActivityPlay -> screen.activity.engineType !in setOf(
+            com.example.model.EngineType.BALLOON_POP,
+            com.example.model.EngineType.STORYBOOK_READER,
+            com.example.model.EngineType.MUSIC_INSTRUMENTS,
+            com.example.model.EngineType.COLORING_CANVAS,
+            com.example.model.EngineType.MEMORY_MATCH
+        )
+        is WonderScreen.ParentCorner, WonderScreen.Onboarding, WonderScreen.Garden -> true
+        else -> false
+    }
+    DisposableEffect(needsLandscape) {
+        hostActivity?.requestedOrientation = if (needsLandscape)
+            ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+        onDispose { }
+    }
     val navStack by viewModel.navigationStack.collectAsStateWithLifecycle()
     val settings by viewModel.settingsState.collectAsStateWithLifecycle()
     val progressList by viewModel.progressListState.collectAsStateWithLifecycle()
@@ -110,6 +134,9 @@ fun LittleWonderWorldApp(
                 reducedMotion = settings.reducedMotion
             )
 
+            is WonderScreen.AllLands -> com.example.ui.screens.DetailedHomeScreen(
+                viewModel, ageBand, buddy, progressList, settings.reducedMotion
+            )
             is WonderScreen.ToyBox -> ToyBoxScreen(
                 viewModel = viewModel,
                 progressList = progressList,

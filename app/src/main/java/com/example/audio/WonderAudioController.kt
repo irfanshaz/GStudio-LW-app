@@ -719,6 +719,8 @@ class WonderAudioController(context: Context) : TextToSpeech.OnInitListener {
         runCatching { player.start() }.onFailure { stopDiscoveryRecording() }
     }
 
+    fun isDiscoveryRecordingPlaying(): Boolean = runCatching { discoveryPlayer?.isPlaying == true }.getOrDefault(false)
+
     private fun stopDiscoveryRecording() {
         val player = discoveryPlayer
         discoveryPlayer = null

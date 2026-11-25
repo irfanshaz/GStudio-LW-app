@@ -359,7 +359,7 @@ fun OnboardingScreen(
  * - Right 6 Learning Lands Grid: All 6 Learning Lands with progress stars and instant navigation
  */
 @Composable
-fun HomeScreen(
+fun LegacyHomeScreen(
     viewModel: WonderViewModel,
     ageBand: AgeBand,
     buddy: LearningBuddy,
@@ -794,7 +794,7 @@ private fun LandTileCard(
  * - My Shelf tabs: Favorites, Recently Played (1-tap replay), and Saved Artworks Gallery with live multi-color stroke preview
  */
 @Composable
-fun ToyBoxScreen(
+fun LegacyToyBoxScreen(
     viewModel: WonderViewModel,
     progressList: List<ActivityProgressEntity>,
     savedArtworks: List<SavedArtworkEntity>
@@ -1229,7 +1229,7 @@ private fun ShelfActivityChip(
  * Land Worlds Screen & Paginated World Activities Screen (up to 9 large activity tiles per page).
  */
 @Composable
-fun LandWorldsScreen(
+fun LegacyLandWorldsScreen(
     landId: LandId,
     viewModel: WonderViewModel,
     progressList: List<ActivityProgressEntity>
@@ -1405,7 +1405,7 @@ fun LandWorldsScreen(
  * has a non-zero, readable title height AND distinguishing glyph/range preview on both phone and tablet landscape.
  */
 @Composable
-fun WorldActivitiesScreen(
+fun LegacyWorldActivitiesScreen(
     world: WorldSpec,
     pageIndex: Int,
     viewModel: WonderViewModel,

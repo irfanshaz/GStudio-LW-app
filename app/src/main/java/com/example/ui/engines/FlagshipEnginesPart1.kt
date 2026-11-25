@@ -151,6 +151,7 @@ fun ActivityPlayScreen(
         viewModel.getAdaptiveParametersFor(activity)
     }
 
+    val activityTools = remember(activity.id) { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -158,173 +159,9 @@ fun ActivityPlayScreen(
             .padding(horizontal = 10.dp, vertical = 6.dp)
             .testTag("activity_play_screen_${activity.id}")
     ) {
-        // 1. Compact Top Instruction Strip (maximizes large play surface below)
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = PlaySurfaceWhite,
-            shape = RoundedCornerShape(18.dp),
-            shadowElevation = 3.dp
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                // Left: Back, Home, Title & Visible Caption when speech is muted/unavailable
-                Row(
-                    modifier = Modifier.weight(1f),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(
-                        onClick = { viewModel.navigateBack() },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(SoftCreamCard)
-                            .testTag("activity_back_button")
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = DeepSlateInk)
-                    }
-                    Spacer(Modifier.width(6.dp))
-                    IconButton(
-                        onClick = { viewModel.navigateHome() },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(SoftCreamCard)
-                            .testTag("activity_home_button")
-                    ) {
-                        Icon(Icons.Default.Home, contentDescription = "Home", tint = DeepSlateInk)
-                    }
-                    Spacer(Modifier.width(8.dp))
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = "${activity.emoji} ${activity.title}",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = DeepSlateInk,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        if ((!settings.narrationEnabled || !ttsAvailable) && lastSpokenCaption.isNotBlank()) {
-                            Text(
-                                text = "💬 $lastSpokenCaption",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = ActionContinueBlue,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.testTag("speech_fallback_visible_caption")
-                            )
-                        }
-                    }
-                }
-
-                // Right: 5-Star Milestone Indicator + Listen + Show Me + Favorite + Replay + Next Game
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    // 5-Star Gentle Milestone Strip
-                    Surface(
-                        color = SoftCreamCard,
-                        shape = RoundedCornerShape(12.dp),
-                        border = BorderStroke(1.dp, ActionListenAmber)
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            for (s in 1..5) {
-                                Icon(
-                                    Icons.Default.Star,
-                                    contentDescription = null,
-                                    tint = if (s <= starsEarned) ActionListenAmber else Color(0xFFCBD5E1),
-                                    modifier = Modifier.size(14.dp)
-                                )
-                            }
-                        }
-                    }
-
-                    // Listen Instruction Icon Button
-                    IconButton(
-                        onClick = { viewModel.audio.speakInstruction(activity.instructionText) },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(ActionListenAmber)
-                            .testTag("activity_listen_button")
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = "Listen", tint = DeepSlateInk)
-                    }
-
-                    // Show Me Demonstration Icon Button
-                    IconButton(
-                        onClick = { viewModel.triggerShowMeDemo(activity) },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(if (showDemoBanner) ActionPlayGreen else SoftCreamCard)
-                            .testTag("activity_show_me_button")
-                    ) {
-                        Icon(
-                            Icons.Default.Lightbulb,
-                            contentDescription = "Show Me",
-                            tint = if (showDemoBanner) PlaySurfaceWhite else DeepSlateInk
-                        )
-                    }
-
-                    // Favorite Heart Button (saves to My Shelf)
-                    IconButton(
-                        onClick = { viewModel.toggleFavorite(activity) },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(SoftCreamCard)
-                            .testTag("activity_favorite_button")
-                    ) {
-                        Icon(
-                            if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = "Save to My Shelf",
-                            tint = if (isFavorite) ActionFavoritePink else MutedSlateText
-                        )
-                    }
-
-                    // Replay Button
-                    IconButton(
-                        onClick = {
-                            replayKey += 1
-                            viewModel.audio.speakInstruction("Let's play ${activity.title} again!")
-                        },
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .background(SoftCreamCard)
-                            .testTag("activity_replay_button")
-                    ) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Replay", tint = DeepSlateInk)
-                    }
-
-                    // Top-Level Next Activity Button (distinct from in-deck Next step)
-                    Button(
-                        onClick = { viewModel.launchNextActivityInWorld(activity) },
-                        colors = ButtonDefaults.buttonColors(containerColor = ActionContinueBlue),
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
-                        shape = RoundedCornerShape(14.dp),
-                        modifier = Modifier
-                            .height(48.dp)
-                            .testTag("activity_next_button")
-                    ) {
-                        Text("Next Game", color = PlaySurfaceWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold, maxLines = 1)
-                        Spacer(Modifier.width(4.dp))
-                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Next Game", tint = PlaySurfaceWhite, modifier = Modifier.size(16.dp))
-                    }
-                }
-            }
+        com.example.ui.screens.CalmActivityHeader(activity, viewModel, isFavorite,
+            onTools = if (activity.engineType in listOf(EngineType.BALLOON_POP, EngineType.STORYBOOK_READER, EngineType.COLORING_CANVAS, EngineType.MUSIC_INSTRUMENTS)) ({ activityTools.value = !activityTools.value }) else null) {
+            replayKey += 1
         }
 
         // Optional "Show Me" Demonstration Banner
@@ -386,6 +223,7 @@ fun ActivityPlayScreen(
                     .fillMaxSize()
                     .padding(10.dp)
             ) {
+                androidx.compose.runtime.CompositionLocalProvider(com.example.ui.screens.LocalActivityTools provides activityTools) {
                 when (activity.engineType) {
                     EngineType.SORTING_BASKETS -> SortingBasketsEngine(
                         activity = activity,
@@ -479,6 +317,7 @@ fun ActivityPlayScreen(
                 }
             }
         }
+    }
     }
 }
 

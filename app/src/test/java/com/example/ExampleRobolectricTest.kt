@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performClick
 import androidx.test.core.app.ApplicationProvider
 import com.example.data.ActivityProgressEntity
@@ -126,13 +127,13 @@ class ExampleRobolectricTest {
         }
         composeTestRule.waitForIdle()
 
-        val parentNode = composeTestRule.onNodeWithTag("home_parent_corner_button", useUnmergedTree = true).SemanticsNodeInteractionBounds()
-        assertTrue("Expected home_parent_corner_button width > 40px, got ${parentNode.first}", parentNode.first > 40f)
-        assertTrue("Expected home_parent_corner_button height > 30px, got ${parentNode.second}", parentNode.second > 30f)
+        val parentNode = composeTestRule.onNodeWithTag("home_parent_hold", useUnmergedTree = true).SemanticsNodeInteractionBounds()
+        assertTrue("Expected home_parent_hold width > 40px, got ${parentNode.first}", parentNode.first > 40f)
+        assertTrue("Expected home_parent_hold height > 30px, got ${parentNode.second}", parentNode.second > 30f)
 
-        composeTestRule.onNodeWithTag("home_toy_box_button").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("home_surprise_play_button").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("home_real_world_button").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("calm_home_tile_0").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("calm_home_tile_2").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("calm_home_tile_1").assertIsDisplayed()
     }
 
     @Test
@@ -151,13 +152,17 @@ class ExampleRobolectricTest {
         }
         composeTestRule.waitForIdle()
 
-        // Verify all 9 cards on Page 1 of w04_tracing have non-zero title height and distinct glyph badge
-        for (i in 1..9) {
-            val id = "w04_tracing_$i"
-            val titleBounds = composeTestRule.onNodeWithTag("activity_title_$id", useUnmergedTree = true).SemanticsNodeInteractionBounds()
-            assertTrue("Expected non-zero title height for $id on phone landscape, got ${titleBounds.second}", titleBounds.second > 8f)
-            val glyphBounds = composeTestRule.onNodeWithTag("activity_glyph_$id", useUnmergedTree = true).SemanticsNodeInteractionBounds()
-            assertTrue("Expected non-zero glyph badge width for $id, got ${glyphBounds.first}", glyphBounds.first > 8f)
+        // Every activity remains reachable through the paged catalog.
+        val count = WonderCatalogRegistry.getActivitiesForWorld(tracingWorld.id).size
+        for (index in 0 until count) {
+            if (index > 0 && index % 4 == 0) {
+                composeTestRule.onNodeWithTag("catalog_next").performScrollTo().performClick()
+                composeTestRule.waitForIdle()
+            }
+            val tile = composeTestRule.onNodeWithTag("catalog_item_$index").performScrollTo()
+            tile.assertIsDisplayed()
+            val bounds = tile.SemanticsNodeInteractionBounds()
+            assertTrue("Activity target must be at least 90px tall", bounds.second >= 90f)
         }
     }
 
@@ -218,6 +223,8 @@ class ExampleRobolectricTest {
         }
         composeTestRule.waitForIdle()
 
+        composeTestRule.onNodeWithTag("coloring_tools_open").performClick()
+        composeTestRule.onNodeWithTag("coloring_save_button").performScrollTo()
         val saveBounds = composeTestRule.onNodeWithTag("coloring_save_button", useUnmergedTree = true).SemanticsNodeInteractionBounds()
         assertTrue("Expected coloring_save_button height > 30px on phone landscape, got ${saveBounds.second}", saveBounds.second > 30f)
     }
@@ -239,8 +246,8 @@ class ExampleRobolectricTest {
         }
         composeTestRule.waitForIdle()
 
-        val cardsBounds = composeTestRule.onNodeWithTag("mode_scroll_cards_button", useUnmergedTree = true).SemanticsNodeInteractionBounds()
-        val reelsBounds = composeTestRule.onNodeWithTag("mode_wonder_reels_button", useUnmergedTree = true).SemanticsNodeInteractionBounds()
+        val cardsBounds = composeTestRule.onNodeWithTag("discovery_look", useUnmergedTree = true).performScrollTo().SemanticsNodeInteractionBounds()
+        val reelsBounds = composeTestRule.onNodeWithTag("discovery_watch", useUnmergedTree = true).performScrollTo().SemanticsNodeInteractionBounds()
         assertTrue("Expected mode_scroll_cards_button width > 40px, got ${cardsBounds.first}", cardsBounds.first > 40f)
         assertTrue("Expected mode_wonder_reels_button width > 40px, got ${reelsBounds.first}", reelsBounds.first > 40f)
     }
