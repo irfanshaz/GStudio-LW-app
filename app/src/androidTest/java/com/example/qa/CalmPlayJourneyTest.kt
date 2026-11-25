@@ -23,10 +23,13 @@ class CalmPlayJourneyTest {
 
     @Before fun prepare() {
         compose.mainClock.autoAdvance = false
+        var onboardingJob: kotlinx.coroutines.Job? = null
         compose.activityRule.scenario.onActivity {
             vm = ViewModelProvider(it)[WonderViewModel::class.java]
-            vm.completeOnboarding(AgeBand.TODDLER_2_3, LearningBuddy.entries.first())
+            onboardingJob = vm.completeOnboarding(AgeBand.TODDLER_2_3, LearningBuddy.entries.first())
         }
+        // Joining the real save/navigation job prevents setup from navigating Home during a test.
+        kotlinx.coroutines.runBlocking { kotlinx.coroutines.withTimeout(15000) { onboardingJob!!.join() } }
         compose.waitUntil(15000) { compose.mainClock.advanceTimeBy(96); vm.settingsState.value.onboardingCompleted }
     }
 
