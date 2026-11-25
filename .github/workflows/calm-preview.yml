@@ -24,8 +24,16 @@ jobs:
           cache-read-only: false
       - name: Verify catalog and media preservation
         run: bash scripts/verify-calm-preservation.sh
+      - name: Retain the preview signing identity for future updates
+        uses: actions/cache@v4
+        with:
+          path: debug.keystore
+          key: wonder-calm-preview-signing-v1
       - name: Prepare preview signing key
-        run: keytool -genkeypair -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -dname "CN=Wonder Preview,O=Android,C=US" -keyalg RSA -validity 10000
+        run: |
+          if [ ! -f debug.keystore ]; then
+            keytool -genkeypair -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -dname "CN=Wonder Preview,O=Android,C=US" -keyalg RSA -validity 10000
+          fi
       - name: Compile and run regression tests
         run: |
           set -o pipefail
