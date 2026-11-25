@@ -1,5 +1,8 @@
 package com.example.ui.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import com.example.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -29,7 +32,7 @@ fun HomeScreen(viewModel: WonderViewModel, ageBand: AgeBand, buddy: LearningBudd
         return
     }
     BoxWithConstraints(Modifier.fillMaxSize().background(SoftCreamCard).testTag("home_screen")) {
-        val portrait = maxHeight > maxWidth
+        val columns = if (maxWidth >= 600.dp) 4 else 2
         Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -38,12 +41,12 @@ fun HomeScreen(viewModel: WonderViewModel, ageBand: AgeBand, buddy: LearningBudd
                 ParentHoldTarget("home_parent_hold") { viewModel.navigateTo(WonderScreen.ParentCorner(unlocked = true)) }
             }
             val labels = listOf("My toys", "Pictures & videos", "Story adventure", "All activities")
-            val symbols = listOf("●", "▣", "✦", "+")
+            val pictures = listOf(R.drawable.atlas_everyday_ball, R.drawable.pack01_elephant, R.drawable.atlas_everyday_book, R.drawable.pack01_star)
             val colors = listOf(ActionPlayGreen, ActionContinueBlue, LandCreativeViolet, ActionListenAmber)
-            for (row in 0..1) {
+            for (row in 0 until (4 / columns)) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                    for (col in 0..1) {
-                        val i = row * 2 + col
+                    for (col in 0 until columns) {
+                        val i = row * columns + col
                         Button(onClick = {
                             when (i) {
                                 0 -> viewModel.navigateTo(WonderScreen.ToyBox)
@@ -51,13 +54,13 @@ fun HomeScreen(viewModel: WonderViewModel, ageBand: AgeBand, buddy: LearningBudd
                                 2 -> viewModel.startGarden()
                                 else -> catalog = true
                             }
-                        }, modifier = Modifier.weight(1f).heightIn(min = if (portrait) 150.dp else 100.dp)
+                        }, modifier = Modifier.weight(1f).heightIn(min = 140.dp)
                             .testTag("calm_home_tile_$i"), shape = RoundedCornerShape(28.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = colors[i].copy(alpha = 0.14f),
                                 contentColor = DeepSlateInk)) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Text(symbols[i], fontSize = 30.sp, color = colors[i])
+                                Image(painterResource(pictures[i]), contentDescription = labels[i], modifier = Modifier.size(60.dp))
                                 Text(labels[i], fontSize = 18.sp, fontWeight = FontWeight.Bold)
                             }
                         }

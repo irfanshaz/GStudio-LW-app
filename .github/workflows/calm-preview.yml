@@ -21,10 +21,20 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.3.1'
+          cache-read-only: false
       - name: Prepare preview signing key
         run: keytool -genkeypair -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -dname "CN=Wonder Preview,O=Android,C=US" -keyalg RSA -validity 10000
       - name: Compile and run regression tests
-        run: gradle testDebugUnitTest assembleDebug assembleDebugAndroidTest -PcalmPreview=true --no-daemon
+        run: |
+          set -o pipefail
+          if ! gradle testDebugUnitTest assembleDebug assembleDebugAndroidTest -PcalmPreview=true --no-configuration-cache --no-daemon 2>&1 | tee build-log.txt; then
+            if grep -Eq '429|Read timed out|Connection reset' build-log.txt; then
+              sleep 20
+              gradle testDebugUnitTest assembleDebug assembleDebugAndroidTest -PcalmPreview=true --no-configuration-cache --no-daemon
+            else
+              exit 1
+            fi
+          fi
       - name: Enable emulator acceleration
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules

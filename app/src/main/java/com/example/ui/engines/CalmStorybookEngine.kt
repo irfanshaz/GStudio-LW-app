@@ -47,6 +47,7 @@ fun StorybookReaderEngine(activity: ActivityConfig, replayKey: Int, viewModel: W
     var options by remember(activity.id) { mutableStateOf(false) }
     var page by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var acted by remember(activity.id, page, replayKey) { mutableStateOf(false) }
+    var finished by remember(activity.id, replayKey) { mutableStateOf(false) }
     var awarded by remember(activity.id, replayKey) { mutableStateOf(false) }
     val settings by viewModel.settingsState.collectAsState()
     val pages = activity.storyPages.ifEmpty { listOf(StoryPageSpec(1, activity.title,
@@ -73,6 +74,7 @@ fun StorybookReaderEngine(activity: ActivityConfig, replayKey: Int, viewModel: W
                     awarded = true
                     viewModel.onActivityMilestoneCompleted(activity, hadRetriesInRound = false, speakMilestonePraise = false)
                 }
+                finished = true
             } else page++
         }
     }
@@ -115,8 +117,8 @@ fun StorybookReaderEngine(activity: ActivityConfig, replayKey: Int, viewModel: W
                 }
             }
             Spacer(Modifier.height(24.dp))
-            if (acted && page == pages.lastIndex) {
-                CalmAction("Again", "story_read_again_button") { page = 0; acted = false }
+            if (finished) {
+                CalmAction("Again", "story_read_again_button") { page = 0; acted = false; finished = false }
             } else {
                 CalmAction(action, "story_action_button") { if (!acted) acted = true }
             }

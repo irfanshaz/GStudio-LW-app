@@ -3,6 +3,7 @@ package com.example.ui.engines
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -56,6 +57,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.zIndex
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -356,6 +358,7 @@ fun ColoringCanvasEngine(
         }
     }
 
+    var artTools by remember { mutableStateOf(false) }
     val currentPoints = remember { mutableStateListOf<Offset>() }
 
     Row(
@@ -364,25 +367,27 @@ fun ColoringCanvasEngine(
             .testTag("engine_coloring_canvas"),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        if (artTools) androidx.compose.ui.window.Dialog(onDismissRequest = { artTools = false }) {
+        Surface(shape = RoundedCornerShape(28.dp), color = SoftCreamCard) {
         // Left: Compact Color Palette & Tool Column (Fits phone landscape 100% with >= 48dp Save Art button)
         Column(
             modifier = Modifier
-                .width(172.dp)
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.SpaceBetween,
+                .fillMaxWidth().verticalScroll(rememberScrollState()).padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // 8 Colors in a compact 4x2 grid
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                for (r in 0..1) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        for (c in 0..3) {
-                            val swatchIdx = r * 4 + c
+            com.example.ui.screens.CalmAction("Back to drawing", "coloring_tools_close") { artTools = false }
+            // Large separated color choices.
+            Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+                for (r in 0..3) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+                        for (c in 0..1) {
+                            val swatchIdx = r * 2 + c
                             val hex = paletteColors[swatchIdx]
                             val selected = !isEraser && activeColorHex == hex
                             Box(
                                 modifier = Modifier
-                                    .size(34.dp)
+                                    .size(90.dp)
                                     .clip(CircleShape)
                                     .background(Color(hex))
                                     .border(
@@ -403,7 +408,7 @@ fun ColoringCanvasEngine(
 
             // Brush Sizes (S, M, L) + Eraser in a single horizontal strip
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -411,7 +416,7 @@ fun ColoringCanvasEngine(
                     val isSelected = !isEraser && activeBrushWidth == w
                     Surface(
                         modifier = Modifier
-                            .size(36.dp)
+                            .size(90.dp)
                             .clip(CircleShape)
                             .clickable {
                                 isEraser = false
@@ -434,7 +439,7 @@ fun ColoringCanvasEngine(
 
                 Surface(
                     modifier = Modifier
-                        .height(36.dp)
+                        .height(90.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .clickable { isEraser = !isEraser }
                         .testTag("coloring_eraser_button"),
@@ -521,7 +526,7 @@ fun ColoringCanvasEngine(
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
+                    .height(90.dp)
                     .testTag("coloring_save_button")
             ) {
                 Icon(Icons.Default.Save, contentDescription = "Save Art", modifier = Modifier.size(18.dp), tint = PlaySurfaceWhite)
@@ -530,6 +535,8 @@ fun ColoringCanvasEngine(
             }
         }
 
+        }
+        }
         // Right: Full-Screen Drawing & Coloring Canvas with Subject Line-Art Guides
         Box(
             modifier = Modifier
@@ -596,6 +603,10 @@ fun ColoringCanvasEngine(
                 }
                 .testTag("drawing_surface_canvas")
         ) {
+            Button(onClick = { artTools = true },
+                modifier = Modifier.align(Alignment.TopEnd).then(Modifier.zIndex(2f)).size(90.dp).testTag("coloring_tools_open")) {
+                Text("Colors")
+            }
             val distinctColorsCount = strokes.filter { it.colorHex != 0xFFFFFBEBL }.map { it.colorHex }.distinct().size
             Text(
                 text = "${activity.emoji} ${activity.traceWordHint} • Strokes: ${strokes.size} • Colors: $distinctColorsCount",

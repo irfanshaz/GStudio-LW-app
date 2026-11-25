@@ -63,6 +63,7 @@ fun CalmFlashcards(items: List<RealWorldMediaItem>, overrides: Map<String, Custo
             delay(300)
             withTimeoutOrNull(15000) { viewModel.audio.isTeacherSpeaking.first { !it } }
             item.bundledSoundRes?.let { viewModel.audio.playDiscoveryRecording(it) }
+            while (viewModel.audio.isDiscoveryRecordingPlaying()) delay(100)
         }
     }
     LaunchedEffect(pager.settledPage) {

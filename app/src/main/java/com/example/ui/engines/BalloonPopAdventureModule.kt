@@ -2031,7 +2031,6 @@ fun BalloonPopAdventureComposable(
                                 IntOffset(xPx.roundToInt(), yPx.roundToInt())
                             }
                             .size(width = boxWidthDp, height = boxHeightDp)
-                            .scale(effectiveScale)
                             .clickable(
                                 enabled = !allItemsPoppedInSession && (
                                     balloon.state == BalloonLifecycleState.FLOATING ||
@@ -2135,6 +2134,7 @@ fun BalloonPopAdventureComposable(
                         contentAlignment = Alignment.TopCenter
                     ) {
                         val showGiantSymbol = payload.categoryTag in listOf("Alphabet", "Phonics", "Number", "Word")
+                        Box(Modifier.fillMaxSize().scale(effectiveScale)) {
                         BalloonShapeGraphic(
                             balloonColorHex = payload.balloonColorHex,
                             isTargetMatch = isTargetMatch,
@@ -2146,6 +2146,7 @@ fun BalloonPopAdventureComposable(
                             hasAnimalSurpriseBadge = balloon.hasAnimalSurpriseBadge,
                             showPointingHand = isHintBalloon && adaptiveManager.shouldShowPointingHand
                         )
+                        }
                     }
                 }
             }
