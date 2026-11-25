@@ -40,6 +40,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.Job
@@ -737,6 +738,9 @@ fun MusicInstrumentsEngine(
     replayKey: Int,
     viewModel: WonderViewModel
 ) {
+    val musicTools = com.example.ui.screens.LocalActivityTools.current
+    val showMusicTools = musicTools?.value == true
+    val toddler = viewModel.settingsState.collectAsState().value.ageBandId == "2-3"
     val defaultMode = remember(activity.id) {
         when (activity.id) {
             "w11_music_2" -> 1 // Sparkling Xylophone
@@ -807,7 +811,7 @@ fun MusicInstrumentsEngine(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            if (showMusicTools) Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(24.dp)) {
                 listOf(
                     0 to "🎹 Piano",
                     1 to "🎼 Xylophone",
@@ -816,14 +820,14 @@ fun MusicInstrumentsEngine(
                 ).forEach { (idx, label) ->
                     val selected = instrumentMode == idx || (idx == defaultMode && instrumentMode == defaultMode)
                     Button(
-                        onClick = { instrumentMode = idx },
+                        onClick = { instrumentMode = idx; musicTools?.value = false },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (selected) ActionContinueBlue else SoftCreamCard,
                             contentColor = if (selected) PlaySurfaceWhite else DeepSlateInk
                         ),
                         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
                         shape = RoundedCornerShape(14.dp),
-                        modifier = Modifier.height(42.dp)
+                        modifier = Modifier.height(90.dp)
                     ) {
                         Text(label, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
@@ -844,7 +848,7 @@ fun MusicInstrumentsEngine(
                 )
             }
 
-            Button(
+            if (instrumentMode == 3 || showMusicTools) Button(
                 onClick = {
                     demoJob?.cancel()
                     viewModel.audio.stopAllAudio()
@@ -863,7 +867,7 @@ fun MusicInstrumentsEngine(
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier
-                    .height(42.dp)
+                    .height(90.dp)
                     .testTag("music_play_echo_button")
             ) {
                 Text("🎵 Play Echo Tune", color = DeepSlateInk, fontSize = 12.sp, fontWeight = FontWeight.Bold)
@@ -961,7 +965,7 @@ fun MusicInstrumentsEngine(
                             .padding(vertical = 6.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        soundOptions.forEachIndexed { idx, opt ->
+                        (if (toddler) listOf(targetSound, soundOptions[(quizIdx + 1) % soundOptions.size]) else soundOptions).forEachIndexed { idx, opt ->
                             Surface(
                                 modifier = Modifier
                                     .weight(1f)
@@ -1009,8 +1013,8 @@ fun MusicInstrumentsEngine(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        .weight(1f).horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     scaleNotes.forEachIndexed { idx, (noteName, freq, color) ->
@@ -1018,7 +1022,7 @@ fun MusicInstrumentsEngine(
                         val isNextEchoTarget = instrumentMode == 3 && currentEchoPattern.getOrNull(echoStep) == noteName
                         Surface(
                             modifier = Modifier
-                                .weight(1f)
+                                .width(90.dp)
                                 .fillMaxHeight(heightFraction)
                                 .clip(RoundedCornerShape(20.dp))
                                 .clickable {
@@ -1135,7 +1139,7 @@ fun MemoryMatchEngine(
             color = DeepSlateInk
         )
 
-        val cols = if (deck.size <= 6) 3 else 4
+        val cols = if (androidx.compose.ui.platform.LocalConfiguration.current.screenWidthDp < 500) 2 else if (deck.size <= 6) 3 else 4
         val rows = (deck.size + cols - 1) / cols
         Column(
             modifier = Modifier

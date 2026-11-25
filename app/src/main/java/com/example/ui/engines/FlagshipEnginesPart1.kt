@@ -160,7 +160,7 @@ fun ActivityPlayScreen(
             .testTag("activity_play_screen_${activity.id}")
     ) {
         com.example.ui.screens.CalmActivityHeader(activity, viewModel, isFavorite,
-            onTools = if (activity.engineType in listOf(EngineType.BALLOON_POP, EngineType.STORYBOOK_READER, EngineType.COLORING_CANVAS)) ({ activityTools.value = !activityTools.value }) else null) {
+            onTools = if (activity.engineType in listOf(EngineType.BALLOON_POP, EngineType.STORYBOOK_READER, EngineType.COLORING_CANVAS, EngineType.MUSIC_INSTRUMENTS)) ({ activityTools.value = !activityTools.value }) else null) {
             replayKey += 1
         }
 
