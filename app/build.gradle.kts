@@ -153,3 +153,9 @@ dependencies {
   "ksp"(libs.androidx.room.compiler)
   // "ksp"(libs.moshi.kotlin.codegen)
 }
+
+
+// Robolectric downloads Android runtimes independently of Gradle repositories.
+tasks.withType<org.gradle.api.tasks.testing.Test>().configureEach {
+  systemProperty("robolectric.dependency.repo.url", "https://maven-central.storage-download.googleapis.com/maven2")
+}

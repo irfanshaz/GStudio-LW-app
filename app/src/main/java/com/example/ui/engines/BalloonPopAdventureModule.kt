@@ -1347,7 +1347,7 @@ fun BalloonPopAdventureComposable(
     }
 
     val visibleCount = minOf(if (androidx.compose.ui.platform.LocalConfiguration.current.screenWidthDp < 500) 2 else 3, payloads.size.coerceAtLeast(1))
-    var showBalloonTools by remember { mutableStateOf(false) }
+    var showBalloonTools by (com.example.ui.screens.LocalActivityTools.current ?: remember { mutableStateOf(false) })
     var poppedCount by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var roadStep by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var nextInstanceId by remember(activity.id, replayKey, sessionResetKey, currentStage) { mutableIntStateOf(100) }
@@ -1626,7 +1626,6 @@ fun BalloonPopAdventureComposable(
             Text(if (currentStage == BalloonStageType.DISCOVERY_EXPLORE) "Pop and explore" else
                 BalloonSpawner.buildVoiceChallengePrompt(targetPayload, currentLanguage),
                 color = DeepSlateInk, fontSize = 22.sp, modifier = Modifier.weight(1f))
-            com.example.ui.screens.ParentHoldTarget("balloon_options_hold") { showBalloonTools = !showBalloonTools }
         }
         // Complete learning controls remain available behind the adult hold.
         if (showBalloonTools) {

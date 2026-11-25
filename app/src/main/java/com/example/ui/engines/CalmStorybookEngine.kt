@@ -44,7 +44,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun StorybookReaderEngine(activity: ActivityConfig, replayKey: Int, viewModel: WonderViewModel) {
     var readAlong by remember(activity.id) { mutableStateOf(false) }
-    var options by remember(activity.id) { mutableStateOf(false) }
+    var options by (com.example.ui.screens.LocalActivityTools.current ?: remember(activity.id) { mutableStateOf(false) })
     var page by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var acted by remember(activity.id, page, replayKey) { mutableStateOf(false) }
     var finished by remember(activity.id, replayKey) { mutableStateOf(false) }
@@ -81,7 +81,6 @@ fun StorybookReaderEngine(activity: ActivityConfig, replayKey: Int, viewModel: W
 
     Column(Modifier.fillMaxSize().testTag("engine_storybook_reader")) {
         if (readAlong) {
-            ParentHoldTarget("story_options_hold") { options = true }
             LegacyStorybookReaderEngine(activity, replayKey, viewModel)
         } else {
             Crossfade(targetState = page, modifier = Modifier.weight(1f), label = "story_scene",
@@ -104,9 +103,6 @@ fun StorybookReaderEngine(activity: ActivityConfig, replayKey: Int, viewModel: W
                         StoryStage()
                         Icon(Icons.Default.TouchApp, action, tint = ActionContinueBlue,
                             modifier = Modifier.size(110.dp))
-                    }
-                    Box(Modifier.align(Alignment.TopEnd)) {
-                        ParentHoldTarget("story_options_hold") { options = true }
                     }
                     if (acted && scenePage == pages.lastIndex) {
                         Surface(Modifier.align(Alignment.BottomCenter).padding(24.dp),

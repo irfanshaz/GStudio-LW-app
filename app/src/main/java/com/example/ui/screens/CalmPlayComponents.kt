@@ -26,6 +26,8 @@ import com.example.viewmodel.WonderScreen
 import com.example.viewmodel.WonderViewModel
 import kotlinx.coroutines.withTimeoutOrNull
 
+val LocalActivityTools = compositionLocalOf<MutableState<Boolean>?> { null }
+
 /** A full sized target with a quiet visual mark. Unlock only after a continuous 3s hold. */
 @Composable
 fun ParentHoldTarget(tag: String = "parent_hold", onUnlock: () -> Unit) {
@@ -68,7 +70,7 @@ fun CalmParentSheet(title: String, onDismiss: () -> Unit, content: @Composable C
 
 @Composable
 fun CalmActivityHeader(activity: ActivityConfig, viewModel: WonderViewModel,
-    isFavorite: Boolean, onReplay: () -> Unit) {
+    isFavorite: Boolean, onTools: (() -> Unit)? = null, onReplay: () -> Unit) {
     var menu by remember(activity.id) { mutableStateOf(false) }
     val caption by viewModel.audio.lastSpokenCaption.collectAsState()
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically,
@@ -85,6 +87,7 @@ fun CalmActivityHeader(activity: ActivityConfig, viewModel: WonderViewModel,
     }
     if (menu) CalmParentSheet("Activity options", { menu = false }) {
         if (caption.isNotBlank()) Text(caption, color = DeepSlateInk)
+        if (onTools != null) CalmAction("Activity options", "activity_tools_button") { menu = false; onTools() }
         CalmAction("Show me", "activity_show_me_button") { menu = false; viewModel.triggerShowMeDemo(activity) }
         CalmAction("Play again", "activity_replay_button") { menu = false; onReplay() }
         CalmAction(if (isFavorite) "Remove from My Shelf" else "Save to My Shelf", "activity_favorite_button") {

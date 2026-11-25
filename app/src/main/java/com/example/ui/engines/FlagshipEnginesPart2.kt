@@ -358,7 +358,7 @@ fun ColoringCanvasEngine(
         }
     }
 
-    var artTools by remember { mutableStateOf(false) }
+    var artTools by (com.example.ui.screens.LocalActivityTools.current ?: remember { mutableStateOf(false) })
     val currentPoints = remember { mutableStateListOf<Offset>() }
 
     Row(

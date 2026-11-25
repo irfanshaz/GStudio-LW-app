@@ -151,6 +151,7 @@ fun ActivityPlayScreen(
         viewModel.getAdaptiveParametersFor(activity)
     }
 
+    val activityTools = remember(activity.id) { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -158,7 +159,8 @@ fun ActivityPlayScreen(
             .padding(horizontal = 10.dp, vertical = 6.dp)
             .testTag("activity_play_screen_${activity.id}")
     ) {
-        com.example.ui.screens.CalmActivityHeader(activity, viewModel, isFavorite) {
+        com.example.ui.screens.CalmActivityHeader(activity, viewModel, isFavorite,
+            onTools = if (activity.engineType in listOf(EngineType.BALLOON_POP, EngineType.STORYBOOK_READER, EngineType.COLORING_CANVAS)) ({ activityTools.value = !activityTools.value }) else null) {
             replayKey += 1
         }
 
@@ -221,6 +223,7 @@ fun ActivityPlayScreen(
                     .fillMaxSize()
                     .padding(10.dp)
             ) {
+                androidx.compose.runtime.CompositionLocalProvider(com.example.ui.screens.LocalActivityTools provides activityTools) {
                 when (activity.engineType) {
                     EngineType.SORTING_BASKETS -> SortingBasketsEngine(
                         activity = activity,
@@ -314,6 +317,7 @@ fun ActivityPlayScreen(
                 }
             }
         }
+    }
     }
 }
 
