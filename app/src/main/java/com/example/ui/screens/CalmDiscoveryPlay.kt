@@ -99,7 +99,11 @@ fun CalmPictureChoices(items: List<RealWorldMediaItem>, overrides: Map<String, C
     val target = pool[round % pool.size]
     val choices = remember(round, pool) { listOf(target, pool[(round + 1) % pool.size]).shuffled() }
     LaunchedEffect(round) { viewModel.audio.speakInstruction("Where is ${target.title}?") }
-    LaunchedEffect(answered) { if (answered) { delay(1400); round++ } }
+    LaunchedEffect(answered) { if (answered) {
+        delay(1400)
+        withTimeoutOrNull(15000) { viewModel.audio.isTeacherSpeaking.first { !it } }
+        round++
+    } }
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(24.dp)) {
         Text(feedback.ifBlank { "Where is ${target.title}?" }, color = DeepSlateInk,
             style = MaterialTheme.typography.titleLarge)

@@ -62,7 +62,7 @@ class CalmPlayJourneyTest {
         assertTrue(vm.audio.lastSpokenCaption.value.contains("knock", true))
         compose.onNodeWithTag("story_scene_action").performClick()
         compose.mainClock.advanceTimeBy(1800)
-        compose.waitUntil(5000) { compose.mainClock.advanceTimeBy(96); vm.audio.lastSpokenCaption.value.contains("Mom and Dad") }
+        compose.waitUntil(30000) { compose.mainClock.advanceTimeBy(96); vm.audio.lastSpokenCaption.value.contains("Mom and Dad") }
         capture("call_grown_up")
     }
 

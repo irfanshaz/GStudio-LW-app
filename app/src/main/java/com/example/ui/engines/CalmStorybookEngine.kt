@@ -39,6 +39,8 @@ import com.example.ui.screens.ParentHoldTarget
 import com.example.ui.theme.*
 import com.example.viewmodel.WonderViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.flow.first
 
 /** Original pages and read-along assessment remain available; narrated play needs no reading. */
 @Composable
@@ -70,6 +72,7 @@ fun StorybookReaderEngine(activity: ActivityConfig, replayKey: Int, viewModel: W
     LaunchedEffect(acted) {
         if (acted) {
             delay(if (settings.reducedMotion) 600 else 1200)
+            withTimeoutOrNull(30000) { viewModel.audio.isTeacherSpeaking.first { !it } }
             if (page == pages.lastIndex) {
                 if (!awarded) {
                     awarded = true
