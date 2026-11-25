@@ -11,7 +11,7 @@ Baseline: `0bb573860dcd3199cbc48deecaebec7f3c646f20` on `fix/toddler-tracing-med
 - Balloons use two or three nonintersecting reserved positions, restrained vertical movement and full-sized hit regions during spawn. Existing worlds, modes, languages, discovery/challenge stages, progression, surprises and optional scenery remain reachable through the balloon hold menu.
 - Coloring opens its palette and full tool set on demand, with enlarged swatches and a scrolling tool sheet.
 - Stories default to narrated scene interactions. Existing text-question read-along mode and parent tips remain in story options. The door safety lesson has a purpose-drawn room and door, smooth restrained motion, and a trusted-adult sequence: the child keeps the door closed and calls a grown-up; opening occurs only in the final adult-assisted scene. Other stories reuse existing artwork and narration; bespoke animated scenes have not been authored for every story.
-- Device orientation is unlocked. Existing media is fitted to the available space; alternate portrait/landscape source variants have not been invented. Immersive system bars can still be revealed by Android's system gesture.
+- The calm home, paged catalog, media, stories, balloons, music, coloring and memory support both orientations. Older spatial engines and parent/setup screens retain their original landscape orientation after emulator images exposed clipped portrait labels. Existing media is fitted to the available space; alternate portrait/landscape source variants have not been invented. Immersive system bars can still be revealed by Android's system gesture.
 
 ## Preservation
 
