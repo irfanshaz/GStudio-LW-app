@@ -359,7 +359,8 @@ fun ColoringCanvasEngine(
         }
     }
 
-    var artTools by (com.example.ui.screens.LocalActivityTools.current ?: remember { mutableStateOf(false) })
+    val toolsState: androidx.compose.runtime.MutableState<Boolean> = com.example.ui.screens.LocalActivityTools.current ?: remember { mutableStateOf(false) }
+    var artTools by toolsState
     val currentPoints = remember { mutableStateListOf<Offset>() }
 
     Row(

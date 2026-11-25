@@ -44,7 +44,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun StorybookReaderEngine(activity: ActivityConfig, replayKey: Int, viewModel: WonderViewModel) {
     var readAlong by remember(activity.id) { mutableStateOf(false) }
-    var options by (com.example.ui.screens.LocalActivityTools.current ?: remember(activity.id) { mutableStateOf(false) })
+    val toolsState: MutableState<Boolean> = com.example.ui.screens.LocalActivityTools.current ?: remember(activity.id) { mutableStateOf(false) }
+    var options by toolsState
     var page by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var acted by remember(activity.id, page, replayKey) { mutableStateOf(false) }
     var finished by remember(activity.id, replayKey) { mutableStateOf(false) }

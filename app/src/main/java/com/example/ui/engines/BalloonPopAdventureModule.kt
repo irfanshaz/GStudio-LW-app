@@ -1347,7 +1347,8 @@ fun BalloonPopAdventureComposable(
     }
 
     val visibleCount = minOf(if (androidx.compose.ui.platform.LocalConfiguration.current.screenWidthDp < 500) 2 else 3, payloads.size.coerceAtLeast(1))
-    var showBalloonTools by (com.example.ui.screens.LocalActivityTools.current ?: remember { mutableStateOf(false) })
+    val toolsState: androidx.compose.runtime.MutableState<Boolean> = com.example.ui.screens.LocalActivityTools.current ?: remember { mutableStateOf(false) }
+    var showBalloonTools by toolsState
     var poppedCount by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var roadStep by remember(activity.id, replayKey) { mutableIntStateOf(0) }
     var nextInstanceId by remember(activity.id, replayKey, sessionResetKey, currentStage) { mutableIntStateOf(100) }
