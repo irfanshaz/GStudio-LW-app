@@ -85,6 +85,9 @@ class CalmPlayJourneyTest {
         compose.onNodeWithTag("picture_choice_0").assertIsDisplayed()
         compose.onNodeWithTag("picture_choice_1").assertIsDisplayed()
         capture("picture_choices")
+        open(WonderScreen.ToyBox)
+        compose.onNodeWithTag("catalog_item_0").assertIsDisplayed()
+        capture("calm_toy_box")
         compose.runOnIdle { vm.navigateHome() }
         compose.mainClock.advanceTimeBy(96)
         capture("home_landscape")

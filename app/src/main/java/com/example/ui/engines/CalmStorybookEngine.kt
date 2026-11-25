@@ -155,7 +155,8 @@ private fun DoorSafetyScene(page: Int, acted: Boolean, reducedMotion: Boolean) {
         val w = size.width; val h = size.height
         drawRect(Brush.verticalGradient(listOf(Color(0xFFF9F1E5), Color(0xFFE7DDD0))))
         drawRect(Color(0xFFCEC0AE), Offset(0f, h * .86f), Size(w, h * .14f))
-        val x = w * .24f; val y = h * .1f; val dw = w * .28f; val dh = h * .76f
+        val dh = h * .76f; val dw = minOf(w * .28f, dh * .53f)
+        val x = w * .36f - dw / 2f; val y = h * .1f
         drawRoundRect(Color(0xFFB6A794), Offset(x - 10, y - 10), Size(dw + 20, dh + 10), CornerRadius(14f))
         drawRect(Color(0xFFB5D2CA), Offset(x, y), Size(dw, dh))
         val doorWidth = dw * (1f - opening * .82f)

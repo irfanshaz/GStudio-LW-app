@@ -80,3 +80,25 @@ fun WorldActivitiesScreen(world: WorldSpec, pageIndex: Int, viewModel: WonderVie
         viewModel.navigateTo(WonderScreen.ActivityPlay(activities[it]))
     }
 }
+
+
+@Composable
+fun ToyBoxScreen(viewModel: WonderViewModel, progressList: List<ActivityProgressEntity>,
+    savedArtworks: List<com.example.data.SavedArtworkEntity>) {
+    var fullShelf by remember { mutableStateOf(false) }
+    if (fullShelf) {
+        LegacyToyBoxScreen(viewModel, progressList, savedArtworks)
+        return
+    }
+    val toys = remember(progressList) {
+        val favoriteIds = progressList.filter { it.isFavorite }.map { it.activityId }
+        val recentIds = progressList.filter { it.lastPlayedEpochMs > 0 }.sortedByDescending { it.lastPlayedEpochMs }.map { it.activityId }
+        (favoriteIds + recentIds + WonderCatalogRegistry.getToyBoxShortcuts().map { it.id }).distinct()
+            .mapNotNull { WonderCatalogRegistry.getActivityById(it) }
+    }
+    CalmCatalog("My toys", toys.map { "${it.emoji}  ${it.title}" } + "Saved art & complete shelf",
+        viewModel, tag = "toy_box_screen") { index ->
+        if (index == toys.size) fullShelf = true
+        else viewModel.navigateTo(WonderScreen.ActivityPlay(toys[index]))
+    }
+}

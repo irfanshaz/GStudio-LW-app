@@ -794,7 +794,7 @@ private fun LandTileCard(
  * - My Shelf tabs: Favorites, Recently Played (1-tap replay), and Saved Artworks Gallery with live multi-color stroke preview
  */
 @Composable
-fun ToyBoxScreen(
+fun LegacyToyBoxScreen(
     viewModel: WonderViewModel,
     progressList: List<ActivityProgressEntity>,
     savedArtworks: List<SavedArtworkEntity>
